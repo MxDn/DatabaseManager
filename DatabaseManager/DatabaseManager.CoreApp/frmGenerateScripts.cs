@@ -25,7 +25,7 @@ namespace DatabaseManager
         private DbInterpreter dbInterpreter;
         private bool useConnector = true;
 
-        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
+        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper(new Dictionary<DatabaseType, IDbInterpreterFactory>() { { DatabaseType.SqlServer, new SqlServerDbInterpreterFactory() } });
         public frmGenerateScripts()
         {
             InitializeComponent();

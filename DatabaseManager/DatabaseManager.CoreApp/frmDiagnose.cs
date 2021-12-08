@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DatabaseInterpreter.Core;
 using DatabaseInterpreter.Model;
 using DatabaseManager.Model;
 using DatabaseManager.Core;
@@ -42,7 +43,7 @@ namespace DatabaseManager
 
         public void Init(IObserver<FeedbackInfo> observer)
         {
-            this.dbManager = new DbManager();
+            this.dbManager = new DbManager(new Dictionary<DatabaseType, IDbInterpreterFactory>() { { DatabaseType.SqlServer, new SqlServerDbInterpreterFactory() } });
 
             dbManager.Subscribe(observer);
         }

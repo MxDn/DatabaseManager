@@ -26,7 +26,7 @@ namespace DatabaseManager.Controls
         public ShowDbObjectContentHandler OnShowContent;
         public DatabaseInterpreter.Utility.FeedbackHandler OnFeedback;
 
-        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
+        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper(new Dictionary<DatabaseType, IDbInterpreterFactory>() { { DatabaseType.SqlServer, new SqlServerDbInterpreterFactory() } });
         public DatabaseType DatabaseType => this.databaseType;
 
         public UC_DbObjectsComplexTree()
@@ -759,7 +759,7 @@ namespace DatabaseManager.Controls
 
             if (tag is DatabaseObject)
             {
-                DbManager dbManager = new DbManager();
+                DbManager dbManager = new DbManager(new Dictionary<DatabaseType, IDbInterpreterFactory>() { { DatabaseType.SqlServer, new SqlServerDbInterpreterFactory() } });
                 dbManager.Subscribe(this);
 
                 await dbManager.Translate(this.databaseType, targetDbType, tag as DatabaseObject, connectionInfo, this.DbConverter_OnTranslated);
@@ -951,7 +951,7 @@ namespace DatabaseManager.Controls
         {
             ConnectionInfo connectionInfo = this.GetCurrentConnectionInfo();
 
-            DbManager dbManager = new DbManager();
+            DbManager dbManager = new DbManager(new Dictionary<DatabaseType, IDbInterpreterFactory>() { { DatabaseType.SqlServer, new SqlServerDbInterpreterFactory() } });
 
             dbManager.Subscribe(this);
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -25,7 +25,7 @@ namespace DatabaseManager.Controls
 
         public FeedbackHandler OnFeedback;
 
-          DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
+        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper(new Dictionary<DatabaseType, IDbInterpreterFactory>() { { DatabaseType.SqlServer, new SqlServerDbInterpreterFactory() } });
         public UC_TableDesigner()
         {
             InitializeComponent();

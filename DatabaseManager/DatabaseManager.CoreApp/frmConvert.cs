@@ -1,4 +1,4 @@
-﻿using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Core;
 using DatabaseInterpreter.Model;
 using DatabaseInterpreter.Profile;
 using DatabaseInterpreter.Utility;
@@ -28,7 +28,7 @@ namespace DatabaseManager
         private DbConverter dbConverter = null;
         private bool useSourceConnector = true;
 
-          DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
+        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper(new Dictionary<DatabaseType, IDbInterpreterFactory>() { { DatabaseType.SqlServer, new SqlServerDbInterpreterFactory() } });
         public frmConvert()
         {
             InitializeComponent();

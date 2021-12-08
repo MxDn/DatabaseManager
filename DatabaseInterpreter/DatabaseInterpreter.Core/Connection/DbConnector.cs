@@ -1,9 +1,7 @@
-﻿using DatabaseInterpreter.Model;
+using DatabaseInterpreter.Model;
 
 using System.Collections.Generic;
 using System.Data.Common;
-
-using Westwind.Utilities;
 
 namespace DatabaseInterpreter.Core
 {
@@ -29,15 +27,7 @@ namespace DatabaseInterpreter.Core
             DbProviderFactory factory = null;
 
             string lowerProviderName = this._dbProvider.ProviderName.ToLower(); 
-            if (registeredDbProviderFactory.ContainsKey(lowerProviderName))
-            {
-                factory = registeredDbProviderFactory[lowerProviderName];                
-            }          
-            else
-            {
-                factory = DataUtils.GetDbProviderFactory(this._dbProvider.ProviderName);
-            }            
-           
+             factory = this._dbProvider.GetDbProviderFactory();
             DbConnection connection = factory.CreateConnection();
             if (connection != null)
             {

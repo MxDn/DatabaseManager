@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -26,7 +26,7 @@ namespace DatabaseManager
 
         public DatabaseInterpreter.Utility.FeedbackHandler OnFeedback;
 
-        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
+        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper(new Dictionary<DatabaseType, IDbInterpreterFactory>() { { DatabaseType.SqlServer, new SqlServerDbInterpreterFactory() } });
         public frmTableCopy()
         {
             InitializeComponent();

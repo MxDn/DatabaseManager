@@ -1,4 +1,4 @@
-﻿using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Core;
 using DatabaseInterpreter.Model;
 using DatabaseInterpreter.Profile;
 using DatabaseInterpreter.Utility;
@@ -22,7 +22,7 @@ namespace DatabaseManager
 
         public ConnectionInfo ConnectionInfo { get; set; }
 
-        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
+        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper(new Dictionary<DatabaseType, IDbInterpreterFactory>() { { DatabaseType.SqlServer, new SqlServerDbInterpreterFactory() } });
         public frmDbConnect(DatabaseType dbType)
         {
             InitializeComponent();

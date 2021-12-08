@@ -1,9 +1,10 @@
-﻿using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Core;
 using DatabaseInterpreter.Model;
 using DatabaseInterpreter.Profile;
 using DatabaseManager.Core;
 using DatabaseManager.Model;
 using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,7 +22,11 @@ namespace DatabaseManager.Controls
 
         public bool RememberPassword => this.chkRememberPassword.Checked;
 
-        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
+        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper(
+            new Dictionary<DatabaseType, IDbInterpreterFactory>()
+            {
+                {DatabaseType.SqlServer,new SqlServerDbInterpreterFactory()}
+            });
         public UC_DbAccountInfo()
         {
             InitializeComponent();

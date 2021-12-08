@@ -1,9 +1,10 @@
-﻿using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Core;
 using DatabaseInterpreter.Utility;
 using DatabaseManager.Core;
 using DatabaseManager.Helper;
 using DatabaseManager.Model;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Windows.Forms;
@@ -20,7 +21,7 @@ namespace DatabaseManager.Controls
         private bool readOnly;
         private bool showEditorMessage =true;
 
-        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
+        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper(new Dictionary<DatabaseType, IDbInterpreterFactory>() { { DatabaseType.SqlServer, new SqlServerDbInterpreterFactory() } });
         public bool ReadOnly
         {
             get { return this.readOnly; }

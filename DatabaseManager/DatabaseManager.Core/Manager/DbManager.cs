@@ -1,4 +1,4 @@
-﻿using DatabaseConverter.Core;
+using DatabaseConverter.Core;
 using DatabaseInterpreter.Core;
 using DatabaseInterpreter.Model;
 using DatabaseInterpreter.Utility;
@@ -19,11 +19,10 @@ namespace DatabaseManager.Core
         private IObserver<FeedbackInfo> observer;
         private DbInterpreter dbInterpreter;
         private DbScriptGenerator scriptGenerator;
-
-        DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
-        public DbManager()
+        public DbInterpreterHelper DbInterpreterHelper;
+        public DbManager(Dictionary<DatabaseType, IDbInterpreterFactory> registered )
         {
-
+            this.DbInterpreterHelper = new DbInterpreterHelper(registered);
         }
 
         public DbManager(DbInterpreter dbInterpreter)
@@ -99,7 +98,7 @@ namespace DatabaseManager.Core
                     {
                         transaction.Rollback();
                     }
-                    catch (Exception iex)
+                    catch (Exception)
                     {
                     }
                 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -28,7 +28,7 @@ namespace DatabaseManager.Controls
         public IEnumerable<DataGridViewColumn> Columns => this.dgvData.Columns.Cast<DataGridViewColumn>();
         public QueryConditionBuilder ConditionBuilder => this.conditionBuilder;
         public DataFilterHandler OnDataFilter;
-        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
+        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper(new Dictionary<DatabaseType, IDbInterpreterFactory>() {{DatabaseType.SqlServer,new SqlServerDbInterpreterFactory()}});
         public UC_DataViewer()
         {
             InitializeComponent();
