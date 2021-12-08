@@ -1,4 +1,4 @@
-﻿using DatabaseInterpreter.Model;
+using DatabaseInterpreter.Model;
 using DatabaseInterpreter.Utility;
 using System;
 using System.Collections.Generic;
@@ -402,6 +402,11 @@ namespace DatabaseInterpreter.Core
             return values;
         }
 
+        public virtual Script DropDefaultValueConstraint(TableDefaultValueConstraint defaultValueConstraint)
+        {
+            throw new NotImplementedException();
+        }
+
         protected virtual bool NeedInsertParameter(TableColumn column, object value)
         {
             return false;
@@ -413,14 +418,7 @@ namespace DatabaseInterpreter.Core
         }
         protected abstract object ParseValue(TableColumn column, object value, bool bytesAsString = false);
        
-        private string GetOracleDatetimeConvertString(DateTime dateTime)
-        {
-            int millisecondLength = dateTime.Millisecond.ToString().Length;
-            string strMillisecond = millisecondLength == 0 ? "" : $".{"f".PadLeft(millisecondLength, 'f')}";
-            string format = $"yyyy-MM-dd HH:mm:ss{strMillisecond}";
-
-            return $"TO_TIMESTAMP('{dateTime.ToString(format)}','yyyy-MM-dd hh24:mi:ssxff')";
-        }
+       
         #endregion
 
         #region Append Scripts
@@ -514,6 +512,12 @@ namespace DatabaseInterpreter.Core
         public abstract Script DropView(View view);
         public abstract Script DropTrigger(TableTrigger trigger);
         public abstract Script DropFunction(Function function);
+
+        public virtual Script SetTableChildComment(TableChild tableChild, bool isNew)
+        {
+            throw new NotImplementedException();
+        }
+
         public abstract Script DropProcedure(Procedure procedure);
         public abstract IEnumerable<Script> SetConstrainsEnabled(bool enabled);
 
@@ -657,5 +661,10 @@ namespace DatabaseInterpreter.Core
             this.dbInterpreter.FeedbackError(message, skipError);
         }
         #endregion
+
+        public virtual Script AddDefaultValueConstraint(TableColumn newColumn)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

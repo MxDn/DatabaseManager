@@ -1,4 +1,4 @@
-﻿using BrightIdeasSoftware;
+using BrightIdeasSoftware;
 using DatabaseInterpreter.Core;
 using DatabaseInterpreter.Model;
 using DatabaseInterpreter.Utility;
@@ -32,11 +32,9 @@ namespace DatabaseManager
         private List<DbDifference> differences;
         private DbInterpreter sourceInterpreter;
         private DbInterpreter targetInterpreter;
-        private DbScriptGenerator sourceScriptGenerator;
-        private DbScriptGenerator targetScriptGenerator;
         private SchemaInfo sourceSchemaInfo;
         private SchemaInfo targetSchemaInfo;
-
+        DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
         public frmCompare()
         {
             InitializeComponent();
@@ -199,9 +197,7 @@ namespace DatabaseManager
 
                 this.sourceInterpreter = DbInterpreterHelper.GetDbInterpreter(dbType, this.sourceDbConnectionInfo, sourceOption);
                 this.targetInterpreter = DbInterpreterHelper.GetDbInterpreter(this.targetDbProfile.DatabaseType, this.targetDbConnectionInfo, targetOption);
-                this.sourceScriptGenerator = DbScriptGeneratorHelper.GetDbScriptGenerator(this.sourceInterpreter);
-                this.targetScriptGenerator = DbScriptGeneratorHelper.GetDbScriptGenerator(this.targetInterpreter);
-
+                
                 this.sourceInterpreter.Subscribe(this);
                 this.targetInterpreter.Subscribe(this);
 
@@ -488,20 +484,7 @@ namespace DatabaseManager
 
         private string GetTargetDbOwner()
         {
-            if (this.targetInterpreter.DatabaseType == DatabaseType.Oracle)
-            {
-                return (this.targetInterpreter as OracleInterpreter).GetDbOwner();
-            }
-            else if (this.targetInterpreter.DatabaseType == DatabaseType.MySql)
-            {
-                return this.targetInterpreter.ConnectionInfo.Database;
-            }
-            else if (this.targetInterpreter.DatabaseType == DatabaseType.SqlServer)
-            {
-                return "dbo";
-            }
-
-            return null;
+            return this.targetInterpreter.GetDbOwner();
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -554,7 +537,7 @@ namespace DatabaseManager
                 return string.Empty;
             }
 
-            DbScriptGenerator scriptGenerator = isSource ? this.sourceScriptGenerator : this.targetScriptGenerator;
+            DbScriptGenerator scriptGenerator = isSource ? this.sourceInterpreter.ScriptGenerator : this.targetInterpreter.ScriptGenerator;
 
             if (dbObj is Table table)
             {

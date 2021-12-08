@@ -1,4 +1,4 @@
-﻿using DatabaseManager.Model;
+using DatabaseManager.Model;
 using System;
 using System.Text;
 using DatabaseInterpreter.Model;
@@ -146,6 +146,8 @@ namespace DatabaseManager.Core
 
         public static DbDiagnosis GetInstance(DatabaseType databaseType, ConnectionInfo connectionInfo)
         {
+            // TODO : USE FACTORY
+            /*
             if (databaseType == DatabaseType.SqlServer)
             {
                 return new SqlServerDiagnosis(connectionInfo);
@@ -158,7 +160,7 @@ namespace DatabaseManager.Core
             {
                 return new OracleDiagnosis(connectionInfo);
             }
-
+            */
             throw new NotImplementedException($"Not implemente diagnosis for {databaseType}.");
         }
 

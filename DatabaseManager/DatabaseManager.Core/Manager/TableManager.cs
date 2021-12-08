@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using DatabaseInterpreter.Model;
@@ -309,7 +309,7 @@ namespace DatabaseManager.Core
 
             if (this.dbInterpreter.DatabaseType == DatabaseType.SqlServer)
             {
-                defaultValueConstraints = await(this.dbInterpreter as SqlServerInterpreter).GetTableDefautValueConstraintsAsync(filter);
+                defaultValueConstraints = await(this.dbInterpreter.GetTableDefautValueConstraintsAsync(filter));
             }
 
             return defaultValueConstraints;
@@ -329,17 +329,15 @@ namespace DatabaseManager.Core
                 if (!isDefaultValueEquals)
                 {
                     if (databaseType == DatabaseType.SqlServer)
-                    {
-                        SqlServerScriptGenerator sqlServerScriptGenerator = scriptGenerator as SqlServerScriptGenerator;
-
+                    { 
                         TableDefaultValueConstraint defaultValueConstraint = defaultValueConstraints?.FirstOrDefault(item => item.Owner == oldTable.Owner && item.TableName == oldTable.Name && item.ColumnName == oldColumn.Name);
 
                         if (defaultValueConstraint != null)
                         {
-                            scripts.Add(sqlServerScriptGenerator.DropDefaultValueConstraint(defaultValueConstraint));
+                            scripts.Add(scriptGenerator.DropDefaultValueConstraint(defaultValueConstraint));
                         }
 
-                        scripts.Add(sqlServerScriptGenerator.AddDefaultValueConstraint(newColumn));
+                        scripts.Add(scriptGenerator.AddDefaultValueConstraint(newColumn));
                     }
                 }
 
@@ -473,7 +471,7 @@ namespace DatabaseManager.Core
         {
             if (this.dbInterpreter.DatabaseType == DatabaseType.SqlServer)
             {
-                scripts.Add((scriptGenerator as SqlServerScriptGenerator).SetTableChildComment(tableChild, isNew));
+                scripts.Add((scriptGenerator.SetTableChildComment(tableChild, isNew)));
             }
         }
 

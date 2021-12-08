@@ -1,4 +1,4 @@
-﻿using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Core;
 using DatabaseInterpreter.Model;
 using DatabaseInterpreter.Utility;
 using DatabaseManager.Core;
@@ -201,7 +201,7 @@ namespace DatabaseManager
 
                 GenerateScriptMode mode = GenerateScriptMode.None;
 
-                DbScriptGenerator dbScriptGenerator = DbScriptGeneratorHelper.GetDbScriptGenerator(this.dbInterpreter);
+                DbScriptGenerator dbScriptGenerator =  this.dbInterpreter.ScriptGenerator;
 
                 if (scriptMode.HasFlag(GenerateScriptMode.Schema))
                 {

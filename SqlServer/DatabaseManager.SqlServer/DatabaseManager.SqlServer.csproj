@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Config\Template\Function\SqlServer.txt" />
+    <None Remove="Config\Template\Procedure\SqlServer.txt" />
+    <None Remove="Config\Template\TableTrigger\SqlServer.txt" />
+    <None Remove="Config\Template\View\Common.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Config\Template\Function\SqlServer.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\Template\Procedure\SqlServer.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\Template\TableTrigger\SqlServer.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\Template\View\Common.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\DatabaseManager\DatabaseManager.Core\DatabaseManager.Core.csproj" />
+  </ItemGroup>
+
+</Project>

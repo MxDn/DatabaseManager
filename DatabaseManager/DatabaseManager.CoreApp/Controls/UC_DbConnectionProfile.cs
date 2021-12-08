@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -67,7 +67,7 @@ namespace DatabaseManager.Controls
 
         public void LoadDbTypes()
         {
-            var databaseTypes = DbInterpreterHelper.GetDisplayDatabaseTypes();
+            var databaseTypes = DbInterpreter.GetDisplayDatabaseTypes();
 
             foreach (var value in databaseTypes)
             {

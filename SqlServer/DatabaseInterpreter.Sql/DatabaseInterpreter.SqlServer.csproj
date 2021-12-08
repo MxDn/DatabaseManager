@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Configurations>Debug;Release;Core</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Config\DataTypeSpecification\SqlServer.xml" />
+    <None Remove="Config\FunctionSpecification\SqlServer.xml" />
+    <None Remove="Config\Keyword\SqlServer.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Config\DataTypeSpecification\SqlServer.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\FunctionSpecification\SqlServer.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\Keyword\SqlServer.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Builder\Script\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\DatabaseInterpreter\DatabaseInterpreter.Core\DatabaseInterpreter.Core.csproj" />
+  </ItemGroup>
+
+</Project>

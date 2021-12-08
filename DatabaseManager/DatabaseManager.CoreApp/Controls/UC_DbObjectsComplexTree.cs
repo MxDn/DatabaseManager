@@ -1,4 +1,4 @@
-﻿using DatabaseConverter.Core;
+using DatabaseConverter.Core;
 using DatabaseConverter.Model;
 using DatabaseInterpreter.Core;
 using DatabaseInterpreter.Model;
@@ -722,7 +722,7 @@ namespace DatabaseManager.Controls
         {
             this.tsmiTranslate.DropDownItems.Clear();
 
-            var dbTypes = DbInterpreterHelper.GetDisplayDatabaseTypes();
+            var dbTypes = DbInterpreter.GetDisplayDatabaseTypes();
 
             foreach (var dbType in dbTypes)
             {

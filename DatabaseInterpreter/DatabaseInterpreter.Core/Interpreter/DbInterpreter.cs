@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using DatabaseInterpreter.Model;
 using DatabaseInterpreter.Utility;
 using System;
@@ -61,10 +61,8 @@ namespace DatabaseInterpreter.Core
 
         #region Database Owner
         public abstract Task<List<DatabaseOwner>> GetDatabaseOwnersAsync();
-        public virtual string GetDbOwner()
-        { 
-            return string.Empty;
-        }
+        public abstract string GetDbOwner();
+
         #endregion
 
         #region User Defined Type     
@@ -890,5 +888,10 @@ namespace DatabaseInterpreter.Core
             this.Feedback(FeedbackInfoType.Info, message);
         }
         #endregion
+
+        public virtual Task<List<TableDefaultValueConstraint>> GetTableDefautValueConstraintsAsync(SchemaInfoFilter filter = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
