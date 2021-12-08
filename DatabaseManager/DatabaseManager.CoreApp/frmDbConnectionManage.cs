@@ -58,7 +58,7 @@ namespace DatabaseManager
 
         public void LoadDbTypes()
         {
-            var databaseTypes = DbInterpreterHelper.GetDisplayDatabaseTypes();
+            var databaseTypes = DbInterpreter.GetDisplayDatabaseTypes();
             foreach (var value in databaseTypes)
             {
                 this.cboDbType.Items.Add(value.ToString());

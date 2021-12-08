@@ -162,7 +162,7 @@ namespace DatabaseConverter.Core
         {
             StringBuilder sb = new StringBuilder();
 
-            this.sourceOwnerName = DbInterpreterHelper.GetOwnerName(sourceDbInterpreter);
+            this.sourceOwnerName = sourceDbInterpreter.GetOwnerName();
 
             int ignoreCount = 0;
 
@@ -277,7 +277,7 @@ namespace DatabaseConverter.Core
                         switch (text.ToUpper())
                         {
                             case "AS":
-                                if (targetDbInterpreter is OracleInterpreter)
+                                if (targetDbInterpreter.DatabaseType == DatabaseType.Oracle)
                                 {
                                     var previousKeyword = (from t in tokens where t.Type == TSQLTokenType.Keyword && t.EndPosition < token.BeginPosition select t).LastOrDefault();
                                     if (previousKeyword != null && previousKeyword.Text.ToUpper() == "FROM")

@@ -17,7 +17,9 @@ namespace DatabaseManager.Core
         protected ConnectionInfo connectionInfo;
 
         public FeedbackHandler OnFeedback;
+        DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
 
+        static IDictionary<DatabaseType, DbDiagnosis> registeredDbDiagnosis;
         public DbDiagnosis(ConnectionInfo connectionInfo)
         {
             this.connectionInfo = connectionInfo;

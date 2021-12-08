@@ -36,7 +36,7 @@ namespace DatabaseManager
         private DbScriptGenerator targetScriptGenerator;
         private SchemaInfo sourceSchemaInfo;
         private SchemaInfo targetSchemaInfo;
-
+        private DbInterpreterHelper DbInterpreterHelper;
         public frmCompare()
         {
             InitializeComponent();
@@ -199,8 +199,8 @@ namespace DatabaseManager
 
                 this.sourceInterpreter = DbInterpreterHelper.GetDbInterpreter(dbType, this.sourceDbConnectionInfo, sourceOption);
                 this.targetInterpreter = DbInterpreterHelper.GetDbInterpreter(this.targetDbProfile.DatabaseType, this.targetDbConnectionInfo, targetOption);
-                this.sourceScriptGenerator = DbScriptGeneratorHelper.GetDbScriptGenerator(this.sourceInterpreter);
-                this.targetScriptGenerator = DbScriptGeneratorHelper.GetDbScriptGenerator(this.targetInterpreter);
+                this.sourceScriptGenerator = this.sourceInterpreter.ScriptGenerator;
+                this.targetScriptGenerator = this.targetInterpreter.ScriptGenerator;
 
                 this.sourceInterpreter.Subscribe(this);
                 this.targetInterpreter.Subscribe(this);

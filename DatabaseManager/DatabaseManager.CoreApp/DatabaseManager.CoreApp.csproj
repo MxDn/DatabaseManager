@@ -10,6 +10,7 @@
     <PackageProjectUrl>https://github.com/victor-wiki/DatabaseManager</PackageProjectUrl>
     <Version>1.0.3</Version>
     <ApplicationIcon>Resources\_dbManager.ico</ApplicationIcon>
+    <Configurations>Debug;Release;Core</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

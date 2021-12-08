@@ -35,7 +35,7 @@ namespace DatabaseManager.Core
 
             SchemaInfo schemaInfo = await dbInterpreter.GetSchemaInfoAsync(filter);
 
-            DbScriptGenerator dbScriptGenerator = DbScriptGeneratorHelper.GetDbScriptGenerator(dbInterpreter);
+            DbScriptGenerator dbScriptGenerator = dbInterpreter.ScriptGenerator;
 
             List<Script> scripts = dbScriptGenerator.GenerateSchemaScripts(schemaInfo).Scripts;
 

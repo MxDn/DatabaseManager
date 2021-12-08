@@ -1,28 +1,26 @@
 ﻿using DatabaseInterpreter.Model;
 
+using System;
+using System.Collections.Generic;
+
 namespace DatabaseInterpreter.Core
 {
+    public interface IDbScriptGeneratorFactory
+    {
+        DbScriptGenerator GetDbScriptGenerator(DbInterpreter dbInterpreter);
+    }
     public class DbScriptGeneratorHelper
     {
-        public static DbScriptGenerator GetDbScriptGenerator(DbInterpreter dbInterpreter)
+        private readonly IDictionary<DatabaseType, IDbScriptGeneratorFactory> registeredScriptGeneratorFactories;
+
+        public DbScriptGeneratorHelper(IDictionary<DatabaseType, IDbScriptGeneratorFactory> registeredScriptGeneratorFactories)
         {
-            DbScriptGenerator dbScriptGenerator = null;
+            this.registeredScriptGeneratorFactories = registeredScriptGeneratorFactories;
+        }
 
-            switch(dbInterpreter.DatabaseType)
-            {
-                case DatabaseType.SqlServer:
-                    dbScriptGenerator = new SqlServerScriptGenerator(dbInterpreter);
-                    break;
-                case DatabaseType.MySql:
-                    dbScriptGenerator = new MySqlScriptGenerator(dbInterpreter);
-                    break;
-                case DatabaseType.Oracle:
-                    dbScriptGenerator = new OracleScriptGenerator(dbInterpreter);
-                    break;
-
-            }
-
-            return dbScriptGenerator;
+        public   DbScriptGenerator GetDbScriptGenerator(DbInterpreter dbInterpreter)
+        { 
+            return registeredScriptGeneratorFactories[ dbInterpreter.DatabaseType].GetDbScriptGenerator(dbInterpreter);
         }
     }
 }

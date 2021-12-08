@@ -23,7 +23,7 @@ namespace DatabaseManager.Core
         {
             this.dbInterpreter = dbInterpreter;
 
-            this.scriptGenerator = DbScriptGeneratorHelper.GetDbScriptGenerator(this.dbInterpreter);
+            this.scriptGenerator =  this.dbInterpreter.ScriptGenerator;
         }
 
         public void Subscribe(IObserver<FeedbackInfo> observer)

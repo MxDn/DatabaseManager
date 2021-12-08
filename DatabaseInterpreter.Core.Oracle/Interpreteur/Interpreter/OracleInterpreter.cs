@@ -53,7 +53,7 @@ namespace DatabaseInterpreter.Core
             return (await this.GetScalarAsync(this.CreateConnection(), sql))?.ToString();
         }
 
-        public string GetDbOwner()
+        public override string GetDbOwner()
         {
             if (this.ConnectionInfo != null && this.ConnectionInfo.IntegratedSecurity && (string.IsNullOrEmpty(this.dbOwner) || this.dbOwner == "/"))
             {

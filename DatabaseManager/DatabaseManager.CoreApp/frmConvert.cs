@@ -28,6 +28,7 @@ namespace DatabaseManager
         private DbConverter dbConverter = null;
         private bool useSourceConnector = true;
 
+          DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
         public frmConvert()
         {
             InitializeComponent();

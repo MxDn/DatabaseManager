@@ -1,16 +1,17 @@
 ﻿using DatabaseInterpreter.Model;
-using MySql.Data.MySqlClient;
-using Oracle.ManagedDataAccess.Client;
+
+using System.Collections.Generic;
 using System.Data.Common;
+
 using Westwind.Utilities;
 
-namespace  DatabaseInterpreter.Core
+namespace DatabaseInterpreter.Core
 {
     public class DbConnector
     {
         private readonly IDbProvider _dbProvider;
         private readonly string _connectionString;
-
+        private readonly IDictionary<string, DbProviderFactory> registeredDbProviderFactory;
         public DbConnector(IDbProvider dbProvider, string connectionString)
         {
             this._dbProvider = dbProvider;
@@ -27,15 +28,11 @@ namespace  DatabaseInterpreter.Core
         {
             DbProviderFactory factory = null;
 
-            string lowerProviderName = this._dbProvider.ProviderName.ToLower();
-            if (lowerProviderName.Contains("oracle"))
+            string lowerProviderName = this._dbProvider.ProviderName.ToLower(); 
+            if (registeredDbProviderFactory.ContainsKey(lowerProviderName))
             {
-                factory = new OracleClientFactory();                
-            }
-            else if(lowerProviderName.Contains("mysql"))
-            {
-                factory = MySqlClientFactory.Instance;
-            }            
+                factory = registeredDbProviderFactory[lowerProviderName];                
+            }          
             else
             {
                 factory = DataUtils.GetDbProviderFactory(this._dbProvider.ProviderName);

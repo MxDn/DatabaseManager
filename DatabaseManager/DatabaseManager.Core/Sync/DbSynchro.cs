@@ -24,7 +24,7 @@ namespace DatabaseManager.Core
             this.targetInterpreter = targetInterpreter;
 
             this.tableManager = new TableManager(this.targetInterpreter);
-            this.targetScriptGenerator = DbScriptGeneratorHelper.GetDbScriptGenerator(targetInterpreter);
+            this.targetScriptGenerator =  targetInterpreter.ScriptGenerator;
         }
 
         public void Subscribe(IObserver<FeedbackInfo> observer)

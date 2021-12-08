@@ -14,6 +14,7 @@ namespace DatabaseManager.Core
         public BackupSetting Setting { get; set; }
         public ConnectionInfo ConnectionInfo { get; set; }
 
+        static IDictionary<DatabaseType, DbBackup> registeredDbBackup;
         public DbBackup() { }
 
         public DbBackup(BackupSetting setting, ConnectionInfo connectionInfo)
@@ -59,21 +60,8 @@ namespace DatabaseManager.Core
         }
 
         public static DbBackup GetInstance(DatabaseType databaseType)
-        {
-            if(databaseType == DatabaseType.SqlServer)
-            {
-                return new SqlServerBackup();
-            }
-            if (databaseType == DatabaseType.Oracle)
-            {
-                return new OracleBackup();
-            }
-            else if (databaseType == DatabaseType.MySql)
-            {
-                return new MySqlBackup();
-            }
-
-            throw new NotImplementedException($"Not implemente for backup {databaseType}.");
+        { 
+            return registeredDbBackup[databaseType]; 
         }
 
     }

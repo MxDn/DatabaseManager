@@ -41,6 +41,7 @@ namespace DatabaseInterpreter.Core
 
         public delegate Task DataReadHandler(TableDataReadInfo tableDataReadInfo);
         public event DataReadHandler OnDataRead;
+        public DbScriptGenerator ScriptGenerator { get; protected set; }
 
         #endregion
 
@@ -51,7 +52,7 @@ namespace DatabaseInterpreter.Core
             this.ConnectionInfo = connectionInfo;
             this.Option = option;
         }
-        #endregion     
+        #endregion
 
         #region Schema Informatioin
         #region Database
@@ -60,6 +61,10 @@ namespace DatabaseInterpreter.Core
 
         #region Database Owner
         public abstract Task<List<DatabaseOwner>> GetDatabaseOwnersAsync();
+        public virtual string GetDbOwner()
+        { 
+            return string.Empty;
+        }
         #endregion
 
         #region User Defined Type     
@@ -701,12 +706,30 @@ namespace DatabaseInterpreter.Core
 
         #region Common Method 
 
-        public string GetObjectDisplayName(DatabaseObject obj, bool useQuotedString = false)
+
+
+        public static IEnumerable<DatabaseType> GetDisplayDatabaseTypes()
         {
-            if (this.GetType().Name == nameof(SqlServerInterpreter))
+            return Enum.GetValues(typeof(DatabaseType)).Cast<DatabaseType>().Where(item => item != DatabaseType.Unknown);
+        }
+        public virtual string GetOwnerName()
+        {
+            if (this.DatabaseType == DatabaseType.Oracle)
             {
-                return $"{this.GetString(obj.Owner, useQuotedString)}.{this.GetString(obj.Name, useQuotedString)}";
+                return this.ConnectionInfo.UserId;
             }
+            else
+            {
+                if (this.DatabaseType == DatabaseType.SqlServer)
+                {
+                    return "dbo";
+                }
+
+                return this.ConnectionInfo.Database;
+            }
+        }
+        public virtual string GetObjectDisplayName(DatabaseObject obj, bool useQuotedString = false)
+        { 
             return $"{this.GetString(obj.Name, useQuotedString)}";
         }
 

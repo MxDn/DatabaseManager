@@ -20,6 +20,7 @@ namespace DatabaseManager.Controls
         private bool readOnly;
         private bool showEditorMessage =true;
 
+        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
         public bool ReadOnly
         {
             get { return this.readOnly; }

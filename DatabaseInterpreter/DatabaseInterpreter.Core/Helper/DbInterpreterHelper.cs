@@ -1,53 +1,33 @@
 ﻿using DatabaseInterpreter.Model;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace  DatabaseInterpreter.Core
+namespace DatabaseInterpreter.Core
 {
-    public class DbInterpreterHelper
+    public interface IDbInterpreterFactory
     {
-        public static DbInterpreter GetDbInterpreter(DatabaseType dbType, ConnectionInfo connectionInfo, DbInterpreterOption option)
+        DbInterpreter GetDbInterpreter(ConnectionInfo connectionInfo, DbInterpreterOption option);
+
+    }
+    public  class DbInterpreterHelper
+    {
+        private   readonly Dictionary<DatabaseType, IDbInterpreterFactory> registeredDbInterpreter;
+        public   DbInterpreterHelper(Dictionary<DatabaseType, IDbInterpreterFactory> dbInterpreterFactorys)
         {
-            DbInterpreter dbInterpreter = null;
-
-            if(dbType == DatabaseType.SqlServer)
-            {
-                dbInterpreter = new SqlServerInterpreter(connectionInfo, option);
-            }
-            else if(dbType == DatabaseType.MySql)
-            {
-                dbInterpreter = new MySqlInterpreter(connectionInfo, option);
-            }
-            else if(dbType == DatabaseType.Oracle)
-            {
-                dbInterpreter = new OracleInterpreter(connectionInfo, option);
-            }           
-
-            return dbInterpreter;
+            registeredDbInterpreter = dbInterpreterFactorys;
         }
 
-        public static string GetOwnerName(DbInterpreter dbInterpreter)
+        public DbInterpreterHelper()
         {
-            if (dbInterpreter.DatabaseType == DatabaseType.Oracle)
-            {
-                return dbInterpreter.ConnectionInfo.UserId;
-            }
-            else
-            {
-                if(dbInterpreter.DatabaseType==DatabaseType.SqlServer)
-                {
-                    return "dbo";
-                }
-
-                return dbInterpreter.ConnectionInfo.Database;
-            }
         }
 
-        public static IEnumerable<DatabaseType> GetDisplayDatabaseTypes()
+        public   DbInterpreter GetDbInterpreter(DatabaseType dbType, ConnectionInfo connectionInfo, DbInterpreterOption option)
         {
-            return Enum.GetValues(typeof(DatabaseType)).Cast<DatabaseType>().Where(item=>item != DatabaseType.Unknown );
+            return registeredDbInterpreter[dbType].GetDbInterpreter(connectionInfo, option);
         }
+
     }
 }

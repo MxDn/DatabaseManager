@@ -200,11 +200,12 @@ namespace DatabaseInterpreter.Core
                 // https://stackoverflow.com/a/23735845/2442468
                 // https://stackoverflow.com/a/17595403/2442468
 
-                var columnData = data.AsEnumerable().Select(r => r.Field<object>(c.ColumnName));
-                object[] paramDataArray = (UploadEverythingInSingleBatch)
-                    ? columnData.ToArray()
-                    : columnData.Skip(skipOffset).Take(batchSize).ToArray();
-
+                // TODO : AsEnumerable
+                object[] paramDataArray = null;
+                    /*(UploadEverythingInSingleBatch)
+                    ? data.AsEnumerable().Select(r => r.Field<object>(c.ColumnName)).ToArray()
+                    : data.AsEnumerable().Select(r => r.Field<object>(c.ColumnName)).Skip(skipOffset).Take(batchSize).ToArray();
+                    */
                 if(this.DetectDateTimeTypeByValues)
                 {
                     if (dbType == OracleDbType.Date)

@@ -21,6 +21,7 @@ namespace DatabaseManager.Controls
 
         public bool RememberPassword => this.chkRememberPassword.Checked;
 
+        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
         public UC_DbAccountInfo()
         {
             InitializeComponent();

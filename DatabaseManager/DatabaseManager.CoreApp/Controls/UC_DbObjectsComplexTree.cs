@@ -26,6 +26,7 @@ namespace DatabaseManager.Controls
         public ShowDbObjectContentHandler OnShowContent;
         public DatabaseInterpreter.Utility.FeedbackHandler OnFeedback;
 
+        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
         public DatabaseType DatabaseType => this.databaseType;
 
         public UC_DbObjectsComplexTree()

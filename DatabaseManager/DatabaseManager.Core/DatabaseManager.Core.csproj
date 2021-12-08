@@ -6,49 +6,14 @@
     <Description>Database manage tool for: SqlServer, MySql and Oracle.</Description>
     <Authors>victor-wiki</Authors>
     <Version>1.0.9</Version>
+    <Configurations>Debug;Release;Core</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Config\Template\Function\MySql.txt" />
-    <None Remove="Config\Template\Function\Oracle.txt" />
-    <None Remove="Config\Template\Function\SqlServer.txt" />
-    <None Remove="Config\Template\Procedure\MySql.txt" />
-    <None Remove="Config\Template\Procedure\Oracle.txt" />
-    <None Remove="Config\Template\Procedure\SqlServer.txt" />
-    <None Remove="Config\Template\TableTrigger\MySql.txt" />
-    <None Remove="Config\Template\TableTrigger\Oracle.txt" />
-    <None Remove="Config\Template\TableTrigger\SqlServer.txt" />
     <None Remove="Config\Template\View\Common.txt" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Config\Template\Function\Oracle.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Config\Template\Function\MySql.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Config\Template\Function\SqlServer.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Config\Template\Procedure\MySql.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Config\Template\Procedure\Oracle.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Config\Template\Procedure\SqlServer.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Config\Template\TableTrigger\MySql.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Config\Template\TableTrigger\Oracle.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Config\Template\TableTrigger\SqlServer.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Config\Template\View\Common.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -70,6 +35,12 @@
     <Compile Update="Model\TableDesigner\TableDesignerGenerateScriptsData.cs">
       <SubType>Form</SubType>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Config\Template\Function\" />
+    <Folder Include="Config\Template\Procedure\" />
+    <Folder Include="Config\Template\TableTrigger\" />
   </ItemGroup>
 
 </Project>

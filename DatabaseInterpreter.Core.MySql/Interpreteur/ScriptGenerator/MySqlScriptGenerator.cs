@@ -102,6 +102,180 @@ namespace DatabaseInterpreter.Core
             string hex = string.Concat(((byte[])value).Select(item => item.ToString("X2")));
             return $"UNHEX('{hex}')";
         }
+        protected override object ParseValue(TableColumn column, object value, bool bytesAsString = false)
+        {
+            if (value != null)
+            {
+                Type type = value.GetType();
+                bool needQuotated = false;
+                string strValue = "";
+
+                if (type == typeof(DBNull))
+                {
+                    return "NULL";
+                }
+                else if (type == typeof(Byte[]))
+                {
+                    if (((Byte[])value).Length == 16) //GUID
+                    {
+                        string str = ValueHelper.ConvertGuidBytesToString((Byte[])value, this.databaseType, column.DataType, column.MaxLength, bytesAsString);
+
+                        if (!string.IsNullOrEmpty(str))
+                        {
+                            needQuotated = true;
+                            strValue = str;
+                        }
+                        else
+                        {
+                            return value;
+                        }
+                    }
+                    else
+                    {
+                        return value;
+                    }
+                }
+
+                bool oracleSemicolon = false;
+
+                switch (type.Name)
+                {
+                    case nameof(Guid):
+
+                        needQuotated = true;
+                        if (this.databaseType == DatabaseType.Oracle && column.DataType.ToLower() == "raw" && column.MaxLength == 16)
+                        {
+                            strValue = StringHelper.GuidToRaw(value.ToString());
+                        }
+                        else
+                        {
+                            strValue = value.ToString();
+                        }
+                        break;
+
+                    case nameof(String):
+
+                        needQuotated = true;
+                        strValue = value.ToString();
+                        if (this.databaseType == DatabaseType.Oracle)
+                        {
+                            if (strValue.Contains(";"))
+                            {
+                                oracleSemicolon = true;
+                            }
+                        }
+                        break;
+
+                    case nameof(DateTime):
+                    case nameof(DateTimeOffset):
+                    case nameof(MySql.Data.Types.MySqlDateTime):
+
+                        if (this.databaseType == DatabaseType.Oracle)
+                        {
+                            if (type.Name == nameof(MySql.Data.Types.MySqlDateTime))
+                            {
+                                DateTime dateTime = ((MySql.Data.Types.MySqlDateTime)value).GetDateTime();
+
+                                strValue = this.GetOracleDatetimeConvertString(dateTime);
+                            }
+                            else if (type.Name == nameof(DateTime))
+                            {
+                                DateTime dateTime = Convert.ToDateTime(value);
+
+                                strValue = this.GetOracleDatetimeConvertString(dateTime);
+                            }
+                            else if (type.Name == nameof(DateTimeOffset))
+                            {
+                                DateTimeOffset dtOffset = DateTimeOffset.Parse(value.ToString());
+                                int millisecondLength = dtOffset.Millisecond.ToString().Length;
+                                string strMillisecond = millisecondLength == 0 ? "" : $".{"f".PadLeft(millisecondLength, 'f')}";
+                                string format = $"yyyy-MM-dd HH:mm:ss{strMillisecond}";
+
+                                string strDtOffset = dtOffset.ToString(format) + $"{dtOffset.Offset.Hours}:{dtOffset.Offset.Minutes}";
+
+                                strValue = $@"TO_TIMESTAMP_TZ('{strDtOffset}','yyyy-MM-dd HH24:MI:ssxff TZH:TZM')";
+                            }
+                        }
+                        else if (this.databaseType == DatabaseType.MySql)
+                        {
+                            if (type.Name == nameof(DateTimeOffset))
+                            {
+                                DateTimeOffset dtOffset = DateTimeOffset.Parse(value.ToString());
+
+                                strValue = $"'{dtOffset.DateTime.Add(dtOffset.Offset).ToString("yyyy-MM-dd HH:mm:ss.ffffff")}'";
+                            }
+                        }
+
+                        if (string.IsNullOrEmpty(strValue))
+                        {
+                            needQuotated = true;
+                            strValue = value.ToString();
+                        }
+                        break;
+
+                    case nameof(Boolean):
+
+                        strValue = value.ToString() == "True" ? "1" : "0";
+                        break;
+
+                    case nameof(TimeSpan):
+
+                        if (this.databaseType == DatabaseType.Oracle)
+                        {
+                            return value;
+                        }
+                        else
+                        {
+                            needQuotated = true;
+
+                            if (column.DataType.IndexOf("datetime", StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                DateTime dateTime = this.dbInterpreter.MinDateTime.AddSeconds(TimeSpan.Parse(value.ToString()).TotalSeconds);
+
+                                strValue = dateTime.ToString("yyyy-MM-dd HH:mm:ss");
+                            }
+                            else
+                            {
+                                strValue = value.ToString();
+                            }
+                        }
+                        break;
+
+                    case "SqlHierarchyId":
+                    case "SqlGeography":
+                    case "SqlGeometry":
+
+                        needQuotated = true;
+                        strValue = value.ToString();
+                        break;
+
+                    default:
+
+                        if (string.IsNullOrEmpty(strValue))
+                        {
+                            strValue = value.ToString();
+                        }
+                        break;
+                }
+
+                if (needQuotated)
+                {
+                    strValue = $"{this.dbInterpreter.UnicodeInsertChar}'{ValueHelper.TransferSingleQuotation(strValue)}'";
+                     
+
+                    return strValue;
+                }
+                else
+                {
+                    return strValue;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         #endregion
 
         #region Alter Table

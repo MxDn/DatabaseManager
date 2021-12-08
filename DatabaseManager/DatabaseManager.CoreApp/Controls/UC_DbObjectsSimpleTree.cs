@@ -16,6 +16,7 @@ namespace DatabaseManager.Controls
 {
     public partial class UC_DbObjectsSimpleTree : UserControl
     {
+        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
         public UC_DbObjectsSimpleTree()
         {
             InitializeComponent();

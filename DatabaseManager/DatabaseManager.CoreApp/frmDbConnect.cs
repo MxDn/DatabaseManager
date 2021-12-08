@@ -22,6 +22,7 @@ namespace DatabaseManager
 
         public ConnectionInfo ConnectionInfo { get; set; }
 
+        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
         public frmDbConnect(DatabaseType dbType)
         {
             InitializeComponent();

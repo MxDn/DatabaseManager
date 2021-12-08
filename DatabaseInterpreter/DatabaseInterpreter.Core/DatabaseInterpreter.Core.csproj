@@ -9,12 +9,20 @@
     <Description>Get database objects meta data, generate schema and insert data scripts, query and bulkcopy data.</Description>
     <PackageProjectUrl>https://github.com/victor-wiki/DatabaseManager</PackageProjectUrl>
     <Version>1.0.14</Version>
+    <Configurations>Debug;Release;Core</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Command\**" />
     <EmbeddedResource Remove="Command\**" />
     <None Remove="Command\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Builder\Connection\SqlServerConnectionBuilder.cs" />
+    <Compile Remove="Interpreter\SqlServerInterpreter.cs" />
+    <Compile Remove="Provider\SqlServerProvider.cs" />
+    <Compile Remove="ScriptGenerator\SqlServerScriptGenerator.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -62,9 +70,7 @@
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="15.0.5" />
     <PackageReference Include="Dapper" Version="2.0.35" />
-    <PackageReference Include="MySqlConnector" Version="0.64.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.19.60" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
     <PackageReference Include="Westwind.Utilities" Version="3.0.37" />

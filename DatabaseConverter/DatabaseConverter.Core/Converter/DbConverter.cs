@@ -37,7 +37,7 @@ namespace DatabaseConverter.Core
         public event TranslateHandler OnTranslated;
 
         public CancellationTokenSource CancellationTokenSource { get; private set; }
-
+         
         public DbConverter(DbConveterInfo source, DbConveterInfo target)
         {
             this.Source = source;
@@ -85,11 +85,8 @@ namespace DatabaseConverter.Core
             this.Target.DbInterpreter.Option.ThrowExceptionWhenErrorOccurs = false;
 
             if (string.IsNullOrEmpty(this.Target.DbOwner))
-            {
-                if (this.Target.DbInterpreter.DatabaseType == DatabaseType.Oracle)
-                {
-                    this.Target.DbOwner = (this.Target.DbInterpreter as OracleInterpreter).GetDbOwner();
-                }
+            { this.Target.DbOwner = this.Target.DbInterpreter.GetDbOwner();
+                
             }
 
             DatabaseObjectType databaseObjectType = (DatabaseObjectType)Enum.GetValues(typeof(DatabaseObjectType)).Cast<int>().Sum();
@@ -218,7 +215,7 @@ namespace DatabaseConverter.Core
 
             ScriptBuilder scriptBuilder = null;
 
-            DbScriptGenerator targetDbScriptGenerator = DbScriptGeneratorHelper.GetDbScriptGenerator(targetInterpreter);
+            DbScriptGenerator targetDbScriptGenerator = targetInterpreter.ScriptGenerator;
 
             if (this.Option.GenerateScriptMode.HasFlag(GenerateScriptMode.Schema))
             {
@@ -487,7 +484,7 @@ namespace DatabaseConverter.Core
                         };
                     }
 
-                    DbScriptGenerator sourceDbScriptGenerator = DbScriptGeneratorHelper.GetDbScriptGenerator(sourceInterpreter);
+                    DbScriptGenerator sourceDbScriptGenerator = sourceInterpreter.ScriptGenerator;
 
                     await sourceDbScriptGenerator.GenerateDataScriptsAsync(sourceSchemaInfo);
 

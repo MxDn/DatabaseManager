@@ -36,15 +36,7 @@ namespace DatabaseConverter.Core
             this.LoadMappings();
 
             if (string.IsNullOrEmpty(targetOwnerName))
-            {
-                if (targetDbInterpreter is SqlServerInterpreter)
-                {
-                    targetOwnerName = "dbo";
-                }
-                else
-                {
-                    targetOwnerName = DbInterpreterHelper.GetOwnerName(targetDbInterpreter);
-                }
+            { targetOwnerName = targetDbInterpreter.GetOwnerName(); 
             }
 
             foreach (View view in views)
@@ -133,7 +125,7 @@ namespace DatabaseConverter.Core
             {
                 StringBuilder sb = new StringBuilder();
 
-                if (this.sourceDbInterpreter.GetType() == typeof(MySqlInterpreter))
+                if (this.sourceDbInterpreter.DatabaseType ==  DatabaseType.MySql)
                 {
                     bool hasError = false;
                     string formattedDefinition = this.FormatSql(definition, out hasError);

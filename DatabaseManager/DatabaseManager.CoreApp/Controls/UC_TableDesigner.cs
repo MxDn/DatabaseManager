@@ -25,6 +25,7 @@ namespace DatabaseManager.Controls
 
         public FeedbackHandler OnFeedback;
 
+          DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
         public UC_TableDesigner()
         {
             InitializeComponent();

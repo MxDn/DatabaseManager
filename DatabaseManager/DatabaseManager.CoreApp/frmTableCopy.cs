@@ -26,6 +26,7 @@ namespace DatabaseManager
 
         public DatabaseInterpreter.Utility.FeedbackHandler OnFeedback;
 
+        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
         public frmTableCopy()
         {
             InitializeComponent();

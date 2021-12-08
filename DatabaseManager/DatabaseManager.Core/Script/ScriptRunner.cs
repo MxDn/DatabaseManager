@@ -27,6 +27,7 @@ namespace DatabaseManager.Core
 
         public event FeedbackHandler OnFeedback;
 
+        DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
         public ScriptRunner()
         {
             this.CancellationTokenSource = new CancellationTokenSource();

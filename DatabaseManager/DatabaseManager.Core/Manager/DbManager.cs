@@ -20,6 +20,7 @@ namespace DatabaseManager.Core
         private DbInterpreter dbInterpreter;
         private DbScriptGenerator scriptGenerator;
 
+        DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
         public DbManager()
         {
 
@@ -28,7 +29,7 @@ namespace DatabaseManager.Core
         public DbManager(DbInterpreter dbInterpreter)
         {
             this.dbInterpreter = dbInterpreter;
-            this.scriptGenerator = DbScriptGeneratorHelper.GetDbScriptGenerator(dbInterpreter);
+            this.scriptGenerator = dbInterpreter.ScriptGenerator;
         }
 
         public void Subscribe(IObserver<FeedbackInfo> observer)
@@ -53,7 +54,7 @@ namespace DatabaseManager.Core
             {
                 this.FeedbackInfo("Disable constrains.");
 
-                DbScriptGenerator scriptGenerator = DbScriptGeneratorHelper.GetDbScriptGenerator(this.dbInterpreter);
+                DbScriptGenerator scriptGenerator =  this.dbInterpreter.ScriptGenerator;
 
                 using (DbConnection dbConnection = this.dbInterpreter.CreateConnection())
                 {

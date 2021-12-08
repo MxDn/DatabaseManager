@@ -25,6 +25,7 @@ namespace DatabaseManager
         private DbInterpreter dbInterpreter;
         private bool useConnector = true;
 
+        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
         public frmGenerateScripts()
         {
             InitializeComponent();
