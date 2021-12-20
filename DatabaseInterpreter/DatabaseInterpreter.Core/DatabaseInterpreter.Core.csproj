@@ -26,48 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Config\DataTypeSpecification\MySql.xml" />
-    <None Remove="Config\DataTypeSpecification\Oracle.xml" />
-    <None Remove="Config\DataTypeSpecification\SqlServer.xml" />
-    <None Remove="Config\FunctionSpecification\MySql.xml" />
-    <None Remove="Config\FunctionSpecification\Oracle.xml" />
-    <None Remove="Config\FunctionSpecification\SqlServer.xml" />
-    <None Remove="Config\Keyword\MySql.txt" />
-    <None Remove="Config\Keyword\Oracle.txt" />
-    <None Remove="Config\Keyword\SqlServer.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Config\DataTypeSpecification\Oracle.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Config\DataTypeSpecification\MySql.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Config\DataTypeSpecification\SqlServer.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Config\FunctionSpecification\MySql.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Config\FunctionSpecification\Oracle.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Config\FunctionSpecification\SqlServer.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Config\Keyword\MySql.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Config\Keyword\Oracle.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Config\Keyword\SqlServer.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="CsvHelper" Version="15.0.5" />
     <PackageReference Include="Dapper" Version="2.0.35" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />

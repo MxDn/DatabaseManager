@@ -6,8 +6,7 @@ using DatabaseInterpreter.Model;
 using SqlAnalyser.Model;
 
 namespace SqlAnalyser.Core
-{
-    public abstract class SqlAnalyserBase
+{   public abstract class SqlAnalyserBase
     {
         public abstract DatabaseType DatabaseType { get; }
 
