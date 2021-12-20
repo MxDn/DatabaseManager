@@ -1,7 +1,8 @@
-﻿using SqlAnalyser.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using SqlAnalyser.Model;
 
 namespace SqlAnalyser.Core
 {
@@ -61,7 +62,7 @@ namespace SqlAnalyser.Core
                         {
                             string[] ids = nameValue.Value.Symbol.Split('.').Select(item => item.Trim()).ToArray();
 
-                            string tableName = ids[0];                                               
+                            string tableName = ids[0];
 
                             JoinItem joinItem = fromItem.JoinItems.FirstOrDefault(item => item.TableName.Name?.Symbol?.ToUpper().Trim('"') == tableName.ToUpper()
                                                 || item.TableName.Alias?.Symbol?.ToUpper()?.Trim('"') == tableName.ToUpper());
@@ -123,13 +124,12 @@ namespace SqlAnalyser.Core
             {
                 if (declare.Type == DeclareType.Variable)
                 {
-                    string defaultValue = (declare.DefaultValue == null ? "" : $" :={declare.DefaultValue}");
+                    string defaultValue = declare.DefaultValue == null ? "" : $" :={declare.DefaultValue}";
 
                     this.AppendLine($"DECLARE {declare.Name} {declare.DataType}{defaultValue};");
                 }
                 else if (declare.Type == DeclareType.Table)
                 {
-
                 }
             }
             else if (statement is IfStatement @if)
@@ -230,6 +230,7 @@ namespace SqlAnalyser.Core
                     case TransactionCommandType.COMMIT:
                         this.AppendLine("COMMIT;");
                         break;
+
                     case TransactionCommandType.ROLLBACK:
                         this.AppendLine("ROLLBACK;");
                         break;
@@ -340,7 +341,6 @@ namespace SqlAnalyser.Core
 
                     i++;
                 }
-
             };
 
             Action appendFrom = () =>
@@ -413,8 +413,10 @@ namespace SqlAnalyser.Core
             {
                 case UnionType.UNION_ALL:
                     return "UNION ALL";
+
                 case UnionType.EXCEPT:
                     return nameof(UnionType.MINUS);
+
                 default:
                     return unionType.ToString();
             }

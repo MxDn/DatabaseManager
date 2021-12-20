@@ -1,50 +1,77 @@
-using DatabaseInterpreter.Model;
-using DatabaseInterpreter.Utility;
-using Oracle.ManagedDataAccess.Client;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DatabaseInterpreter.Model;
+using DatabaseInterpreter.Utility;
+
+using Oracle.ManagedDataAccess.Client;
+
 namespace DatabaseInterpreter.Core
 {
+    public class OracleInterpreterDbInterpreterFactory : IDbInterpreterFactory
+    {
+        public DbInterpreter GetDbInterpreter(ConnectionInfo connectionInfo, DbInterpreterOption option)
+        {
+            return new OracleInterpreter(connectionInfo, option);
+        }
+    }
+
     public class OracleInterpreter : DbInterpreter
     {
         #region Field & Property
+
         private string dbOwner;
         public const int DEFAULT_PORT = 1521;
         public const string DEFAULT_SERVICE_NAME = "ORCL";
         public const string SEMICOLON_FUNC = "CHR(59)";
         public const string CONNECT_CHAR = "||";
         public override string UnicodeInsertChar => "";
-        public override string CommandParameterChar { get { return ":"; } }
-        public override char QuotationLeftChar { get { return '"'; } }
-        public override char QuotationRightChar { get { return '"'; } }
+
+        public override string CommandParameterChar
+        { get { return ":"; } }
+
+        public override char QuotationLeftChar
+        { get { return '"'; } }
+
+        public override char QuotationRightChar
+        { get { return '"'; } }
+
         public override string CommentString => "--";
         public override DatabaseType DatabaseType => DatabaseType.Oracle;
         public override IndexType IndexType => IndexType.Normal | IndexType.Unique | IndexType.Bitmap | IndexType.Reverse;
-        public override bool SupportBulkCopy { get { return true; } }
+
+        public override bool SupportBulkCopy
+        { get { return true; } }
+
         public override List<string> BuiltinDatabases => new List<string> { "SYSTEM", "USERS", "TEMP", "SYSAUX" };
-        #endregion
+
+        #endregion Field & Property
 
         #region Constructor
+
         public OracleInterpreter(ConnectionInfo connectionInfo, DbInterpreterOption option) : base(connectionInfo, option)
         {
             this.dbOwner = connectionInfo.UserId;
             this.dbConnector = this.GetDbConnector();
         }
-        #endregion
 
-        #region Common Method  
+        #endregion Constructor
+
+        #region Common Method
+
         public override DbConnector GetDbConnector()
         {
             return new DbConnector(new OracleProvider(), new OracleConnectionBuilder(), this.ConnectionInfo);
         }
-        #endregion
+
+        #endregion Common Method
 
         #region Schema Information
+
         #region Database
 
         public async Task<string> GetCurrentUserName()
@@ -84,18 +111,21 @@ namespace DatabaseInterpreter.Core
 
             return base.GetDbObjectsAsync<Database>(sql);
         }
-        #endregion
+
+        #endregion Database
 
         #region Database Owner
+
         public override Task<List<DatabaseOwner>> GetDatabaseOwnersAsync()
         {
             string sql = @"SELECT USERNAME AS ""Owner"",USERNAME AS ""NAME""  FROM ALL_USERS ORDER BY USERNAME";
 
             return base.GetDbObjectsAsync<DatabaseOwner>(sql);
         }
-        #endregion
 
-        #region User Defined Type       
+        #endregion Database Owner
+
+        #region User Defined Type
 
         public override Task<List<UserDefinedType>> GetUserDefinedTypesAsync(SchemaInfoFilter filter = null)
         {
@@ -135,9 +165,11 @@ namespace DatabaseInterpreter.Core
 
             return sql;
         }
-        #endregion
 
-        #region Function  
+        #endregion User Defined Type
+
+        #region Function
+
         public override Task<List<Function>> GetFunctionsAsync(SchemaInfoFilter filter = null)
         {
             return base.GetDbObjectsAsync<Function>(this.GetSqlForProcedures("FUNCTION", filter));
@@ -167,7 +199,7 @@ namespace DatabaseInterpreter.Core
             if (isSimpleMode)
             {
                 sql = $@"SELECT P.OBJECT_NAME AS ""Name"", P.OWNER AS ""Owner""
-                         FROM ALL_PROCEDURES P 
+                         FROM ALL_PROCEDURES P
                          WHERE P.OBJECT_TYPE='{type}' {ownerCondition}
                          {nameCondition}";
             }
@@ -194,9 +226,10 @@ namespace DatabaseInterpreter.Core
             return sql;
         }
 
-        #endregion
+        #endregion Function
 
         #region Table
+
         public override Task<List<Table>> GetTablesAsync(SchemaInfoFilter filter = null)
         {
             return base.GetDbObjectsAsync<Table>(this.GetSqlForTables(filter));
@@ -217,7 +250,7 @@ namespace DatabaseInterpreter.Core
             if (isSimpleMode)
             {
                 sql = $@"SELECT T.OWNER AS ""Owner"", T.TABLE_NAME AS ""Name""
-                         FROM ALL_TABLES T 
+                         FROM ALL_TABLES T
                         ";
             }
             else
@@ -241,7 +274,8 @@ namespace DatabaseInterpreter.Core
 
             return sql;
         }
-        #endregion
+
+        #endregion Table
 
         #region Table Column
 
@@ -273,9 +307,11 @@ namespace DatabaseInterpreter.Core
 
             return sql;
         }
-        #endregion
+
+        #endregion Table Column
 
         #region Table Primary Key
+
         public override Task<List<TablePrimaryKeyItem>> GetTablePrimaryKeyItemsAsync(SchemaInfoFilter filter = null)
         {
             return base.GetDbObjectsAsync<TablePrimaryKeyItem>(this.GetSqlForTablePrimaryKeyItems(filter));
@@ -290,7 +326,7 @@ namespace DatabaseInterpreter.Core
         {
             string sql = $@"SELECT UC.OWNER AS ""Owner"", UC.TABLE_NAME AS ""TableName"",UC.CONSTRAINT_NAME AS ""Name"",UCC.COLUMN_NAME AS ""ColumnName"", UCC.POSITION AS ""Order"", 0 AS ""IsDesc""
                         FROM USER_CONSTRAINTS UC
-                        JOIN USER_CONS_COLUMNS UCC ON UC.OWNER=UCC.OWNER AND UC.TABLE_NAME=UCC.TABLE_NAME AND UC.CONSTRAINT_NAME=UCC.CONSTRAINT_NAME  
+                        JOIN USER_CONS_COLUMNS UCC ON UC.OWNER=UCC.OWNER AND UC.TABLE_NAME=UCC.TABLE_NAME AND UC.CONSTRAINT_NAME=UCC.CONSTRAINT_NAME
                         WHERE UC.CONSTRAINT_TYPE='P' AND UPPER(UC.OWNER)=UPPER('{this.GetDbOwner()}')";
 
             if (filter != null && filter.TableNames != null && filter.TableNames.Any())
@@ -301,9 +337,11 @@ namespace DatabaseInterpreter.Core
 
             return sql;
         }
-        #endregion
+
+        #endregion Table Primary Key
 
         #region Table Foreign Key
+
         public override Task<List<TableForeignKeyItem>> GetTableForeignKeyItemsAsync(SchemaInfoFilter filter = null)
         {
             return base.GetDbObjectsAsync<TableForeignKeyItem>(this.GetSqlForTableForeignKeyItems(filter));
@@ -318,9 +356,9 @@ namespace DatabaseInterpreter.Core
         {
             string sql = $@"SELECT UC.OWNER AS ""Owner"", UC.TABLE_NAME AS ""TableName"", UC.CONSTRAINT_NAME AS ""Name"", UCC.column_name AS ""ColumnName"",
                         RUCC.TABLE_NAME AS ""ReferencedTableName"",RUCC.COLUMN_NAME AS ""ReferencedColumnName"",
-                        0 AS ""UpdateCascade"", CASE UC.DELETE_RULE WHEN 'CASCADE' THEN 1 ELSE 0 END AS ""DeleteCascade"" 
-                        FROM USER_CONSTRAINTS UC                       
-                        JOIN USER_CONS_COLUMNS UCC ON UC.OWNER=UCC.OWNER AND UC.TABLE_NAME=UCC.TABLE_NAME AND UC.CONSTRAINT_NAME=UCC.CONSTRAINT_NAME                       
+                        0 AS ""UpdateCascade"", CASE UC.DELETE_RULE WHEN 'CASCADE' THEN 1 ELSE 0 END AS ""DeleteCascade""
+                        FROM USER_CONSTRAINTS UC
+                        JOIN USER_CONS_COLUMNS UCC ON UC.OWNER=UCC.OWNER AND UC.TABLE_NAME=UCC.TABLE_NAME AND UC.CONSTRAINT_NAME=UCC.CONSTRAINT_NAME
                         JOIN USER_CONS_COLUMNS RUCC ON UC.OWNER=RUCC.OWNER AND UC.R_CONSTRAINT_NAME=RUCC.CONSTRAINT_NAME AND UCC.POSITION=RUCC.POSITION
                         WHERE UC.CONSTRAINT_TYPE='R' AND UPPER(UC.OWNER)=UPPER('{this.GetDbOwner()}')";
 
@@ -332,9 +370,11 @@ namespace DatabaseInterpreter.Core
 
             return sql;
         }
-        #endregion
+
+        #endregion Table Foreign Key
 
         #region Table Index
+
         public override Task<List<TableIndexItem>> GetTableIndexItemsAsync(SchemaInfoFilter filter = null, bool includePrimaryKey = false)
         {
             return base.GetDbObjectsAsync<TableIndexItem>(this.GetSqlForTableIndexItems(filter, includePrimaryKey));
@@ -347,7 +387,6 @@ namespace DatabaseInterpreter.Core
 
         private string GetSqlForTableIndexItems(SchemaInfoFilter filter = null, bool includePrimaryKey = false)
         {
-
             string sql = $@"SELECT UI.TABLE_OWNER AS ""Owner"", UI.TABLE_NAME AS ""TableName"", UI.INDEX_NAME AS ""Name"", UIC.COLUMN_NAME AS ""ColumnName"", UIC.COLUMN_POSITION AS ""Order"",
                 CASE UIC.DESCEND WHEN 'ASC' THEN 0 ELSE 1 END AS ""IsDesc"", CASE UI.UNIQUENESS WHEN 'UNIQUE' THEN 1 ELSE 0 END AS ""IsUnique"",
                 UI.INDEX_TYPE AS ""Type"", CASE WHEN UC.CONSTRAINT_NAME IS NOT NULL THEN 1 ELSE 0 END AS ""IsPrimary"", CASE WHEN UC.CONSTRAINT_NAME IS NOT NULL THEN 1 ELSE 0 END AS ""Clustered""
@@ -364,9 +403,11 @@ namespace DatabaseInterpreter.Core
 
             return sql;
         }
-        #endregion
 
-        #region Table Trigger      
+        #endregion Table Index
+
+        #region Table Trigger
+
         public override Task<List<TableTrigger>> GetTableTriggersAsync(SchemaInfoFilter filter = null)
         {
             if (this.IsObjectFectchSimpleMode())
@@ -405,7 +446,7 @@ namespace DatabaseInterpreter.Core
         {
             bool isSimpleMode = this.IsObjectFectchSimpleMode();
 
-            string sql = $@"SELECT TRIGGER_NAME AS ""Name"",TABLE_OWNER AS ""Owner"", TABLE_NAME AS ""TableName"", 
+            string sql = $@"SELECT TRIGGER_NAME AS ""Name"",TABLE_OWNER AS ""Owner"", TABLE_NAME AS ""TableName"",
                          { (isSimpleMode ? "''" : "('CREATE OR REPLACE TRIGGER ' || DESCRIPTION)")} AS ""CreateClause"",
                          { (isSimpleMode ? "''" : "TRIGGER_BODY")} AS ""Definition""
                         FROM USER_TRIGGERS
@@ -431,9 +472,11 @@ namespace DatabaseInterpreter.Core
 
             return sql;
         }
-        #endregion
+
+        #endregion Table Trigger
 
         #region Table Constraint
+
         public override Task<List<TableConstraint>> GetTableConstraintsAsync(SchemaInfoFilter filter = null)
         {
             return base.GetDbObjectsAsync<TableConstraint>(this.GetSqlForTableConstraints(filter));
@@ -448,7 +491,7 @@ namespace DatabaseInterpreter.Core
         {
             string sql = $@"SELECT OWNER AS ""Owner"", CONSTRAINT_NAME AS ""Name"", TABLE_NAME AS ""TableName"", SEARCH_CONDITION_VC AS ""Definition""
                          FROM ALL_CONSTRAINTS C
-                         WHERE UPPER(OWNER) = UPPER('{this.GetDbOwner()}') 
+                         WHERE UPPER(OWNER) = UPPER('{this.GetDbOwner()}')
                          AND CONSTRAINT_TYPE = 'C' AND GENERATED = 'USER NAME'
                          ";
 
@@ -462,9 +505,11 @@ namespace DatabaseInterpreter.Core
 
             return sql;
         }
-        #endregion
 
-        #region View  
+        #endregion Table Constraint
+
+        #region View
+
         public override Task<List<View>> GetViewsAsync(SchemaInfoFilter filter = null)
         {
             return base.GetDbObjectsAsync<View>(this.GetSqlForViews(filter));
@@ -479,7 +524,7 @@ namespace DatabaseInterpreter.Core
         {
             bool isSimpleMode = this.IsObjectFectchSimpleMode();
 
-            string sql = $@"SELECT V.OWNER AS ""Owner"", V.VIEW_NAME AS ""Name"", {(isSimpleMode ? "''" : "'CREATE OR REPLACE VIEW '||V.VIEW_NAME||' AS ' || CHR(13) || TEXT_VC")} AS ""Definition"" 
+            string sql = $@"SELECT V.OWNER AS ""Owner"", V.VIEW_NAME AS ""Name"", {(isSimpleMode ? "''" : "'CREATE OR REPLACE VIEW '||V.VIEW_NAME||' AS ' || CHR(13) || TEXT_VC")} AS ""Definition""
                         FROM ALL_VIEWS V
                         WHERE UPPER(OWNER) = UPPER('{this.GetDbOwner()}')";
 
@@ -493,9 +538,10 @@ namespace DatabaseInterpreter.Core
 
             return sql;
         }
-        #endregion
 
-        #region Procedure     
+        #endregion View
+
+        #region Procedure
 
         public override Task<List<Procedure>> GetProceduresAsync(SchemaInfoFilter filter = null)
         {
@@ -506,10 +552,12 @@ namespace DatabaseInterpreter.Core
         {
             return base.GetDbObjectsAsync<Procedure>(dbConnection, this.GetSqlForProcedures("PROCEDURE", filter));
         }
-        #endregion
-        #endregion
 
-        #region Database Operation      
+        #endregion Procedure
+
+        #endregion Schema Information
+
+        #region Database Operation
 
         public override Task<long> GetTableRecordCountAsync(DbConnection connection, Table table, string whereClause = "")
         {
@@ -521,10 +569,12 @@ namespace DatabaseInterpreter.Core
             }
 
             return base.GetTableRecordCountAsync(connection, sql);
-        }      
-        #endregion
+        }
+
+        #endregion Database Operation
 
         #region BulkCopy
+
         public override async Task BulkCopyAsync(DbConnection connection, DataTable dataTable, BulkCopyInfo bulkCopyInfo)
         {
             if (!(connection is OracleConnection conn))
@@ -589,9 +639,11 @@ namespace DatabaseInterpreter.Core
 
             return dtChanged;
         }
-        #endregion
+
+        #endregion BulkCopy
 
         #region Sql Query Clause
+
         protected override string GetSqlForPagination(string tableName, string columnNames, string orderColumns, string whereClause, long pageNumber, int pageSize)
         {
             var startEndRowNumber = PaginationHelper.GetStartEndRowNumber(pageNumber, pageSize);
@@ -620,9 +672,11 @@ namespace DatabaseInterpreter.Core
         {
             return $"OFFSET {limitStart} ROWS FETCH NEXT {limitCount} ROWS ONLY";
         }
-        #endregion
+
+        #endregion Sql Query Clause
 
         #region Parse Column & DataType
+
         public override string ParseColumn(Table table, TableColumn column)
         {
             if (column.IsComputed)
@@ -634,7 +688,7 @@ namespace DatabaseInterpreter.Core
             else
             {
                 string dataType = this.ParseDataType(column);
-                string requiredClause = (column.IsRequired ? "NOT NULL" : "NULL");
+                string requiredClause = column.IsRequired ? "NOT NULL" : "NULL";
                 string defaultValueClause = this.Option.TableScriptsGenerateOption.GenerateDefaultValue && !string.IsNullOrEmpty(column.DefaultValue) ? (" DEFAULT " + this.GetColumnDefaultValue(column)) : "";
                 string scriptComment = string.IsNullOrEmpty(column.ScriptComment) ? "" : $"/*{column.ScriptComment}*/";
 
@@ -694,7 +748,7 @@ namespace DatabaseInterpreter.Core
                         dataType += $"({dataLength})";
                     }
                 }
-            }           
+            }
 
             return dataType.Trim();
         }
@@ -758,6 +812,7 @@ namespace DatabaseInterpreter.Core
 
             return dataLength;
         }
-        #endregion      
+
+        #endregion Parse Column & DataType
     }
 }

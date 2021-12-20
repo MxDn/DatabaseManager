@@ -1,18 +1,16 @@
-using DatabaseInterpreter.Core;
-using DatabaseInterpreter.Model;
-using DatabaseInterpreter.Profile;
-using DatabaseInterpreter.Utility;
-using DatabaseConverter.Core;
-using DatabaseConverter.Profile;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using DatabaseConverter.Core;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
+using DatabaseInterpreter.Utility;
+
 using DatabaseManager.Controls;
 using DatabaseManager.Helper;
 
@@ -29,6 +27,7 @@ namespace DatabaseManager
         private bool useSourceConnector = true;
 
         public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper(new Dictionary<DatabaseType, IDbInterpreterFactory>() { { DatabaseType.SqlServer, new SqlServerDbInterpreterFactory() } });
+
         public frmConvert()
         {
             InitializeComponent();
@@ -208,7 +207,7 @@ namespace DatabaseManager
             DatabaseType targetDbType = this.targetDbProfile.DatabaseType;
 
             DbInterpreterOption sourceScriptOption = new DbInterpreterOption() { ScriptOutputMode = GenerateScriptOutputMode.None, SortObjectsByReference = true, GetTableAllObjects = true };
-            DbInterpreterOption targetScriptOption = new DbInterpreterOption() { ScriptOutputMode = (GenerateScriptOutputMode.WriteToString) };
+            DbInterpreterOption targetScriptOption = new DbInterpreterOption() { ScriptOutputMode = GenerateScriptOutputMode.WriteToString };
 
             this.SetGenerateScriptOption(sourceScriptOption, targetScriptOption);
 
@@ -378,17 +377,21 @@ namespace DatabaseManager
         }
 
         #region IObserver<FeedbackInfo>
+
         void IObserver<FeedbackInfo>.OnCompleted()
         {
         }
+
         void IObserver<FeedbackInfo>.OnError(Exception error)
         {
         }
+
         void IObserver<FeedbackInfo>.OnNext(FeedbackInfo info)
         {
             this.Feedback(info);
         }
-        #endregion    
+
+        #endregion IObserver<FeedbackInfo>
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {

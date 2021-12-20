@@ -1,7 +1,7 @@
 ﻿namespace DatabaseInterpreter.Model
 {
     public class UserDefinedType : DatabaseObject
-    {     
+    {
         public string AttrName { get; set; }
         public string Type { get; set; }
         public int MaxLength { get; set; }

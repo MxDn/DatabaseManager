@@ -1,7 +1,6 @@
-﻿using DatabaseInterpreter.Model;
+﻿using System.Collections.Generic;
 
-using System;
-using System.Collections.Generic;
+using DatabaseInterpreter.Model;
 
 namespace DatabaseInterpreter.Core
 {
@@ -9,6 +8,7 @@ namespace DatabaseInterpreter.Core
     {
         DbScriptGenerator GetDbScriptGenerator(DbInterpreter dbInterpreter);
     }
+
     public class DbScriptGeneratorHelper
     {
         private readonly IDictionary<DatabaseType, IDbScriptGeneratorFactory> registeredScriptGeneratorFactories;
@@ -18,9 +18,9 @@ namespace DatabaseInterpreter.Core
             this.registeredScriptGeneratorFactories = registeredScriptGeneratorFactories;
         }
 
-        public   DbScriptGenerator GetDbScriptGenerator(DbInterpreter dbInterpreter)
-        { 
-            return registeredScriptGeneratorFactories[ dbInterpreter.DatabaseType].GetDbScriptGenerator(dbInterpreter);
+        public DbScriptGenerator GetDbScriptGenerator(DbInterpreter dbInterpreter)
+        {
+            return registeredScriptGeneratorFactories[dbInterpreter.DatabaseType].GetDbScriptGenerator(dbInterpreter);
         }
     }
 }

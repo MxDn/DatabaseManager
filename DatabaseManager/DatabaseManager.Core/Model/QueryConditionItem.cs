@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
+
 using DatabaseInterpreter.Core;
 
 namespace DatabaseManager.Model
@@ -30,7 +30,7 @@ namespace DatabaseManager.Model
             {
                 return value;
             }
-                
+
             value = Regex.Replace(value, @";", string.Empty);
             value = Regex.Replace(value, @"'", string.Empty);
             value = Regex.Replace(value, @"&", string.Empty);
@@ -48,13 +48,13 @@ namespace DatabaseManager.Model
         {
             string conditon = "";
 
-            if (this.Mode== QueryConditionMode.Single)
-            {               
+            if (this.Mode == QueryConditionMode.Single)
+            {
                 string value = this.Operator.Contains("LIKE") ? $"'%{this.Value}%'" : this.GetValue(this.Value);
 
                 conditon = $"{this.Operator} {value}";
             }
-            else if (this.Mode== QueryConditionMode.Range)
+            else if (this.Mode == QueryConditionMode.Range)
             {
                 conditon = $"BETWEEN {this.GetValue(this.From)} AND {this.GetValue(this.To)}";
             }

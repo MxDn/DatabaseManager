@@ -1,7 +1,8 @@
-﻿using DatabaseInterpreter.Model;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+
+using DatabaseInterpreter.Model;
 
 namespace DatabaseConverter.Profile
 {
@@ -37,9 +38,9 @@ $@"<?xml version=""1.0"" encoding=""utf-8""?>
 ");
                     sw.Flush();
                 }
-            }           
+            }
 
-            lock(obj)
+            lock (obj)
             {
                 XDocument doc = XDocument.Load(filePath);
                 XElement root = doc.Root;
@@ -70,7 +71,7 @@ $@"<?xml version=""1.0"" encoding=""utf-8""?>
                 }
 
                 doc.Save(filePath);
-            }           
+            }
 
             return true;
         }
@@ -93,7 +94,7 @@ $@"<?xml version=""1.0"" encoding=""utf-8""?>
                item.Attribute("TargetDatabase")?.Value == profile.TargetDatabase
                );
 
-            if(profileElement!=null)
+            if (profileElement != null)
             {
                 profileElement.Remove();
                 doc.Save(filePath);
@@ -107,7 +108,7 @@ $@"<?xml version=""1.0"" encoding=""utf-8""?>
         {
             DataTransferErrorProfile profile = null;
             string filePath = ProfilePath;
-            if (!File.Exists(filePath) || sourceConnectionInfo==null || targetConnectionInfo==null)
+            if (!File.Exists(filePath) || sourceConnectionInfo == null || targetConnectionInfo == null)
             {
                 return null;
             }
@@ -122,17 +123,17 @@ $@"<?xml version=""1.0"" encoding=""utf-8""?>
                item.Attribute("TargetDatabase")?.Value == targetConnectionInfo.Database
                );
 
-            if(profileElement!=null)
+            if (profileElement != null)
             {
                 profile = new DataTransferErrorProfile()
                 {
-                    SourceServer= sourceConnectionInfo.Server,
-                    SourceDatabase= sourceConnectionInfo.Database,
-                    SourceTableName= profileElement.Attribute("SourceTableName")?.Value,
+                    SourceServer = sourceConnectionInfo.Server,
+                    SourceDatabase = sourceConnectionInfo.Database,
+                    SourceTableName = profileElement.Attribute("SourceTableName")?.Value,
 
-                    TargetServer=targetConnectionInfo.Server,
-                    TargetDatabase=targetConnectionInfo.Database,
-                    TargetTableName= profileElement.Attribute("TargetTableName")?.Value
+                    TargetServer = targetConnectionInfo.Server,
+                    TargetDatabase = targetConnectionInfo.Database,
+                    TargetTableName = profileElement.Attribute("TargetTableName")?.Value
                 };
             }
 

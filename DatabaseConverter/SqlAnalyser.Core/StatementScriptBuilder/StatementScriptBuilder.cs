@@ -1,8 +1,9 @@
-﻿using SqlAnalyser.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
+using SqlAnalyser.Model;
 
 namespace SqlAnalyser.Core
 {
@@ -81,7 +82,8 @@ namespace SqlAnalyser.Core
             return this.sb.ToString();
         }
 
-        protected virtual void BuildSelectStatement(SelectStatement select, bool appendSeparator = true) { }
+        protected virtual void BuildSelectStatement(SelectStatement select, bool appendSeparator = true)
+        { }
 
         protected void BuildSelectStatementFromItems(SelectStatement selectStatement)
         {
@@ -185,7 +187,7 @@ namespace SqlAnalyser.Core
             this.AppendLine("PIVOT");
             this.AppendLine("(");
             this.AppendLine($"{pivotItem.AggregationFunctionName}({pivotItem.AggregatedColumnName})");
-            this.AppendLine($"FOR {pivotItem.ColumnName} IN ({(string.Join(",", pivotItem.Values.Select(item => this.GetPivotInItem(item))))})");
+            this.AppendLine($"FOR {pivotItem.ColumnName} IN ({string.Join(",", pivotItem.Values.Select(item => this.GetPivotInItem(item)))})");
             this.AppendLine(")");
         }
 
@@ -194,7 +196,7 @@ namespace SqlAnalyser.Core
             this.AppendLine("UNPIVOT");
             this.AppendLine("(");
             this.AppendLine($"{unpivotItem.ValueColumnName}");
-            this.AppendLine($"FOR {unpivotItem.ForColumnName} IN ({(string.Join(",", unpivotItem.InColumnNames.Select(item => $"{item}")))})");
+            this.AppendLine($"FOR {unpivotItem.ForColumnName} IN ({string.Join(",", unpivotItem.InColumnNames.Select(item => $"{item}"))})");
             this.AppendLine(")");
         }
     }

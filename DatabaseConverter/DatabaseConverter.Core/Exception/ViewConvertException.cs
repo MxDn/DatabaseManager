@@ -1,5 +1,6 @@
-﻿using DatabaseInterpreter.Model;
-using System;
+﻿using System;
+
+using DatabaseInterpreter.Model;
 
 namespace DatabaseConverter.Core
 {
@@ -7,6 +8,8 @@ namespace DatabaseConverter.Core
     {
         public override string ObjectType => nameof(View);
 
-        public ViewConvertException(Exception ex) : base(ex) { }
+        public ViewConvertException(Exception ex) : base(ex)
+        {
+        }
     }
 }

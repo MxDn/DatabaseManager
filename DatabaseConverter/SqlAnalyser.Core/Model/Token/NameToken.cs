@@ -1,6 +1,5 @@
 ﻿using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
-using System.Linq;
 
 namespace SqlAnalyser.Model
 {
@@ -21,6 +20,7 @@ namespace SqlAnalyser.Model
                 this.name = value;
             }
         }
+
         public TokenInfo Alias
         {
             get

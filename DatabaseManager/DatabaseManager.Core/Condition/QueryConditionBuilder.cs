@@ -1,6 +1,7 @@
-﻿using DatabaseManager.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
+using DatabaseManager.Model;
 
 namespace DatabaseManager.Core
 {
@@ -20,7 +21,7 @@ namespace DatabaseManager.Core
 
         public override string ToString()
         {
-            return string.Join(" AND ", this.conditions.Select(item=> $"({this.QuotationLeftChar}{item.ColumnName}{this.QuotationRightChar} {item.ToString()})" ));
+            return string.Join(" AND ", this.conditions.Select(item => $"({this.QuotationLeftChar}{item.ColumnName}{this.QuotationRightChar} {item.ToString()})"));
         }
     }
 }

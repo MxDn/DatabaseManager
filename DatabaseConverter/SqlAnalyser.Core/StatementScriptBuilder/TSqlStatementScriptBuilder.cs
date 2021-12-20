@@ -1,8 +1,9 @@
-﻿using SqlAnalyser.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+
+using SqlAnalyser.Model;
 
 namespace SqlAnalyser.Core
 {
@@ -44,6 +45,7 @@ namespace SqlAnalyser.Core
                 List<TokenInfo> tableNames = new List<TokenInfo>();
 
                 #region Handle for mysql and plsql update join
+
                 if (update.TableNames.Count == 1)
                 {
                     string[] items = update.TableNames[0].Symbol.Split(' ');
@@ -94,7 +96,8 @@ namespace SqlAnalyser.Core
                         }
                     }
                 }
-                #endregion
+
+                #endregion Handle for mysql and plsql update join
 
                 if (tableNames.Count == 0)
                 {
@@ -153,7 +156,7 @@ namespace SqlAnalyser.Core
             {
                 if (declare.Type == DeclareType.Variable)
                 {
-                    string defaultValue = (declare.DefaultValue == null ? "" : $" = {declare.DefaultValue}");
+                    string defaultValue = declare.DefaultValue == null ? "" : $" = {declare.DefaultValue}";
                     this.AppendLine($"DECLARE {declare.Name} {declare.DataType}{defaultValue};");
                 }
                 else if (declare.Type == DeclareType.Table)
@@ -279,7 +282,6 @@ namespace SqlAnalyser.Core
                 this.AppendLine("BEGIN CATCH");
                 this.AppendChildStatements(tryCatch.CatchStatements, true);
                 this.AppendLine("END CATCH");
-
             }
             else if (statement is ReturnStatement @return)
             {
@@ -302,9 +304,11 @@ namespace SqlAnalyser.Core
                     case TransactionCommandType.BEGIN:
                         this.AppendLine("BEGIN TRANS");
                         break;
+
                     case TransactionCommandType.COMMIT:
                         this.AppendLine("COMMIT");
                         break;
+
                     case TransactionCommandType.ROLLBACK:
                         this.AppendLine("ROLLBACK");
                         break;
@@ -347,7 +351,6 @@ namespace SqlAnalyser.Core
 
             return this;
         }
-
 
         protected override void BuildSelectStatement(SelectStatement select, bool appendSeparator = true)
         {
@@ -478,8 +481,10 @@ namespace SqlAnalyser.Core
             {
                 case UnionType.UNION_ALL:
                     return "UNION ALL";
+
                 case UnionType.MINUS:
                     return nameof(UnionType.EXCEPT);
+
                 default:
                     return unionType.ToString();
             }

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using DatabaseInterpreter.Model;
-using DatabaseInterpreter.Core;
-using DatabaseManager.Model;
 using System.Linq;
 using System.Threading.Tasks;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
 using DatabaseInterpreter.Utility;
+
+using DatabaseManager.Model;
 
 namespace DatabaseManager.Core
 {
@@ -14,7 +15,7 @@ namespace DatabaseManager.Core
     {
         private IObserver<FeedbackInfo> observer;
         private DbInterpreter sourceInterpreter;
-        private DbInterpreter targetInterpreter;     
+        private DbInterpreter targetInterpreter;
         private DbScriptGenerator targetScriptGenerator;
         private TableManager tableManager;
 
@@ -24,7 +25,7 @@ namespace DatabaseManager.Core
             this.targetInterpreter = targetInterpreter;
 
             this.tableManager = new TableManager(this.targetInterpreter);
-            this.targetScriptGenerator =  targetInterpreter.ScriptGenerator;
+            this.targetScriptGenerator = targetInterpreter.ScriptGenerator;
         }
 
         public void Subscribe(IObserver<FeedbackInfo> observer)
@@ -67,7 +68,7 @@ namespace DatabaseManager.Core
         public async Task<List<Script>> GenerateChangedScripts(SchemaInfo schemaInfo, string targetDbOwner, IEnumerable<DbDifference> differences)
         {
             List<Script> scripts = new List<Script>();
-            List<Script> tableScripts = new List<Script>();           
+            List<Script> tableScripts = new List<Script>();
 
             foreach (DbDifference difference in differences)
             {
@@ -83,6 +84,7 @@ namespace DatabaseManager.Core
                     case DatabaseObjectType.Table:
                         tableScripts.AddRange(await this.GenerateTableChangedScripts(schemaInfo, difference, targetDbOwner));
                         break;
+
                     case DatabaseObjectType.View:
                     case DatabaseObjectType.Function:
                     case DatabaseObjectType.Procedure:
@@ -100,7 +102,7 @@ namespace DatabaseManager.Core
         {
             List<Script> scripts = new List<Script>();
 
-            DbDifferenceType diffType = difference.DifferenceType;           
+            DbDifferenceType diffType = difference.DifferenceType;
 
             ScriptDbObject sourceScriptDbObject = difference.Source as ScriptDbObject;
             ScriptDbObject targetScriptDbObject = difference.Target as ScriptDbObject;
@@ -240,7 +242,7 @@ namespace DatabaseManager.Core
             }
             else if (diffType == DbDifferenceType.Modified)
             {
-                if(difference.DatabaseObjectType == DatabaseObjectType.TableColumn)
+                if (difference.DatabaseObjectType == DatabaseObjectType.TableColumn)
                 {
                     SchemaInfoFilter filter = new SchemaInfoFilter() { TableNames = new string[] { source.TableName } };
                     List<TableDefaultValueConstraint> defaultValueConstraints = await this.tableManager.GetTableDefaultConstraints(filter);
@@ -273,13 +275,13 @@ namespace DatabaseManager.Core
             }
 
             return scripts;
-        }    
+        }
 
         private DatabaseObject CloneTableChild(DatabaseObject tableChild, DatabaseObjectType databaseObjectType, string targetOwner)
         {
             if (databaseObjectType == DatabaseObjectType.TablePrimaryKey)
             {
-                return this.CloneDbObject(tableChild as TablePrimaryKey, targetOwner);                
+                return this.CloneDbObject(tableChild as TablePrimaryKey, targetOwner);
             }
             else if (databaseObjectType == DatabaseObjectType.TableForeignKey)
             {
@@ -296,10 +298,10 @@ namespace DatabaseManager.Core
 
             return tableChild;
         }
-        
-        private T CloneDbObject<T>(T dbObject, string owner) where T:DatabaseObject
+
+        private T CloneDbObject<T>(T dbObject, string owner) where T : DatabaseObject
         {
-            if(dbObject == null)
+            if (dbObject == null)
             {
                 return null;
             }

@@ -1,17 +1,21 @@
-﻿using DatabaseConverter.Model;
-using DatabaseInterpreter.Core;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+
+using DatabaseConverter.Model;
+
+using DatabaseInterpreter.Core;
 
 namespace DatabaseConverter.Core
 {
     public class VariableMappingManager : ConfigManager
     {
-        public static string FunctionMappingFilePath { get { return Path.Combine(ConfigRootFolder, "VariableMapping.xml"); } }
+        public static string FunctionMappingFilePath
+        { get { return Path.Combine(ConfigRootFolder, "VariableMapping.xml"); } }
 
         private static List<IEnumerable<VariableMapping>> _variableMappings;
+
         public static List<IEnumerable<VariableMapping>> VariableMappings
         {
             get

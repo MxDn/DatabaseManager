@@ -1,14 +1,16 @@
 ﻿/***
  * This file refer to: https://github.com/TylerHaigh/OracleBulkCopy/blob/master/OracleBulkCopy.Standard/OracleBulkCopy.cs
- * 
+ *
 ***/
-using Oracle.ManagedDataAccess.Client;
+
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using Oracle.ManagedDataAccess.Client;
 
 namespace DatabaseInterpreter.Core
 {
@@ -33,7 +35,9 @@ namespace DatabaseInterpreter.Core
             this._ownsTheConnection = true;
         }
 
-        public OracleBulkCopy(OracleConnection connection) : this(connection, null) { }
+        public OracleBulkCopy(OracleConnection connection) : this(connection, null)
+        {
+        }
 
         public OracleBulkCopy(OracleConnection connection, OracleTransaction transation = null)
         {
@@ -55,7 +59,7 @@ namespace DatabaseInterpreter.Core
 
                 _destinationTableName = value;
             }
-        }        
+        }
 
         private int _batchSize = 0;
 
@@ -75,7 +79,8 @@ namespace DatabaseInterpreter.Core
 
         public int BulkCopyTimeout { get; set; }
 
-        private bool UploadEverythingInSingleBatch { get { return _batchSize == 0; } }
+        private bool UploadEverythingInSingleBatch
+        { get { return _batchSize == 0; } }
 
         public bool ColumnNameNeedQuoted { get; set; }
         public bool DetectDateTimeTypeByValues { get; set; }
@@ -170,7 +175,6 @@ namespace DatabaseInterpreter.Core
             return commandText;
         }
 
-
         private async Task<int> WriteSingleBatchOfData(DataTable table, int skipOffset, string commandText, int batchSize)
         {
             List<OracleParameter> parameters = this.GetParameters(table, batchSize, skipOffset);
@@ -202,15 +206,15 @@ namespace DatabaseInterpreter.Core
 
                 // TODO : AsEnumerable
                 object[] paramDataArray = null;
-                    /*(UploadEverythingInSingleBatch)
-                    ? data.AsEnumerable().Select(r => r.Field<object>(c.ColumnName)).ToArray()
-                    : data.AsEnumerable().Select(r => r.Field<object>(c.ColumnName)).Skip(skipOffset).Take(batchSize).ToArray();
-                    */
-                if(this.DetectDateTimeTypeByValues)
+                /*(UploadEverythingInSingleBatch)
+                ? data.AsEnumerable().Select(r => r.Field<object>(c.ColumnName)).ToArray()
+                : data.AsEnumerable().Select(r => r.Field<object>(c.ColumnName)).Skip(skipOffset).Take(batchSize).ToArray();
+                */
+                if (this.DetectDateTimeTypeByValues)
                 {
                     if (dbType == OracleDbType.Date)
                     {
-                        if(c.AllowDBNull)
+                        if (c.AllowDBNull)
                         {
                             if (paramDataArray.Cast<DateTime?>().Any(item => item.HasValue && item.Value.Millisecond > 0))
                             {
@@ -225,7 +229,7 @@ namespace DatabaseInterpreter.Core
                             }
                         }
                     }
-                }                
+                }
 
                 OracleParameter param = new OracleParameter();
                 param.OracleDbType = dbType;
@@ -236,7 +240,6 @@ namespace DatabaseInterpreter.Core
 
             return parameters;
         }
-
 
         private string GetColumnList(DataTable data)
         {
@@ -274,7 +277,7 @@ namespace DatabaseInterpreter.Core
 
             string valueList = sb.ToString();
             return valueList;
-        }       
+        }
 
         public void Dispose()
         {
@@ -312,12 +315,11 @@ namespace DatabaseInterpreter.Core
             if (t == typeof(float)) return OracleDbType.Single;
             if (t == typeof(double)) return OracleDbType.Double;
             if (t == typeof(TimeSpan)) return OracleDbType.IntervalDS;
-            if (t == typeof(bool)) return OracleDbType.Int16;            
+            if (t == typeof(bool)) return OracleDbType.Int16;
 
             // Tylers
             //if (o is bool) return OracleDbType.Boolean;
             //if (o is char) return OracleDbType.Char;
-
 
             return OracleDbType.Varchar2;
         }

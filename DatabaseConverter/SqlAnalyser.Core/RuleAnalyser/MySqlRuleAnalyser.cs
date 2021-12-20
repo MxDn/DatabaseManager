@@ -1,12 +1,13 @@
-﻿using Antlr4.Runtime.Tree;
-using SqlAnalyser.Model;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Linq;
-using static MySqlParser;
+using System.Text;
+
 using Antlr4.Runtime;
-using DatabaseInterpreter.Model;
+using Antlr4.Runtime.Tree;
+
+using SqlAnalyser.Model;
+
+using static MySqlParser;
 
 namespace SqlAnalyser.Core
 {
@@ -63,10 +64,13 @@ namespace SqlAnalyser.Core
                 if (proc != null)
                 {
                     #region Name
+
                     this.SetScriptName(script, proc.fullId());
-                    #endregion
+
+                    #endregion Name
 
                     #region Parameters
+
                     ProcedureParameterContext[] parameters = proc.procedureParameter();
 
                     if (parameters != null)
@@ -86,13 +90,14 @@ namespace SqlAnalyser.Core
                             script.Parameters.Add(parameterInfo);
                         }
                     }
-                    #endregion
+
+                    #endregion Parameters
 
                     #region Body
 
                     this.SetScriptBody(script, proc.routineBody());
 
-                    #endregion
+                    #endregion Body
                 }
 
                 this.ExtractFunctions(script, ddlStatement);
@@ -207,10 +212,13 @@ namespace SqlAnalyser.Core
                 if (func != null)
                 {
                     #region Name
+
                     this.SetScriptName(script, func.fullId());
-                    #endregion
+
+                    #endregion Name
 
                     #region Parameters
+
                     FunctionParameterContext[] parameters = func.functionParameter();
 
                     if (parameters != null)
@@ -230,7 +238,8 @@ namespace SqlAnalyser.Core
                             script.Parameters.Add(parameterInfo);
                         }
                     }
-                    #endregion
+
+                    #endregion Parameters
 
                     script.ReturnDataType = new TokenInfo(func.dataType().GetText()) { Type = TokenType.DataType };
 
@@ -238,7 +247,7 @@ namespace SqlAnalyser.Core
 
                     this.SetScriptBody(script, func.routineBody());
 
-                    #endregion
+                    #endregion Body
                 }
 
                 this.ExtractFunctions(script, ddlStatement);
@@ -266,8 +275,10 @@ namespace SqlAnalyser.Core
                 if (view != null)
                 {
                     #region Name
+
                     this.SetScriptName(script, view.fullId());
-                    #endregion                  
+
+                    #endregion Name
 
                     #region Statement
 
@@ -279,7 +290,7 @@ namespace SqlAnalyser.Core
                         }
                     }
 
-                    #endregion
+                    #endregion Statement
                 }
 
                 this.ExtractFunctions(script, ddlStatement);
@@ -317,7 +328,7 @@ namespace SqlAnalyser.Core
                         script.OtherTriggerName = new TokenInfo(ids[1]);
                     }
 
-                    #endregion
+                    #endregion Name
 
                     script.TableName = new TokenInfo(trigger.tableName()) { Type = TokenType.TableName };
 
@@ -330,21 +341,27 @@ namespace SqlAnalyser.Core
                                 case MySqlParser.BEFORE:
                                     script.Time = TriggerTime.BEFORE;
                                     break;
+
                                 case MySqlParser.AFTER:
                                     script.Time = TriggerTime.AFTER;
                                     break;
+
                                 case MySqlParser.INSERT:
                                     script.Events.Add(TriggerEvent.INSERT);
                                     break;
+
                                 case MySqlParser.UPDATE:
                                     script.Events.Add(TriggerEvent.UPDATE);
                                     break;
+
                                 case MySqlParser.DELETE:
                                     script.Events.Add(TriggerEvent.DELETE);
                                     break;
+
                                 case MySqlParser.PRECEDES:
                                     script.Behavior = nameof(MySqlParser.PRECEDES);
                                     break;
+
                                 case MySqlParser.FOLLOWS:
                                     script.Behavior = nameof(MySqlParser.FOLLOWS);
                                     break;
@@ -356,7 +373,7 @@ namespace SqlAnalyser.Core
 
                     this.SetScriptBody(script, trigger.routineBody());
 
-                    #endregion
+                    #endregion Body
                 }
 
                 this.ExtractFunctions(script, ddlStatement);
@@ -827,9 +844,11 @@ namespace SqlAnalyser.Core
                         case TSqlParser.ALL:
                             unionType = UnionType.UNION_ALL;
                             break;
+
                         case TSqlParser.INTERSECT:
                             unionType = UnionType.INTERSECT;
                             break;
+
                         case TSqlParser.EXCEPT:
                             unionType = UnionType.EXCEPT;
                             break;
@@ -1218,6 +1237,7 @@ namespace SqlAnalyser.Core
 
             return tableName;
         }
+
         public override ColumnName ParseColumnName(ParserRuleContext node, bool strict = false)
         {
             ColumnName columnName = null;
@@ -1287,12 +1307,15 @@ namespace SqlAnalyser.Core
                     case MySqlParser.LEFT:
                         joinItem.Type = JoinType.LEFT;
                         break;
+
                     case MySqlParser.RIGHT:
                         joinItem.Type = JoinType.RIGHT;
                         break;
+
                     case MySqlParser.FULL:
                         joinItem.Type = JoinType.FULL;
                         break;
+
                     case MySqlParser.CROSS:
                         joinItem.Type = JoinType.CROSS;
                         break;

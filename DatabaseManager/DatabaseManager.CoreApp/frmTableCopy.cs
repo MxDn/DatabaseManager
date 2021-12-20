@@ -1,15 +1,12 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using DatabaseInterpreter.Model;
-using DatabaseInterpreter.Core;
+
 using DatabaseConverter.Core;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
 using DatabaseInterpreter.Utility;
 
 namespace DatabaseManager
@@ -22,11 +19,12 @@ namespace DatabaseManager
 
         public DatabaseType DatabaseType { get; set; }
         public ConnectionInfo ConnectionInfo { get; set; }
-        public Table Table { get; set; }        
+        public Table Table { get; set; }
 
         public DatabaseInterpreter.Utility.FeedbackHandler OnFeedback;
 
         public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper(new Dictionary<DatabaseType, IDbInterpreterFactory>() { { DatabaseType.SqlServer, new SqlServerDbInterpreterFactory() } });
+
         public frmTableCopy()
         {
             InitializeComponent();

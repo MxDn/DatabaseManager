@@ -1,8 +1,8 @@
-﻿using SqlAnalyser.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
+
+using SqlAnalyser.Model;
 
 namespace DatabaseConverter.Core
 {
@@ -83,7 +83,7 @@ namespace DatabaseConverter.Core
                 return;
             }
 
-            this.tokens.Add(token);           
+            this.tokens.Add(token);
         }
     }
 }

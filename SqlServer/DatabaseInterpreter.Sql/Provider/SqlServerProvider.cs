@@ -1,11 +1,12 @@
-using System;
+﻿using System;
 using System.Data.Common;
 using System.Data.SqlClient;
 
 namespace DatabaseInterpreter.Core
 {
     public class SqlServerProvider : IDbProvider
-    { public string ProviderName => "System.Data.SqlClient";
+    {
+        public string ProviderName => "System.Data.SqlClient";
 
         public DbProviderFactory GetDbProviderFactory()
         {
@@ -37,12 +38,16 @@ namespace DatabaseInterpreter.Core
             {
                 case DataAccessProviderTypes.SqlServer:
                     return SqlClientFactory.Instance;
+
                 case DataAccessProviderTypes.SqLite:
                     return this.GetDbProviderFactory("System.Data.SQLite.SQLiteFactory", "System.Data.SQLite");
+
                 case DataAccessProviderTypes.MySql:
                     return this.GetDbProviderFactory("MySql.Data.MySqlClient.MySqlClientFactory", "MySql.Data");
+
                 case DataAccessProviderTypes.PostgreSql:
                     return this.GetDbProviderFactory("Npgsql.NpgsqlFactory", "Npgsql");
+
                 default:
                     throw new NotSupportedException();
             }
@@ -73,5 +78,5 @@ namespace DatabaseInterpreter.Core
 
             throw new NotSupportedException();
         }
-           }
+    }
 }

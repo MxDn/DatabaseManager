@@ -1,22 +1,22 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
 using System.Data;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
 using DatabaseInterpreter.Core;
 using DatabaseInterpreter.Model;
-using DatabaseManager.Core;
-using DatabaseManager.Model;
-using DatabaseManager.Helper;
 using DatabaseInterpreter.Utility;
+
+using DatabaseManager.Core;
+using DatabaseManager.Helper;
+using DatabaseManager.Model;
 
 namespace DatabaseManager.Controls
 {
     public delegate void GeneateChangeScriptsHandler();
+
     public partial class UC_TableDesigner : UserControl, IDbObjContentDisplayer, IObserver<FeedbackInfo>
     {
         private readonly string selfTableName = "<self>";
@@ -26,6 +26,7 @@ namespace DatabaseManager.Controls
         public FeedbackHandler OnFeedback;
 
         public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper(new Dictionary<DatabaseType, IDbInterpreterFactory>() { { DatabaseType.SqlServer, new SqlServerDbInterpreterFactory() } });
+
         public UC_TableDesigner()
         {
             InitializeComponent();
@@ -62,7 +63,7 @@ namespace DatabaseManager.Controls
             }
             else
             {
-                this.cboOwner.Enabled = false;               
+                this.cboOwner.Enabled = false;
 
                 SchemaInfoFilter filter = new SchemaInfoFilter() { Strict = true, TableNames = new string[] { this.displayInfo.Name } };
                 filter.DatabaseObjectType = DatabaseObjectType.Table | DatabaseObjectType.TableColumn | DatabaseObjectType.TablePrimaryKey;
@@ -78,10 +79,12 @@ namespace DatabaseManager.Controls
                     this.txtTableComment.Text = table.Comment;
 
                     #region Load Columns
+
                     List<TableColumnDesingerInfo> columnDesingerInfos = ColumnManager.GetTableColumnDesingerInfos(dbInterpreter, table, schemaInfo.TableColumns, schemaInfo.TablePrimaryKeys);
 
                     this.ucColumns.LoadColumns(table, columnDesingerInfos);
-                    #endregion
+
+                    #endregion Load Columns
                 }
                 else
                 {
@@ -455,7 +458,7 @@ namespace DatabaseManager.Controls
 
             IEnumerable<TableColumnDesingerInfo> columns = this.ucColumns.GetColumns().Where(item => !string.IsNullOrEmpty(item.Name));
 
-            form.TableColumns = columns.OrderBy(item => item.Name).Select(item => item.Name).ToList();           
+            form.TableColumns = columns.OrderBy(item => item.Name).Select(item => item.Name).ToList();
 
             DbInterpreter dbInterpreter = this.GetDbInterpreter();
             dbInterpreter.Option.ObjectFetchMode = DatabaseObjectFetchMode.Simple;
@@ -470,7 +473,7 @@ namespace DatabaseManager.Controls
             else
             {
                 form.ReferenceTableColumns = referenceTableColumns.Select(item => item.Name).ToList();
-            }           
+            }
 
             if (form.ShowDialog() == DialogResult.OK)
             {
@@ -479,6 +482,7 @@ namespace DatabaseManager.Controls
         }
 
         #region IObserver<FeedbackInfo>
+
         public void OnNext(FeedbackInfo value)
         {
             this.Feedback(value);
@@ -491,7 +495,8 @@ namespace DatabaseManager.Controls
         public void OnCompleted()
         {
         }
-        #endregion
+
+        #endregion IObserver<FeedbackInfo>
 
         private void Feedback(string message)
         {

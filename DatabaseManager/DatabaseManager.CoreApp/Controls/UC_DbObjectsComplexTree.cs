@@ -1,17 +1,19 @@
-using DatabaseConverter.Core;
-using DatabaseConverter.Model;
-using DatabaseInterpreter.Core;
-using DatabaseInterpreter.Model;
-using DatabaseInterpreter.Utility;
-using DatabaseManager.Core;
-using DatabaseManager.Helper;
-using DatabaseManager.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using DatabaseConverter.Model;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
+using DatabaseInterpreter.Utility;
+
+using DatabaseManager.Core;
+using DatabaseManager.Helper;
+using DatabaseManager.Model;
 
 namespace DatabaseManager.Controls
 {
@@ -270,7 +272,8 @@ namespace DatabaseManager.Controls
 
             this.ClearNodes(treeNode);
 
-            #region Columns           
+            #region Columns
+
             if (nodeName == nameof(DbObjectTreeFolderType.Columns))
             {
                 foreach (TableColumn column in schemaInfo.TableColumns)
@@ -286,7 +289,8 @@ namespace DatabaseManager.Controls
                     treeNode.Nodes.Add(node);
                 }
             }
-            #endregion
+
+            #endregion Columns
 
             if (nodeName == nameof(DbObjectTreeFolderType.Triggers))
             {
@@ -294,6 +298,7 @@ namespace DatabaseManager.Controls
             }
 
             #region Indexes
+
             if (nodeName == nameof(DbObjectTreeFolderType.Indexes) && schemaInfo.TableIndexes.Any())
             {
                 foreach (TableIndex index in schemaInfo.TableIndexes)
@@ -311,7 +316,9 @@ namespace DatabaseManager.Controls
                     treeNode.Nodes.Add(node);
                 }
             }
-            #endregion
+
+            #endregion Indexes
+
             if (nodeName == nameof(DbObjectTreeFolderType.Keys))
             {
                 foreach (TablePrimaryKey key in schemaInfo.TablePrimaryKeys)
@@ -328,6 +335,7 @@ namespace DatabaseManager.Controls
             }
 
             #region Constraints
+
             if (nodeName == nameof(DbObjectTreeFolderType.Constraints) && schemaInfo.TableConstraints.Any())
             {
                 foreach (TableConstraint constraint in schemaInfo.TableConstraints)
@@ -336,7 +344,8 @@ namespace DatabaseManager.Controls
                     treeNode.Nodes.Add(node);
                 }
             }
-            #endregion          
+
+            #endregion Constraints
 
             this.Feedback("");
         }
@@ -422,15 +431,19 @@ namespace DatabaseManager.Controls
                         case nameof(DbObjectTreeFolderType.Columns):
                             databaseObjectType = DatabaseObjectType.TableColumn | DatabaseObjectType.TablePrimaryKey | DatabaseObjectType.TableForeignKey;
                             break;
+
                         case nameof(DbObjectTreeFolderType.Triggers):
                             databaseObjectType = DatabaseObjectType.TableTrigger;
                             break;
+
                         case nameof(DbObjectTreeFolderType.Indexes):
                             databaseObjectType = DatabaseObjectType.TableIndex;
                             break;
+
                         case nameof(DbObjectTreeFolderType.Keys):
                             databaseObjectType = DatabaseObjectType.TablePrimaryKey | DatabaseObjectType.TableForeignKey;
                             break;
+
                         case nameof(DbObjectTreeFolderType.Constraints):
                             databaseObjectType = DatabaseObjectType.TableConstraint;
                             break;

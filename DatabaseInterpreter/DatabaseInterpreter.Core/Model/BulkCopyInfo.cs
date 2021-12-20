@@ -1,6 +1,6 @@
-﻿using System.Data.Common;
+﻿using System.Collections.Generic;
+using System.Data.Common;
 using System.Threading;
-using System.Collections.Generic;
 
 namespace DatabaseInterpreter.Model
 {

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using DatabaseManager.Model;
+﻿using System.Collections.Generic;
+
 using DatabaseInterpreter.Model;
 using DatabaseInterpreter.Utility;
+
+using DatabaseManager.Model;
 
 namespace DatabaseManager.Core
 {
@@ -28,7 +27,7 @@ namespace DatabaseManager.Core
         public static List<TableIndexDesignerInfo> GetIndexDesignerInfos(DatabaseType databaseType, List<TableIndex> indexes)
         {
             List<TableIndexDesignerInfo> indexDesignerInfos = new List<TableIndexDesignerInfo>();
-            
+
             foreach (var index in indexes)
             {
                 TableIndexDesignerInfo indexDesignerInfo = new TableIndexDesignerInfo();
@@ -36,7 +35,7 @@ namespace DatabaseManager.Core
                 indexDesignerInfo.OldName = indexDesignerInfo.Name = index.Name;
                 indexDesignerInfo.IsPrimary = index.IsPrimary;
                 indexDesignerInfo.OldType = index.Type;
-                indexDesignerInfo.Comment = index.Comment;               
+                indexDesignerInfo.Comment = index.Comment;
 
                 string type = index.Type;
 
@@ -47,14 +46,14 @@ namespace DatabaseManager.Core
 
                 if (index.IsPrimary)
                 {
-                    if(databaseType == DatabaseType.Oracle)
+                    if (databaseType == DatabaseType.Oracle)
                     {
                         indexDesignerInfo.Type = IndexType.Unique.ToString();
                     }
                     else
                     {
                         indexDesignerInfo.Type = IndexType.Primary.ToString();
-                    }             
+                    }
 
                     if (indexDesignerInfo.ExtraPropertyInfo == null)
                     {
@@ -67,7 +66,7 @@ namespace DatabaseManager.Core
                 {
                     indexDesignerInfo.Type = IndexType.Unique.ToString();
                 }
-                else if(string.IsNullOrEmpty(index.Type))
+                else if (string.IsNullOrEmpty(index.Type))
                 {
                     indexDesignerInfo.Type = IndexType.Normal.ToString();
                 }
@@ -89,14 +88,14 @@ namespace DatabaseManager.Core
         {
             List<TableForeignKeyDesignerInfo> foreignKeyDesignerInfos = new List<TableForeignKeyDesignerInfo>();
 
-            foreach(TableForeignKey foreignKey in foreignKeys)
+            foreach (TableForeignKey foreignKey in foreignKeys)
             {
                 TableForeignKeyDesignerInfo keyDesignerInfo = new TableForeignKeyDesignerInfo();
 
                 ObjectHelper.CopyProperties(foreignKey, keyDesignerInfo);
 
-                keyDesignerInfo.OldName = foreignKey.Name;              
-                keyDesignerInfo.Columns = foreignKey.Columns;               
+                keyDesignerInfo.OldName = foreignKey.Name;
+                keyDesignerInfo.Columns = foreignKey.Columns;
 
                 foreignKeyDesignerInfos.Add(keyDesignerInfo);
             }
@@ -114,7 +113,7 @@ namespace DatabaseManager.Core
 
                 ObjectHelper.CopyProperties(constraint, constraintDesignerInfo);
 
-                constraintDesignerInfo.OldName = constraint.Name;               
+                constraintDesignerInfo.OldName = constraint.Name;
 
                 constraintDesignerInfos.Add(constraintDesignerInfo);
             }

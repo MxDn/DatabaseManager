@@ -1,5 +1,4 @@
-﻿using DatabaseInterpreter.Model;
-using System;
+﻿using System;
 
 namespace DatabaseConverter.Core
 {
@@ -7,6 +6,8 @@ namespace DatabaseConverter.Core
     {
         public override string ObjectType => typeof(T).Name;
 
-        public ScriptConvertException(Exception ex) : base(ex) { }
+        public ScriptConvertException(Exception ex) : base(ex)
+        {
+        }
     }
 }

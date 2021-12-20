@@ -1,16 +1,13 @@
-﻿using DatabaseInterpreter.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+
+using DatabaseInterpreter.Core;
 using DatabaseInterpreter.Model;
 using DatabaseInterpreter.Profile;
+
 using DatabaseManager.Helper;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace DatabaseManager
 {
@@ -241,10 +238,10 @@ namespace DatabaseManager
 
         private void dgvDbConnection_DoubleClick(object sender, EventArgs e)
         {
-            if(this.IsForSelecting)
+            if (this.IsForSelecting)
             {
                 this.SelectRecord();
-            }    
+            }
             else
             {
                 this.Edit();

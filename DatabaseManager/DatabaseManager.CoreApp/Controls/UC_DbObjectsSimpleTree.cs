@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using DatabaseInterpreter.Model;
+
 using DatabaseInterpreter.Core;
-using DatabaseManager.Core;
+using DatabaseInterpreter.Model;
+
 using DatabaseManager.Helper;
 
 namespace DatabaseManager.Controls
@@ -17,6 +12,7 @@ namespace DatabaseManager.Controls
     public partial class UC_DbObjectsSimpleTree : UserControl
     {
         public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper(new Dictionary<DatabaseType, IDbInterpreterFactory>() { { DatabaseType.SqlServer, new SqlServerDbInterpreterFactory() } });
+
         public UC_DbObjectsSimpleTree()
         {
             InitializeComponent();
@@ -27,7 +23,7 @@ namespace DatabaseManager.Controls
         {
             this.tvDbObjects.Nodes.Clear();
 
-            DbInterpreterOption option = new DbInterpreterOption() { ObjectFetchMode = DatabaseObjectFetchMode.Simple };          
+            DbInterpreterOption option = new DbInterpreterOption() { ObjectFetchMode = DatabaseObjectFetchMode.Simple };
 
             DatabaseObjectType databaseObjectType = DatabaseObjectType.None;
 
@@ -42,7 +38,7 @@ namespace DatabaseManager.Controls
             SchemaInfoFilter filter = new SchemaInfoFilter() { DatabaseObjectType = databaseObjectType };
 
             SchemaInfo schemaInfo = await dbInterpreter.GetSchemaInfoAsync(filter);
-            
+
             this.tvDbObjects.Nodes.AddDbObjectFolderNode(nameof(UserDefinedType), "User Defined Types", schemaInfo.UserDefinedTypes);
             this.tvDbObjects.Nodes.AddDbObjectFolderNode(nameof(Table), "Tables", schemaInfo.Tables);
             this.tvDbObjects.Nodes.AddDbObjectFolderNode(nameof(DatabaseInterpreter.Model.View), "Views", schemaInfo.Views);
@@ -86,18 +82,23 @@ namespace DatabaseManager.Controls
                             case nameof(UserDefinedType):
                                 schemaInfo.UserDefinedTypes.Add(item.Tag as UserDefinedType);
                                 break;
+
                             case nameof(Table):
                                 schemaInfo.Tables.Add(item.Tag as Table);
                                 break;
+
                             case nameof(DatabaseInterpreter.Model.View):
                                 schemaInfo.Views.Add(item.Tag as DatabaseInterpreter.Model.View);
                                 break;
+
                             case nameof(Function):
                                 schemaInfo.Functions.Add(item.Tag as Function);
                                 break;
+
                             case nameof(Procedure):
                                 schemaInfo.Procedures.Add(item.Tag as Procedure);
                                 break;
+
                             case nameof(TableTrigger):
                                 schemaInfo.TableTriggers.Add(item.Tag as TableTrigger);
                                 break;

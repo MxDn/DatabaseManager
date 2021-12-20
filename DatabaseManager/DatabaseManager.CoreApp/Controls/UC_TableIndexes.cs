@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
 using System.Data;
+using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using DatabaseManager.Helper;
-using DatabaseInterpreter.Model;
+
 using DatabaseInterpreter.Core;
-using DatabaseManager.Model;
+using DatabaseInterpreter.Model;
+
 using DatabaseManager.Core;
+using DatabaseManager.Helper;
+using DatabaseManager.Model;
 
 namespace DatabaseManager.Controls
 {
@@ -29,6 +28,7 @@ namespace DatabaseManager.Controls
         public bool LoadedData => this.loadedData;
 
         public event ColumnSelectHandler OnColumnSelect;
+
         public GeneateChangeScriptsHandler OnGenerateChangeScripts;
 
         public UC_TableIndexes()
@@ -236,7 +236,6 @@ namespace DatabaseManager.Controls
 
         private void dgvIndexes_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-
         }
 
         private void dgvIndexes_MouseUp(object sender, MouseEventArgs e)
@@ -352,7 +351,7 @@ namespace DatabaseManager.Controls
             {
                 DataGridViewCell cell = row.Cells[this.colType.Name];
 
-                if(isPrimary)
+                if (isPrimary)
                 {
                     return;
                 }
@@ -427,8 +426,8 @@ namespace DatabaseManager.Controls
             {
                 DataGridViewRow row = this.dgvIndexes.Rows[e.RowIndex];
                 DataGridViewCell cell = row.Cells[this.colColumns.Name];
-                
-                if(cell.ReadOnly)
+
+                if (cell.ReadOnly)
                 {
                     return;
                 }

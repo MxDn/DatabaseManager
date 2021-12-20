@@ -1,10 +1,12 @@
-﻿using DatabaseConverter.Model;
-using DatabaseInterpreter.Core;
-using DatabaseInterpreter.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+
+using DatabaseConverter.Model;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
 
 namespace DatabaseConverter.Core
 {
@@ -48,15 +50,15 @@ namespace DatabaseConverter.Core
         {
             DataTypeMappingTarget target = new DataTypeMappingTarget(element);
 
-            if(!string.IsNullOrEmpty(target.Args))
+            if (!string.IsNullOrEmpty(target.Args))
             {
                 string[] items = target.Args.Split(',');
 
-                foreach(string item in items)
+                foreach (string item in items)
                 {
                     string[] nvs = item.Split(':');
 
-                    DataTypeMappingArgument arg = new DataTypeMappingArgument() { Name=nvs[0], Value=nvs[1] };
+                    DataTypeMappingArgument arg = new DataTypeMappingArgument() { Name = nvs[0], Value = nvs[1] };
 
                     target.Arguments.Add(arg);
                 }

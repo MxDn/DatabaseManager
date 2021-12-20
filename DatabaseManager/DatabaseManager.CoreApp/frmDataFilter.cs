@@ -1,14 +1,11 @@
-﻿using DatabaseManager.Core;
-using DatabaseManager.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using DatabaseManager.Core;
+using DatabaseManager.Model;
 
 namespace DatabaseManager
 {
@@ -199,6 +196,7 @@ namespace DatabaseManager
                     case DataGridViewHitTestType.None:
                         e.Effect = DragDropEffects.Move;
                         break;
+
                     default:
                         e.Effect = DragDropEffects.None;
                         break;

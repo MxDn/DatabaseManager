@@ -1,11 +1,12 @@
-﻿using DatabaseInterpreter.Core;
-using DatabaseInterpreter.Model;
-using SqlAnalyser.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
+
+using SqlAnalyser.Model;
 
 namespace DatabaseConverter.Core
 {
@@ -139,7 +140,6 @@ namespace DatabaseConverter.Core
                                            this.GetQuotedName(columnName.TableName.ToString().Trim('.'), token.Type) :
                                            columnName.TableName.Symbol)
                                            + ".";
-
                         }
 
                         string strColName = this.GetQuotedName(columnName.Name.ToString().Trim('.'), token.Type);
@@ -186,6 +186,7 @@ namespace DatabaseConverter.Core
                 }
 
                 #region Replace parameter and variable name
+
                 if (token.Type != TokenType.ParameterName && token.Type != TokenType.VariableName)
                 {
                     if (this.ReplacedVariables.ContainsKey(token.Symbol))
@@ -237,10 +238,12 @@ namespace DatabaseConverter.Core
                         }
                     }
                 }
-                #endregion
+
+                #endregion Replace parameter and variable name
             }
 
             #region Nested token handle
+
             if (this.nameWithQuotation)
             {
                 var nestedTokens = tokens.Where(item => this.IsNestedToken(item));
@@ -299,7 +302,8 @@ namespace DatabaseConverter.Core
                     }
                 }
             }
-            #endregion
+
+            #endregion Nested token handle
 
             this.Script.Owner = null;
 
@@ -383,7 +387,7 @@ namespace DatabaseConverter.Core
 
             for (int i = 0; i < items.Count - 1; i++)
             {
-                if ((tokenType == TokenType.TableName || tokenType == TokenType.RoutineName))
+                if (tokenType == TokenType.TableName || tokenType == TokenType.RoutineName)
                 {
                     if (i == items.Count - 2)
                     {

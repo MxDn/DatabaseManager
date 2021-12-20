@@ -1,12 +1,13 @@
-﻿using DatabaseConverter.Core;
-using DatabaseInterpreter.Core;
-using DatabaseInterpreter.Model;
-using SqlAnalyser.Model;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
+
+using SqlAnalyser.Model;
 
 namespace DatabaseManager.Helper
 {

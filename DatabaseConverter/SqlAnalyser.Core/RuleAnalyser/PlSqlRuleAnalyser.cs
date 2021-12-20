@@ -1,12 +1,13 @@
-﻿using Antlr4.Runtime.Tree;
-using SqlAnalyser.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
-using static PlSqlParser;
+
 using Antlr4.Runtime;
-using DatabaseInterpreter.Model;
+using Antlr4.Runtime.Tree;
+
+using SqlAnalyser.Model;
+
+using static PlSqlParser;
 
 namespace SqlAnalyser.Core
 {
@@ -65,6 +66,7 @@ namespace SqlAnalyser.Core
                 if (proc != null)
                 {
                     #region Name
+
                     Procedure_nameContext name = proc.procedure_name();
 
                     if (name.id_expression() != null)
@@ -76,24 +78,31 @@ namespace SqlAnalyser.Core
                     {
                         script.Name = new TokenInfo(name.identifier());
                     }
-                    #endregion
 
-                    #region Parameters   
+                    #endregion Name
+
+                    #region Parameters
+
                     this.SetRoutineParameters(script, proc.parameter());
-                    #endregion
+
+                    #endregion Parameters
 
                     #region Declare
+
                     var declare = proc.seq_of_declare_specs();
 
                     if (declare != null)
                     {
                         script.Statements.AddRange(declare.declare_spec().Select(item => this.ParseDeclareStatement(item)));
                     }
-                    #endregion
+
+                    #endregion Declare
 
                     #region Body
+
                     this.SetScriptBody(script, proc.body());
-                    #endregion
+
+                    #endregion Body
                 }
 
                 this.ExtractFunctions(script, unitStatement);
@@ -121,6 +130,7 @@ namespace SqlAnalyser.Core
                 if (func != null)
                 {
                     #region Name
+
                     Function_nameContext name = func.function_name();
 
                     if (name.id_expression() != null)
@@ -132,26 +142,33 @@ namespace SqlAnalyser.Core
                     {
                         script.Name = new TokenInfo(name.identifier());
                     }
-                    #endregion
+
+                    #endregion Name
 
                     #region Parameters
+
                     this.SetRoutineParameters(script, func.parameter());
-                    #endregion
+
+                    #endregion Parameters
 
                     #region Declare
+
                     var declare = func.seq_of_declare_specs();
 
                     if (declare != null)
                     {
                         script.Statements.AddRange(declare.declare_spec().Select(item => this.ParseDeclareStatement(item)));
                     }
-                    #endregion
+
+                    #endregion Declare
 
                     script.ReturnDataType = new TokenInfo(func.type_spec().GetText()) { Type = TokenType.DataType };
 
                     #region Body
+
                     this.SetScriptBody(script, func.body());
-                    #endregion
+
+                    #endregion Body
                 }
 
                 this.ExtractFunctions(script, unitStatement);
@@ -179,6 +196,7 @@ namespace SqlAnalyser.Core
                 if (view != null)
                 {
                     #region Name
+
                     Tableview_nameContext name = view.tableview_name();
 
                     if (name.id_expression() != null)
@@ -190,7 +208,8 @@ namespace SqlAnalyser.Core
                     {
                         script.Name = new TokenInfo(name.identifier());
                     }
-                    #endregion                  
+
+                    #endregion Name
 
                     #region Statement
 
@@ -202,7 +221,7 @@ namespace SqlAnalyser.Core
                         }
                     }
 
-                    #endregion
+                    #endregion Statement
                 }
 
                 this.ExtractFunctions(script, unitStatement);
@@ -243,7 +262,7 @@ namespace SqlAnalyser.Core
                         script.Name = new TokenInfo(name.identifier());
                     }
 
-                    #endregion
+                    #endregion Name
 
                     Simple_dml_triggerContext simpleDml = trigger.simple_dml_trigger();
 
@@ -270,9 +289,11 @@ namespace SqlAnalyser.Core
                                     case PlSqlParser.BEFORE:
                                         script.Time = TriggerTime.BEFORE;
                                         break;
+
                                     case PlSqlParser.AFTER:
                                         script.Time = TriggerTime.AFTER;
                                         break;
+
                                     case PlSqlParser.INSTEAD:
                                         script.Time = TriggerTime.INSTEAD_OF;
                                         break;
@@ -302,7 +323,7 @@ namespace SqlAnalyser.Core
 
                     this.SetScriptBody(script, block.body());
 
-                    #endregion
+                    #endregion Body
                 }
 
                 this.ExtractFunctions(script, unitStatement);
@@ -909,6 +930,7 @@ namespace SqlAnalyser.Core
                         case TSqlParser.UNION:
                             isUnion = true;
                             break;
+
                         case TSqlParser.ALL:
                             unionType = UnionType.UNION_ALL;
                             break;
@@ -960,12 +982,15 @@ namespace SqlAnalyser.Core
                             case nameof(PlSqlParser.LEFT):
                                 joinItem.Type = JoinType.LEFT;
                                 break;
+
                             case nameof(PlSqlParser.RIGHT):
                                 joinItem.Type = JoinType.RIGHT;
                                 break;
+
                             case nameof(PlSqlParser.FULL):
                                 joinItem.Type = JoinType.FULL;
                                 break;
+
                             case nameof(PlSqlParser.CROSS):
                                 joinItem.Type = JoinType.CROSS;
                                 break;

@@ -1,17 +1,16 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using DatabaseInterpreter.Model;
-using DatabaseManager.Model;
+
 using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
+
 using DatabaseManager.Core;
 using DatabaseManager.Helper;
+using DatabaseManager.Model;
 
 namespace DatabaseManager.Controls
 {
@@ -28,7 +27,8 @@ namespace DatabaseManager.Controls
         public IEnumerable<DataGridViewColumn> Columns => this.dgvData.Columns.Cast<DataGridViewColumn>();
         public QueryConditionBuilder ConditionBuilder => this.conditionBuilder;
         public DataFilterHandler OnDataFilter;
-        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper(new Dictionary<DatabaseType, IDbInterpreterFactory>() {{DatabaseType.SqlServer,new SqlServerDbInterpreterFactory()}});
+        public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper(new Dictionary<DatabaseType, IDbInterpreterFactory>() { { DatabaseType.SqlServer, new SqlServerDbInterpreterFactory() } });
+
         public UC_DataViewer()
         {
             InitializeComponent();
@@ -59,7 +59,7 @@ namespace DatabaseManager.Controls
 
             if (this.dgvData.SortedColumn != null)
             {
-                string sortOrder = (this.sortOrder == SortOrder.Descending ? "DESC" : "ASC");
+                string sortOrder = this.sortOrder == SortOrder.Descending ? "DESC" : "ASC";
                 orderColumns = $"{dbInterpreter.GetQuotedString(this.dgvData.SortedColumn.Name)} {sortOrder}";
             }
 
@@ -111,7 +111,7 @@ namespace DatabaseManager.Controls
         private void pagination_OnPageNumberChanged(long pageNum)
         {
             this.LoadData(this.displayInfo, pageNum);
-        }       
+        }
 
         public ContentSaveResult Save(ContentSaveInfo info)
         {
@@ -150,7 +150,6 @@ namespace DatabaseManager.Controls
 
         private void dgvData_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-
-        }       
+        }
     }
 }

@@ -1,23 +1,25 @@
-﻿using DatabaseConverter.Model;
-using DatabaseInterpreter.Core;
-using DatabaseInterpreter.Model;
-using DatabaseInterpreter.Utility;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
+using DatabaseConverter.Model;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
+using DatabaseInterpreter.Utility;
+
 namespace DatabaseConverter.Core
 {
-    public class ViewTranslator: DbObjectTokenTranslator
+    public class ViewTranslator : DbObjectTokenTranslator
     {
-        private List<View> views;     
-       
-        private string targetOwnerName;              
+        private List<View> views;
 
-        public ViewTranslator(DbInterpreter sourceDbInterpreter, DbInterpreter targetDbInterpreter, List<View> views, string targetOwnerName = null): base(sourceDbInterpreter, targetDbInterpreter)
+        private string targetOwnerName;
+
+        public ViewTranslator(DbInterpreter sourceDbInterpreter, DbInterpreter targetDbInterpreter, List<View> views, string targetOwnerName = null) : base(sourceDbInterpreter, targetDbInterpreter)
         {
-            this.views = views;           
+            this.views = views;
             this.targetOwnerName = targetOwnerName;
         }
 
@@ -36,13 +38,14 @@ namespace DatabaseConverter.Core
             this.LoadMappings();
 
             if (string.IsNullOrEmpty(targetOwnerName))
-            { targetOwnerName = targetDbInterpreter.GetOwnerName(); 
+            {
+                targetOwnerName = targetDbInterpreter.GetOwnerName();
             }
 
             foreach (View view in views)
             {
                 try
-                {                    
+                {
                     string viewNameWithQuotation = $"{targetDbInterpreter.QuotationLeftChar}{view.Name}{targetDbInterpreter.QuotationRightChar}";
 
                     string definition = view.Definition;
@@ -58,10 +61,10 @@ namespace DatabaseConverter.Core
                     StringBuilder sb = new StringBuilder();
 
                     string[] lines = definition.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                    
-                    foreach(string line in lines)
+
+                    foreach (string line in lines)
                     {
-                        if(line.StartsWith(this.sourceDbInterpreter.CommentString))
+                        if (line.StartsWith(this.sourceDbInterpreter.CommentString))
                         {
                             continue;
                         }
@@ -73,7 +76,7 @@ namespace DatabaseConverter.Core
 
                     string createClause = this.targetDbInterpreter.DatabaseType == DatabaseType.Oracle ? "CREATE OR REPLACE" : "CREATE";
 
-                    string createAsClause = $"{createClause} VIEW {(string.IsNullOrEmpty(targetOwnerName)? "": targetOwnerName + "." )}{viewNameWithQuotation} AS ";
+                    string createAsClause = $"{createClause} VIEW {(string.IsNullOrEmpty(targetOwnerName) ? "" : targetOwnerName + ".")}{viewNameWithQuotation} AS ";
 
                     if (!definition.Trim().ToLower().StartsWith("create"))
                     {
@@ -111,9 +114,9 @@ namespace DatabaseConverter.Core
                     else
                     {
                         this.FeedbackError(ExceptionHelper.GetExceptionDetails(ex), this.SkipError);
-                    }                   
+                    }
                 }
-            }           
+            }
         }
 
         public override string ParseDefinition(string definition)
@@ -121,11 +124,12 @@ namespace DatabaseConverter.Core
             definition = base.ParseDefinition(definition);
 
             #region Handle join cluase for mysql which has no "on", so it needs to make up that.
+
             try
             {
                 StringBuilder sb = new StringBuilder();
 
-                if (this.sourceDbInterpreter.DatabaseType ==  DatabaseType.MySql)
+                if (this.sourceDbInterpreter.DatabaseType == DatabaseType.MySql)
                 {
                     bool hasError = false;
                     string formattedDefinition = this.FormatSql(definition, out hasError);
@@ -167,10 +171,11 @@ namespace DatabaseConverter.Core
             {
                 FeedbackInfo info = new FeedbackInfo() { InfoType = FeedbackInfoType.Error, Message = ExceptionHelper.GetExceptionDetails(ex), Owner = this };
                 FeedbackHelper.Feedback(info);
-            } 
-            #endregion
+            }
+
+            #endregion Handle join cluase for mysql which has no "on", so it needs to make up that.
 
             return definition.Trim();
-        }             
+        }
     }
 }

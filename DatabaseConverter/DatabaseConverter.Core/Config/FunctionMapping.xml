@@ -106,7 +106,7 @@
   </mapping>
   <mapping>
     <SqlServer direction="IN">REPLICATE</SqlServer>
-    <MySql direction="OUT">RPAD</MySql>  
+    <MySql direction="OUT">RPAD</MySql>
   </mapping>
   <mapping>
     <SqlServer>CEILING</SqlServer>

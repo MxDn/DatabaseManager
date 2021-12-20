@@ -1,15 +1,15 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using DatabaseInterpreter.Model;
-using DatabaseInterpreter.Core;
-using DatabaseManager.Model;
-using System.Linq;
-using DatabaseInterpreter.Utility;
-using System.Data.Common;
 using System.Data;
-using System.Threading.Tasks;
+using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
+using DatabaseInterpreter.Utility;
+
+using DatabaseManager.Model;
 
 namespace DatabaseManager.Core
 {
@@ -23,7 +23,7 @@ namespace DatabaseManager.Core
         {
             this.dbInterpreter = dbInterpreter;
 
-            this.scriptGenerator =  this.dbInterpreter.ScriptGenerator;
+            this.scriptGenerator = this.dbInterpreter.ScriptGenerator;
         }
 
         public void Subscribe(IObserver<FeedbackInfo> observer)
@@ -92,7 +92,7 @@ namespace DatabaseManager.Core
 
                 table = schemaInfo.Tables.First();
 
-                scriptsData.Table = table;               
+                scriptsData.Table = table;
 
                 List<Script> scripts = new List<Script>();
 
@@ -104,7 +104,7 @@ namespace DatabaseManager.Core
                 }
                 else
                 {
-                    #region Alter Table                   
+                    #region Alter Table
 
                     TableDesignerInfo tableDesignerInfo = schemaDesignerInfo.TableDesignerInfo;
 
@@ -142,6 +142,7 @@ namespace DatabaseManager.Core
                     }
 
                     #region Columns
+
                     List<TableColumnDesingerInfo> columnDesingerInfos = schemaDesignerInfo.TableColumnDesingerInfos;
                     List<TableColumn> oldColumns = oldSchemaInfo.TableColumns;
 
@@ -174,16 +175,20 @@ namespace DatabaseManager.Core
                             scripts.Add(this.scriptGenerator.DropTableColumn(oldColumn));
                         }
                     }
-                    #endregion
+
+                    #endregion Columns
 
                     #region Primary Key
+
                     TablePrimaryKey oldPrimaryKey = oldSchemaInfo.TablePrimaryKeys.FirstOrDefault();
                     TablePrimaryKey newPrimaryKey = schemaInfo.TablePrimaryKeys.FirstOrDefault();
 
                     scripts.AddRange(this.GetPrimaryKeyAlterScripts(oldPrimaryKey, newPrimaryKey, schemaDesignerInfo.IgnoreTableIndex));
-                    #endregion
+
+                    #endregion Primary Key
 
                     #region Index
+
                     if (!schemaDesignerInfo.IgnoreTableIndex)
                     {
                         IEnumerable<TableIndex> oldIndexes = oldSchemaInfo.TableIndexes.Where(item => !item.IsPrimary);
@@ -217,9 +222,11 @@ namespace DatabaseManager.Core
                             }
                         }
                     }
-                    #endregion
+
+                    #endregion Index
 
                     #region Foreign Key
+
                     if (!schemaDesignerInfo.IgnoreTableForeignKey)
                     {
                         List<TableForeignKey> oldForeignKeys = oldSchemaInfo.TableForeignKeys;
@@ -254,9 +261,11 @@ namespace DatabaseManager.Core
                             }
                         }
                     }
-                    #endregion
+
+                    #endregion Foreign Key
 
                     #region Constraint
+
                     if (!schemaDesignerInfo.IgnoreTableConstraint)
                     {
                         List<TableConstraint> oldConstraints = oldSchemaInfo.TableConstraints;
@@ -288,9 +297,10 @@ namespace DatabaseManager.Core
                             }
                         }
                     }
-                    #endregion
 
-                    #endregion
+                    #endregion Constraint
+
+                    #endregion Alter Table
                 }
 
                 scriptsData.Scripts.AddRange(scripts);
@@ -303,13 +313,13 @@ namespace DatabaseManager.Core
             }
         }
 
-        public async Task<List<TableDefaultValueConstraint>> GetTableDefaultConstraints( SchemaInfoFilter filter)
+        public async Task<List<TableDefaultValueConstraint>> GetTableDefaultConstraints(SchemaInfoFilter filter)
         {
             List<TableDefaultValueConstraint> defaultValueConstraints = null;
 
             if (this.dbInterpreter.DatabaseType == DatabaseType.SqlServer)
             {
-                defaultValueConstraints = await(this.dbInterpreter.GetTableDefautValueConstraintsAsync(filter));
+                defaultValueConstraints = await this.dbInterpreter.GetTableDefautValueConstraintsAsync(filter);
             }
 
             return defaultValueConstraints;
@@ -329,7 +339,7 @@ namespace DatabaseManager.Core
                 if (!isDefaultValueEquals)
                 {
                     if (databaseType == DatabaseType.SqlServer)
-                    { 
+                    {
                         TableDefaultValueConstraint defaultValueConstraint = defaultValueConstraints?.FirstOrDefault(item => item.Owner == oldTable.Owner && item.TableName == oldTable.Name && item.ColumnName == oldColumn.Name);
 
                         if (defaultValueConstraint != null)
@@ -471,7 +481,7 @@ namespace DatabaseManager.Core
         {
             if (this.dbInterpreter.DatabaseType == DatabaseType.SqlServer)
             {
-                scripts.Add((scriptGenerator.SetTableChildComment(tableChild, isNew)));
+                scripts.Add(scriptGenerator.SetTableChildComment(tableChild, isNew));
             }
         }
 
@@ -495,6 +505,7 @@ namespace DatabaseManager.Core
             schemaInfo.Tables.Add(table);
 
             #region Columns
+
             TablePrimaryKey primaryKey = null;
 
             foreach (TableColumnDesingerInfo column in schemaDesignerInfo.TableColumnDesingerInfos)
@@ -571,9 +582,11 @@ namespace DatabaseManager.Core
             {
                 schemaInfo.TablePrimaryKeys.Add(primaryKey);
             }
-            #endregion
+
+            #endregion Columns
 
             #region Indexes
+
             if (!schemaDesignerInfo.IgnoreTableIndex)
             {
                 foreach (TableIndexDesignerInfo indexDesignerInfo in schemaDesignerInfo.TableIndexDesingerInfos)
@@ -596,9 +609,11 @@ namespace DatabaseManager.Core
                     }
                 }
             }
-            #endregion
+
+            #endregion Indexes
 
             #region Foreign Keys
+
             if (!schemaDesignerInfo.IgnoreTableForeignKey)
             {
                 foreach (TableForeignKeyDesignerInfo keyDesignerInfo in schemaDesignerInfo.TableForeignKeyDesignerInfos)
@@ -619,9 +634,11 @@ namespace DatabaseManager.Core
                     schemaInfo.TableForeignKeys.Add(foreignKey);
                 }
             }
-            #endregion
+
+            #endregion Foreign Keys
 
             #region Constraint
+
             if (!schemaDesignerInfo.IgnoreTableConstraint)
             {
                 foreach (TableConstraintDesignerInfo constraintDesignerInfo in schemaDesignerInfo.TableConstraintDesignerInfos)
@@ -634,7 +651,8 @@ namespace DatabaseManager.Core
                     schemaInfo.TableConstraints.Add(constraint);
                 }
             }
-            #endregion
+
+            #endregion Constraint
 
             return schemaInfo;
         }
@@ -664,6 +682,7 @@ namespace DatabaseManager.Core
             }
 
             #region Columns
+
             List<TableColumnDesingerInfo> columns = schemaDesignerInfo.TableColumnDesingerInfos;
 
             List<string> columnNames = new List<string>();
@@ -697,9 +716,11 @@ namespace DatabaseManager.Core
 
                 columnNames.Add(column.Name);
             }
-            #endregion
+
+            #endregion Columns
 
             #region Indexes
+
             if (!schemaDesignerInfo.IgnoreTableIndex)
             {
                 List<TableIndexDesignerInfo> indexes = schemaDesignerInfo.TableIndexDesingerInfos;
@@ -741,9 +762,11 @@ namespace DatabaseManager.Core
                     return false;
                 }
             }
-            #endregion
+
+            #endregion Indexes
 
             #region Foreign Keys
+
             if (!schemaDesignerInfo.IgnoreTableForeignKey)
             {
                 List<TableForeignKeyDesignerInfo> foreignKeys = schemaDesignerInfo.TableForeignKeyDesignerInfos;
@@ -769,9 +792,11 @@ namespace DatabaseManager.Core
                     }
                 }
             }
-            #endregion
+
+            #endregion Foreign Keys
 
             #region Constraints
+
             if (!schemaDesignerInfo.IgnoreTableConstraint)
             {
                 List<TableConstraintDesignerInfo> constraints = schemaDesignerInfo.TableConstraintDesignerInfos;
@@ -797,7 +822,8 @@ namespace DatabaseManager.Core
                     }
                 }
             }
-            #endregion
+
+            #endregion Constraints
 
             return true;
         }

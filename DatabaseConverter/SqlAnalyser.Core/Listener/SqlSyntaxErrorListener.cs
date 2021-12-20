@@ -1,9 +1,8 @@
-﻿using Antlr4.Runtime;
+﻿using System.IO;
+
+using Antlr4.Runtime;
+
 using SqlAnalyser.Model;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
 namespace SqlAnalyser.Core
 {

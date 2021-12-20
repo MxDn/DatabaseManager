@@ -1,7 +1,9 @@
-﻿using DatabaseInterpreter.Model;
-using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
+using DatabaseInterpreter.Model;
+
+using Newtonsoft.Json;
 
 namespace DatabaseInterpreter.Core
 {
@@ -13,7 +15,7 @@ namespace DatabaseInterpreter.Core
             return cloneSchemaInfo;
         }
 
-        public static void MapTableNames(SchemaInfo schemaInfo, Dictionary<string,string> tableNameMappings)
+        public static void MapTableNames(SchemaInfo schemaInfo, Dictionary<string, string> tableNameMappings)
         {
             schemaInfo.Tables.ForEach(item => item.Name = GetMappedTableName(item.Name, tableNameMappings));
             schemaInfo.TableColumns.ForEach(item => item.TableName = GetMappedTableName(item.TableName, tableNameMappings));
@@ -24,12 +26,12 @@ namespace DatabaseInterpreter.Core
                 {
                     item.TableName = GetMappedTableName(item.TableName, tableNameMappings);
                     item.ReferencedTableName = GetMappedTableName(item.ReferencedTableName, tableNameMappings);
-                }           
-            );          
+                }
+            );
         }
 
         public static void RenameTableChildren(SchemaInfo schemaInfo)
-        {            
+        {
             schemaInfo.TablePrimaryKeys.ForEach(item => item.Name = Rename(item.Name));
             schemaInfo.TableIndexes.ForEach(item => item.Name = Rename(item.Name));
             schemaInfo.TableConstraints.ForEach(item => item.Name = Rename(item.Name));
@@ -146,13 +148,13 @@ namespace DatabaseInterpreter.Core
                     {
                         TableColumnChild tk = obj as TableColumnChild;
 
-                        existed = (targetObjs.Cast<TableColumnChild>()).Any(item => item.TableName.ToLower() == tk.TableName && item.ColumnName.ToLower() == tk.ColumnName.ToLower());
+                        existed = targetObjs.Cast<TableColumnChild>().Any(item => item.TableName.ToLower() == tk.TableName && item.ColumnName.ToLower() == tk.ColumnName.ToLower());
                     }
                     else if (obj is TableChild)
                     {
                         TableChild tc = obj as TableChild;
 
-                        existed = (targetObjs.Cast<TableChild>()).Any(item => item.TableName.ToLower() == tc.TableName && item.Name.ToLower() == tc.Name.ToLower());
+                        existed = targetObjs.Cast<TableChild>().Any(item => item.TableName.ToLower() == tc.TableName && item.Name.ToLower() == tc.Name.ToLower());
                     }
                     else
                     {

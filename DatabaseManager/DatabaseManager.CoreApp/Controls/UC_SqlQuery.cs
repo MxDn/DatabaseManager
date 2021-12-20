@@ -1,16 +1,18 @@
-using DatabaseInterpreter.Core;
-using DatabaseInterpreter.Utility;
-using DatabaseManager.Core;
-using DatabaseManager.Helper;
-using DatabaseManager.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+
+using DatabaseInterpreter.Core;
 using DatabaseInterpreter.Model;
+using DatabaseInterpreter.Utility;
+
+using DatabaseManager.Core;
 using DatabaseManager.Data;
-using System.Drawing;
+using DatabaseManager.Helper;
+using DatabaseManager.Model;
 
 namespace DatabaseManager.Controls
 {
@@ -19,9 +21,10 @@ namespace DatabaseManager.Controls
         private DatabaseObjectDisplayInfo displayInfo;
         private ScriptRunner scriptRunner;
         private bool readOnly;
-        private bool showEditorMessage =true;
+        private bool showEditorMessage = true;
 
         public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper(new Dictionary<DatabaseType, IDbInterpreterFactory>() { { DatabaseType.SqlServer, new SqlServerDbInterpreterFactory() } });
+
         public bool ReadOnly
         {
             get { return this.readOnly; }
@@ -45,7 +48,7 @@ namespace DatabaseManager.Controls
             set
             {
                 this.showEditorMessage = value;
-                this.statusStrip1.Visible = value;                
+                this.statusStrip1.Visible = value;
             }
         }
 
@@ -53,24 +56,24 @@ namespace DatabaseManager.Controls
         {
             InitializeComponent();
 
-            this.SetResultPanelVisible(false);           
+            this.SetResultPanelVisible(false);
         }
 
         private void queryEditor_Load(object sender, EventArgs e)
         {
-            if(this.showEditorMessage)
+            if (this.showEditorMessage)
             {
                 this.queryEditor.OnQueryEditorInfoMessage += this.ShowEditorInfoMessage;
-            }     
+            }
             else
             {
                 this.splitContainer1.Height += this.statusStrip1.Height;
             }
 
-            if(!this.readOnly)
+            if (!this.readOnly)
             {
                 this.queryEditor.SetupIntellisenseRequired += QueryEditor_SetupIntellisenseRequired;
-            }            
+            }
         }
 
         private void QueryEditor_SetupIntellisenseRequired(object sender, EventArgs e)
@@ -95,34 +98,34 @@ namespace DatabaseManager.Controls
             {
                 this.Editor.AppendText(displayInfo.Content);
             }
-            else if(File.Exists(displayInfo.FilePath))
+            else if (File.Exists(displayInfo.FilePath))
             {
                 this.Editor.AppendText(File.ReadAllText(displayInfo.FilePath));
             }
 
             this.queryEditor.DatabaseType = this.displayInfo.DatabaseType;
 
-            if (displayInfo.ConnectionInfo!= null && !string.IsNullOrEmpty(displayInfo.ConnectionInfo.Database))
+            if (displayInfo.ConnectionInfo != null && !string.IsNullOrEmpty(displayInfo.ConnectionInfo.Database))
             {
                 this.SetupIntellisence();
-            }            
+            }
         }
 
         private async void SetupIntellisence()
-        {           
-            if(this.CheckConnection())
+        {
+            if (this.CheckConnection())
             {
                 DbInterpreterOption option = new DbInterpreterOption() { ObjectFetchMode = DatabaseObjectFetchMode.Simple };
 
                 DbInterpreter dbInterpreter = DbInterpreterHelper.GetDbInterpreter(this.displayInfo.DatabaseType, this.displayInfo.ConnectionInfo, option);
 
-                this.queryEditor.DbInterpreter = dbInterpreter;              
+                this.queryEditor.DbInterpreter = dbInterpreter;
 
                 SchemaInfoFilter filter = new SchemaInfoFilter()
                 {
-                    DatabaseObjectType = DatabaseObjectType.Table 
-                    | DatabaseObjectType.Function 
-                    | DatabaseObjectType.View                   
+                    DatabaseObjectType = DatabaseObjectType.Table
+                    | DatabaseObjectType.Function
+                    | DatabaseObjectType.View
                     | DatabaseObjectType.TableColumn
                 };
 
@@ -131,7 +134,7 @@ namespace DatabaseManager.Controls
                 DataStore.SetSchemaInfo(this.displayInfo.DatabaseType, schemaInfo);
 
                 this.queryEditor.SetupIntellisence();
-            }           
+            }
         }
 
         public ContentSaveResult Save(ContentSaveInfo info)
@@ -180,8 +183,8 @@ namespace DatabaseManager.Controls
                     selectedTabIndex = 1;
 
                     if (this.resultTextBox.Text.Length == 0)
-                    {  
-                        if(!(this.displayInfo.ScriptAction== ScriptAction.CREATE || this.displayInfo.ScriptAction == ScriptAction.ALTER))
+                    {
+                        if (!(this.displayInfo.ScriptAction == ScriptAction.CREATE || this.displayInfo.ScriptAction == ScriptAction.ALTER))
                         {
                             if (result.Result is int affectedRows)
                             {
@@ -190,7 +193,7 @@ namespace DatabaseManager.Controls
                                     this.AppendMessage($"{affectedRows} row(s) affected.");
                                 }
                             }
-                        }                                           
+                        }
                     }
 
                     this.AppendMessage("command executed.");
@@ -245,12 +248,13 @@ namespace DatabaseManager.Controls
                 return true;
             }
             else
-            {                
+            {
                 return false;
             }
         }
 
         #region IObserver<FeedbackInfo>
+
         public void OnNext(FeedbackInfo value)
         {
             this.Feedback(value);
@@ -263,7 +267,8 @@ namespace DatabaseManager.Controls
         public void OnCompleted()
         {
         }
-        #endregion
+
+        #endregion IObserver<FeedbackInfo>
 
         private void Feedback(FeedbackInfo info)
         {
@@ -306,7 +311,5 @@ namespace DatabaseManager.Controls
             this.splitContainer1.Panel2Collapsed = !visible;
             this.splitContainer1.SplitterWidth = visible ? 3 : 1;
         }
-
-       
     }
 }

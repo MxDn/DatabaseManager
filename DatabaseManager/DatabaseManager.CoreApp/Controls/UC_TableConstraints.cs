@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+
 using DatabaseInterpreter.Model;
-using DatabaseManager.Model;
+
 using DatabaseManager.Helper;
+using DatabaseManager.Model;
 
 namespace DatabaseManager.Controls
 {
@@ -33,7 +29,6 @@ namespace DatabaseManager.Controls
 
         private void UC_TableConstraints_Load(object sender, EventArgs e)
         {
-
         }
 
         public void InitControls()
@@ -132,7 +127,6 @@ namespace DatabaseManager.Controls
 
         private void dgvConstraints_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-
         }
 
         public void OnSaved()

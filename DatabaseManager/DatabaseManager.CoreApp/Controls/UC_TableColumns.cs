@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
 using System.Data;
+using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using DatabaseManager.Helper;
-using DatabaseInterpreter.Model;
+
 using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
+
+using DatabaseManager.Helper;
 using DatabaseManager.Model;
-using DatabaseInterpreter.Utility;
 
 namespace DatabaseManager.Controls
 {
@@ -323,7 +321,6 @@ namespace DatabaseManager.Controls
 
         private void dgvColumns_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-
         }
 
         private void dgvColumns_SelectionChanged(object sender, EventArgs e)

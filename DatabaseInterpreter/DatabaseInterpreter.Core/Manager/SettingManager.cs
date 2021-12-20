@@ -1,7 +1,8 @@
-﻿using DatabaseInterpreter.Model;
-using DatabaseInterpreter.Utility;
+﻿using System.IO;
+
+using DatabaseInterpreter.Model;
+
 using Newtonsoft.Json;
-using System.IO;
 
 namespace DatabaseInterpreter.Core
 {
@@ -12,7 +13,7 @@ namespace DatabaseInterpreter.Core
         static SettingManager()
         {
             LoadConfig();
-        }       
+        }
 
         public static string ConfigFilePath
         {

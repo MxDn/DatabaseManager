@@ -1,12 +1,13 @@
-﻿using DatabaseInterpreter.Core;
-using DatabaseInterpreter.Model;
-using DatabaseManager.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
+
+using DatabaseManager.Model;
 
 namespace DatabaseManager.Core
 {
@@ -41,7 +42,7 @@ namespace DatabaseManager.Core
 
             StringBuilder sbContent = new StringBuilder();
 
-            DatabaseType databaseType = this.dbInterpreter.DatabaseType;           
+            DatabaseType databaseType = this.dbInterpreter.DatabaseType;
 
             foreach (Script script in scripts)
             {
@@ -71,9 +72,11 @@ namespace DatabaseManager.Core
                             case DatabaseType.SqlServer:
                                 content = content.Substring(0, createFlagIndex) + "ALTER " + content.Substring(createFlagIndex + createFlag.Length);
                                 break;
+
                             case DatabaseType.MySql:
                                 content = $"DROP {objType} IF EXISTS {this.dbInterpreter.GetQuotedString(dbObject.Name)};" + Environment.NewLine + content;
                                 break;
+
                             case DatabaseType.Oracle:
                                 if (!Regex.IsMatch(content, @"^(CREATE[\s]+OR[\s]+REPLACE[\s]+)", RegexOptions.IgnoreCase))
                                 {
@@ -107,8 +110,6 @@ namespace DatabaseManager.Core
             }
 
             return -1;
-        }       
-
-
+        }
     }
 }

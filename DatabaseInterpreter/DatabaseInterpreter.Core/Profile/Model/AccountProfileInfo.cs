@@ -1,15 +1,15 @@
-﻿using DatabaseInterpreter.Model;
+﻿using System;
+
+using DatabaseInterpreter.Model;
+
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DatabaseInterpreter.Profile
 {
     public class AccountProfileInfo : DatabaseAccountInfo
     {
         public Guid Id { get; set; } = Guid.NewGuid();
-      
+
         public string DatabaseType { get; set; }
 
         [JsonIgnore]
@@ -17,7 +17,7 @@ namespace DatabaseInterpreter.Profile
         {
             get
             {
-                return $"{((!string.IsNullOrEmpty(this.UserId)? this.UserId: "Integrated Security"))}({this.Server})";
+                return $"{(!string.IsNullOrEmpty(this.UserId) ? this.UserId : "Integrated Security")}({this.Server})";
             }
         }
     }

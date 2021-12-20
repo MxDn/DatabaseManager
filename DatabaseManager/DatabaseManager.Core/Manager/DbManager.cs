@@ -1,16 +1,18 @@
-using DatabaseConverter.Core;
-using DatabaseInterpreter.Core;
-using DatabaseInterpreter.Model;
-using DatabaseInterpreter.Utility;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Threading.Tasks;
-using System.Linq;
-using DatabaseManager.Model;
 using System.IO;
+using System.Threading.Tasks;
+
+using DatabaseConverter.Core;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
+using DatabaseInterpreter.Utility;
+
 using DatabaseManager.Helper;
+using DatabaseManager.Model;
 
 namespace DatabaseManager.Core
 {
@@ -20,7 +22,8 @@ namespace DatabaseManager.Core
         private DbInterpreter dbInterpreter;
         private DbScriptGenerator scriptGenerator;
         public DbInterpreterHelper DbInterpreterHelper;
-        public DbManager(Dictionary<DatabaseType, IDbInterpreterFactory> registered )
+
+        public DbManager(Dictionary<DatabaseType, IDbInterpreterFactory> registered)
         {
             this.DbInterpreterHelper = new DbInterpreterHelper(registered);
         }
@@ -53,13 +56,13 @@ namespace DatabaseManager.Core
             {
                 this.FeedbackInfo("Disable constrains.");
 
-                DbScriptGenerator scriptGenerator =  this.dbInterpreter.ScriptGenerator;
+                DbScriptGenerator scriptGenerator = this.dbInterpreter.ScriptGenerator;
 
                 using (DbConnection dbConnection = this.dbInterpreter.CreateConnection())
                 {
                     dbConnection.Open();
 
-                    await this.SetConstrainsEnabled(dbConnection, false);                   
+                    await this.SetConstrainsEnabled(dbConnection, false);
 
                     transaction = dbConnection.BeginTransaction();
 
@@ -109,7 +112,7 @@ namespace DatabaseManager.Core
                 {
                     this.FeedbackInfo("Enable constrains.");
 
-                    await this.SetConstrainsEnabled(null, true);                    
+                    await this.SetConstrainsEnabled(null, true);
                 }
             }
 
@@ -120,11 +123,11 @@ namespace DatabaseManager.Core
         {
             bool needDispose = false;
 
-            if(dbConnection == null)
+            if (dbConnection == null)
             {
                 needDispose = true;
                 dbConnection = this.dbInterpreter.CreateConnection();
-            }           
+            }
 
             IEnumerable<Script> scripts = this.scriptGenerator.SetConstrainsEnabled(enabled);
 
@@ -133,7 +136,7 @@ namespace DatabaseManager.Core
                 await this.dbInterpreter.ExecuteNonQueryAsync(dbConnection, script.Content);
             }
 
-            if(needDispose)
+            if (needDispose)
             {
                 using (dbConnection) { };
             }

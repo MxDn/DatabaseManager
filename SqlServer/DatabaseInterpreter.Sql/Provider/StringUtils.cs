@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -215,7 +215,7 @@ namespace DatabaseInterpreter.Core
         /// <summary>
         /// Tries to create a phrase string from CamelCase text.
         /// Will place spaces before capitalized letters.
-        /// 
+        ///
         /// Note that this method may not work for round tripping
         /// ToCamelCase calls, since ToCamelCase strips more characters
         /// than just spaces.
@@ -466,7 +466,7 @@ namespace DatabaseInterpreter.Core
         /// <summary>
         /// Tokenizes a string based on a start and end string. Replaces the values with a token
         /// text (#@#1#@# for example).
-        /// 
+        ///
         /// You can use Detokenize to get the original values back
         /// </summary>
         /// <param name="text"></param>
@@ -722,7 +722,7 @@ namespace DatabaseInterpreter.Core
         /// <summary>
         /// Encodes an integer into a string by mapping to alpha and digits (36 chars)
         /// chars are embedded as lower case
-        /// 
+        ///
         /// Example: 4zx12ss
         /// </summary>
         /// <param name="value"></param>
@@ -799,7 +799,7 @@ namespace DatabaseInterpreter.Core
                 {
                     int num = 0;
                     string str2 = str1;
-                    for (int index = 0; index < str2.Length && (str2[index] == ' ' && num < count); ++index)
+                    for (int index = 0; index < str2.Length && str2[index] == ' ' && num < count; ++index)
                         ++num;
                     if (num == 0)
                         return code;
@@ -856,7 +856,7 @@ namespace DatabaseInterpreter.Core
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="propertyString"></param>
         /// <param name="key"></param>
@@ -871,6 +871,7 @@ namespace DatabaseInterpreter.Core
             return oldValue != string.Empty ? propertyString.Replace(oldValue, newValue) : propertyString + newValue + "\r\n";
         }
     }
+
     public enum LineFeedTypes
     {
         Lf,

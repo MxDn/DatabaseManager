@@ -1,5 +1,6 @@
-﻿using DatabaseInterpreter.Model;
-using System.Text;
+﻿using System.Text;
+
+using DatabaseInterpreter.Model;
 
 namespace DatabaseInterpreter.Core
 {

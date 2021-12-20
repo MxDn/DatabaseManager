@@ -19,7 +19,7 @@
     <source type="char" />
     <target type="char" />
     <special name="maxLength" value="36" type="uniqueidentifier"></special>
-  </mapping> 
+  </mapping>
   <mapping>
     <source type="date" />
     <target type="date" />
@@ -27,11 +27,11 @@
   <mapping>
     <source type="datetime" />
     <target type="datetime" />
-  </mapping> 
+  </mapping>
   <mapping>
     <source type="decimal" />
     <target type="decimal" />
-  </mapping> 
+  </mapping>
   <mapping>
     <source type="double" />
     <target type="float" />
@@ -67,7 +67,7 @@
   <mapping>
     <source type="mediumint" />
     <target type="int" />
-  </mapping>  
+  </mapping>
   <mapping>
     <source type="mediumtext" />
     <target type="text" />
@@ -82,16 +82,16 @@
   </mapping>
   <mapping>
     <source type="set" />
-    <target type="varchar" length="1000"/>
-  </mapping>  
+    <target type="varchar" length="1000" />
+  </mapping>
   <mapping>
     <source type="smallint" />
     <target type="int" />
-  </mapping> 
+  </mapping>
   <mapping>
     <source type="text" />
     <target type="text" />
-  </mapping>  
+  </mapping>
   <mapping>
     <source type="time" />
     <target type="time" />
@@ -118,7 +118,7 @@
   </mapping>
   <mapping>
     <source type="varchar" />
-    <target type="varchar" substitute="text"/>
+    <target type="varchar" substitute="text" />
   </mapping>
   <mapping>
     <source type="year" />

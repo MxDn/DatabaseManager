@@ -1,9 +1,5 @@
 ﻿using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SqlAnalyser.Model
 {
@@ -25,7 +21,7 @@ namespace SqlAnalyser.Model
                 value.Type = TokenType.TableName;
                 this.tableName = value;
             }
-        }      
+        }
 
         public ColumnName(string symbol) : base(symbol)
         {
@@ -45,6 +41,6 @@ namespace SqlAnalyser.Model
 
         public ColumnName(string symbol, ITerminalNode node) : base(symbol, node)
         {
-        }       
+        }
     }
 }

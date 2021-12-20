@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
 using System.Data;
+using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Text.RegularExpressions;
-using DatabaseManager.Model;
-using DatabaseInterpreter.Model;
-using DatabaseManager.Helper;
-using DatabaseConverter.Core;
-using DatabaseConverter.Model;
-using DatabaseManager.Data;
+using System.Windows.Forms;
+
 using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
+
+using DatabaseManager.Data;
+using DatabaseManager.Helper;
+using DatabaseManager.Model;
 
 namespace DatabaseManager.Controls
 {
@@ -37,9 +34,11 @@ namespace DatabaseManager.Controls
 
         public DatabaseType DatabaseType { get; set; }
         public DbInterpreter DbInterpreter { get; set; }
+
         public event EventHandler SetupIntellisenseRequired;
 
         public QueryEditorInfoMessageHandler OnQueryEditorInfoMessage;
+
         public UC_QueryEditor()
         {
             InitializeComponent();
@@ -312,18 +311,23 @@ namespace DatabaseManager.Controls
                         case SqlWordTokenType.Keyword:
                             item.ImageIndex = 0;
                             break;
+
                         case SqlWordTokenType.BuiltinFunction:
                             item.ImageIndex = 1;
                             break;
+
                         case SqlWordTokenType.Table:
                             item.ImageIndex = 2;
                             break;
+
                         case SqlWordTokenType.View:
                             item.ImageIndex = 3;
                             break;
+
                         case SqlWordTokenType.TableColumn:
                             item.ImageIndex = 4;
                             break;
+
                         case SqlWordTokenType.Owner:
                             item.ImageIndex = 5;
                             break;
@@ -585,7 +589,6 @@ namespace DatabaseManager.Controls
                     token.Type = SqlWordTokenType.Keyword;
 
                     this.SetWordColor(token);
-
                 }
                 else if (this.builtinFunctions.Any(item => item.Name.ToUpper() == word.ToUpper()))
                 {
@@ -741,7 +744,6 @@ namespace DatabaseManager.Controls
             }
             catch (Exception ex)
             {
-
             }
         }
 

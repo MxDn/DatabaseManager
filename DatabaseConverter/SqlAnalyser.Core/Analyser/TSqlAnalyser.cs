@@ -1,10 +1,11 @@
-﻿using SqlAnalyser.Model;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
 using DatabaseInterpreter.Model;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
+
+using SqlAnalyser.Model;
 
 namespace SqlAnalyser.Core
 {
@@ -22,22 +23,21 @@ namespace SqlAnalyser.Core
         public override AnalyseResult AnalyseView(string content)
         {
             return this.ruleAnalyser.AnalyseView(content);
-         
         }
 
         public override AnalyseResult AnalyseProcedure(string content)
         {
-            return this.ruleAnalyser.AnalyseProcedure(content);   
+            return this.ruleAnalyser.AnalyseProcedure(content);
         }
 
         public override AnalyseResult AnalyseFunction(string content)
         {
-            return this.ruleAnalyser.AnalyseFunction(content);   
+            return this.ruleAnalyser.AnalyseFunction(content);
         }
 
         public override AnalyseResult AnalyseTrigger(string content)
         {
-            return this.ruleAnalyser.AnalyseTrigger(content);            
+            return this.ruleAnalyser.AnalyseTrigger(content);
         }
 
         public override string GenerateScripts(CommonScript script)
@@ -77,7 +77,7 @@ namespace SqlAnalyser.Core
 
                     string strParameterType = "";
 
-                    if(parameterType== ParameterType.IN)
+                    if (parameterType == ParameterType.IN)
                     {
                         strParameterType = "";
                     }
@@ -191,7 +191,7 @@ namespace SqlAnalyser.Core
         {
             StringBuilder sb = new StringBuilder();
 
-            string time = (script.Time == TriggerTime.BEFORE || script.Time == TriggerTime.INSTEAD_OF ) ? "INSTEAD OF" : script.Time.ToString();
+            string time = (script.Time == TriggerTime.BEFORE || script.Time == TriggerTime.INSTEAD_OF) ? "INSTEAD OF" : script.Time.ToString();
             string events = string.Join(",", script.Events);
 
             sb.AppendLine($"CREATE TRIGGER {script.FullName} ON {script.TableName}");
@@ -208,6 +208,6 @@ namespace SqlAnalyser.Core
             sb.AppendLine("END");
 
             return this.FormatScripts(sb.ToString());
-        }       
+        }
     }
 }

@@ -1,16 +1,17 @@
-﻿using DatabaseInterpreter.Core;
-using DatabaseInterpreter.Model;
-using DatabaseInterpreter.Utility;
-using DatabaseManager.Controls;
-using DatabaseManager.Helper;
-using DatabaseManager.Model;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
+using DatabaseInterpreter.Utility;
+
+using DatabaseManager.Controls;
+using DatabaseManager.Helper;
+using DatabaseManager.Model;
 
 namespace DatabaseManager
 {
@@ -78,7 +79,7 @@ namespace DatabaseManager
                 {
                     this.txtMessage.Text = info.Message;
                 }
-            }));            
+            }));
         }
 
         private void tsmiSetting_Click(object sender, EventArgs e)

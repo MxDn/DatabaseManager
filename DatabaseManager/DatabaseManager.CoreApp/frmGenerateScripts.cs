@@ -1,18 +1,14 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
 using DatabaseInterpreter.Core;
 using DatabaseInterpreter.Model;
 using DatabaseInterpreter.Utility;
-using DatabaseManager.Core;
+
 using DatabaseManager.Helper;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace DatabaseManager
 {
@@ -26,6 +22,7 @@ namespace DatabaseManager
         private bool useConnector = true;
 
         public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper(new Dictionary<DatabaseType, IDbInterpreterFactory>() { { DatabaseType.SqlServer, new SqlServerDbInterpreterFactory() } });
+
         public frmGenerateScripts()
         {
             InitializeComponent();
@@ -175,7 +172,7 @@ namespace DatabaseManager
                 {
                     option.TreatBytesAsHexStringForFile = true;
                 }
-            }           
+            }
 
             this.SetGenerateScriptOption(option);
 
@@ -189,7 +186,7 @@ namespace DatabaseManager
 
             this.dbInterpreter = DbInterpreterHelper.GetDbInterpreter(dbType, this.connectionInfo, option);
 
-            SchemaInfoFilter filter = new SchemaInfoFilter();           
+            SchemaInfoFilter filter = new SchemaInfoFilter();
 
             SchemaInfoHelper.SetSchemaInfoFilterValues(filter, schemaInfo);
 
@@ -201,7 +198,7 @@ namespace DatabaseManager
 
                 GenerateScriptMode mode = GenerateScriptMode.None;
 
-                DbScriptGenerator dbScriptGenerator =  this.dbInterpreter.ScriptGenerator;
+                DbScriptGenerator dbScriptGenerator = this.dbInterpreter.ScriptGenerator;
 
                 if (scriptMode.HasFlag(GenerateScriptMode.Schema))
                 {
@@ -314,17 +311,21 @@ namespace DatabaseManager
         }
 
         #region IObserver<FeedbackInfo>
+
         void IObserver<FeedbackInfo>.OnCompleted()
         {
         }
+
         void IObserver<FeedbackInfo>.OnError(Exception error)
         {
         }
+
         void IObserver<FeedbackInfo>.OnNext(FeedbackInfo info)
         {
             this.Feedback(info);
         }
-        #endregion
+
+        #endregion IObserver<FeedbackInfo>
 
         private void frmGenerateScripts_FormClosing(object sender, FormClosingEventArgs e)
         {

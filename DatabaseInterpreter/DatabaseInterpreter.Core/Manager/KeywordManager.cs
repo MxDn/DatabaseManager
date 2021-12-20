@@ -1,11 +1,12 @@
-﻿using DatabaseInterpreter.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+using DatabaseInterpreter.Model;
+
 namespace DatabaseInterpreter.Core
 {
-    public class KeywordManager: ConfigManager
+    public class KeywordManager : ConfigManager
     {
         public static readonly string KeywordFolder = Path.Combine(ConfigRootFolder, "Keyword");
 

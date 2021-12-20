@@ -1,10 +1,12 @@
-﻿using DatabaseInterpreter.Core;
-using DatabaseInterpreter.Model;
-using DatabaseManager.Data;
-using DatabaseManager.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
+
+using DatabaseManager.Data;
+using DatabaseManager.Model;
 
 namespace DatabaseManager.Helper
 {
@@ -19,7 +21,7 @@ namespace DatabaseManager.Helper
             //    var keywords = KeywordManager.GetKeywords(databaseType).Where(item => Contains(item, search));
 
             //    words.AddRange(keywords.Select(item => new SqlWord() { Type = SqlWordTokenType.Keyword, Text = item }));
-            //}           
+            //}
 
             if (IsTypeMatched(tokenType, SqlWordTokenType.BuiltinFunction))
             {

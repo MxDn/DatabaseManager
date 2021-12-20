@@ -1,22 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using DatabaseManager.Model;
+
 using DatabaseInterpreter.Model;
+
 using DatabaseManager.Helper;
+using DatabaseManager.Model;
 
 namespace DatabaseManager
 {
     public partial class frmDiagnoseResult : Form
     {
         public DatabaseType DatabaseType { get; set; }
-        public ConnectionInfo ConnectionInfo { get; set; }      
+        public ConnectionInfo ConnectionInfo { get; set; }
 
         public frmDiagnoseResult()
         {
@@ -111,7 +107,7 @@ namespace DatabaseManager
                 return;
             }
 
-            if(e.ColumnIndex == this.colInvalidRecordCount.Index)
+            if (e.ColumnIndex == this.colInvalidRecordCount.Index)
             {
                 DiagnoseResultItem resultItem = this.dgvResult.Rows[e.RowIndex].Tag as DiagnoseResultItem;
 

@@ -1,9 +1,11 @@
-﻿using DatabaseInterpreter.Model;
-using DatabaseInterpreter.Utility;
-using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
+using DatabaseInterpreter.Model;
+using DatabaseInterpreter.Utility;
+
+using Newtonsoft.Json;
 
 namespace DatabaseInterpreter.Profile
 {
@@ -95,9 +97,9 @@ namespace DatabaseInterpreter.Profile
             if (File.Exists(filePath))
             {
                 profiles = ((IEnumerable<ConnectionProfileInfo>)JsonConvert.DeserializeObject(File.ReadAllText(ProfilePath), typeof(IEnumerable<ConnectionProfileInfo>)))
-                    .Where(item => (item.DatabaseType == dbType || string.IsNullOrEmpty(dbType)));
+                    .Where(item => item.DatabaseType == dbType || string.IsNullOrEmpty(dbType));
 
-                if (!isSampleMode )
+                if (!isSampleMode)
                 {
                     var accountProfiles = AccountProfileManager.GetProfiles(dbType);
                     foreach (var profile in profiles)
@@ -113,7 +115,7 @@ namespace DatabaseInterpreter.Profile
                 }
             }
 
-            return profiles.OrderBy(item=>item.Name);
+            return profiles.OrderBy(item => item.Name);
         }
 
         public static ConnectionInfo GetConnectionInfo(string dbType, string profileName)

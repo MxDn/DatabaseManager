@@ -1,8 +1,9 @@
-﻿using SqlAnalyser.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
+using SqlAnalyser.Model;
 
 namespace SqlAnalyser.Core
 {
@@ -104,7 +105,7 @@ namespace SqlAnalyser.Core
             {
                 if (declare.Type == DeclareType.Variable)
                 {
-                    string defaultValue = (declare.DefaultValue == null ? "" : $" DEFAULT {declare.DefaultValue}");
+                    string defaultValue = declare.DefaultValue == null ? "" : $" DEFAULT {declare.DefaultValue}";
                     this.AppendLine($"DECLARE {declare.Name} {declare.DataType}{defaultValue};");
                 }
                 else if (declare.Type == DeclareType.Table)
@@ -234,9 +235,11 @@ namespace SqlAnalyser.Core
                     case TransactionCommandType.BEGIN:
                         this.AppendLine("START TRANSACTION;");
                         break;
+
                     case TransactionCommandType.COMMIT:
                         this.AppendLine("COMMIT;");
                         break;
+
                     case TransactionCommandType.ROLLBACK:
                         this.AppendLine("ROLLBACK;");
                         break;

@@ -1,10 +1,11 @@
-﻿using DatabaseInterpreter.Model;
-using DatabaseManager.Core;
-using DatabaseManager.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+
+using DatabaseInterpreter.Model;
+
+using DatabaseManager.Model;
 
 namespace DatabaseManager.Helper
 {
@@ -70,6 +71,7 @@ namespace DatabaseManager.Helper
         }
 
         #region TreeNode Extension
+
         public static TreeNode CreateTreeNode<T>(T dbObject, bool createFakeNode = false)
             where T : DatabaseObject
         {
@@ -152,6 +154,7 @@ namespace DatabaseManager.Helper
                 yield return node;
             }
         }
-        #endregion
+
+        #endregion TreeNode Extension
     }
 }

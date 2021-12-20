@@ -8,8 +8,8 @@ namespace DatabaseInterpreter.Model
         public DatabaseObjectType DatabaseObjectType = DatabaseObjectType.None;
         public string[] UserDefinedTypeNames { get; set; }
         public string[] FunctionNames { get; set; }
-        public string[] TableNames { get; set; }       
-        public string[] ViewNames { get; set; }       
+        public string[] TableNames { get; set; }
+        public string[] ViewNames { get; set; }
         public string[] ProcedureNames { get; set; }
         public string[] TableTriggerNames { get; set; }
     }

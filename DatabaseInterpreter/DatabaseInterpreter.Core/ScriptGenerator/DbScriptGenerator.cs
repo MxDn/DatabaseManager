@@ -1,6 +1,4 @@
-using DatabaseInterpreter.Model;
-using DatabaseInterpreter.Utility;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -8,6 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using DatabaseInterpreter.Model;
+using DatabaseInterpreter.Utility;
 
 namespace DatabaseInterpreter.Core
 {
@@ -27,6 +28,7 @@ namespace DatabaseInterpreter.Core
         }
 
         #region Schema Scripts
+
         public abstract ScriptBuilder GenerateSchemaScripts(SchemaInfo schemaInfo);
 
         protected virtual List<Script> GenerateScriptDbObjectScripts<T>(List<T> dbObjects)
@@ -65,9 +67,10 @@ namespace DatabaseInterpreter.Core
             return scripts;
         }
 
-        #endregion
+        #endregion Schema Scripts
 
         #region Data Scripts
+
         public virtual async Task<string> GenerateDataScriptsAsync(SchemaInfo schemaInfo)
         {
             StringBuilder sb = new StringBuilder();
@@ -347,7 +350,7 @@ namespace DatabaseInterpreter.Core
 
         protected virtual string GetBatchInsertItemEnd(bool isAllEnd)
         {
-            return (isAllEnd ? ";" : ",");
+            return isAllEnd ? ";" : ",";
         }
 
         private List<object> GetRowValues(Dictionary<string, object> row, int rowIndex, List<TableColumn> columns, List<string> excludeColumnNames, long pageNumber, bool isAppendToFile, out Dictionary<string, object> parameters)
@@ -416,12 +419,13 @@ namespace DatabaseInterpreter.Core
         {
             return null;
         }
+
         protected abstract object ParseValue(TableColumn column, object value, bool bytesAsString = false);
-       
-       
-        #endregion
+
+        #endregion Data Scripts
 
         #region Append Scripts
+
         public string GetScriptOutputFilePath(GenerateScriptMode generateScriptMode)
         {
             string fileName = $"{this.dbInterpreter.ConnectionInfo.Database}_{this.databaseType}_{DateTime.Today.ToString("yyyyMMdd")}_{generateScriptMode.ToString()}.sql";
@@ -464,9 +468,11 @@ namespace DatabaseInterpreter.Core
                 File.WriteAllText(filePath, "", Encoding.UTF8);
             }
         }
-        #endregion
+
+        #endregion Append Scripts
 
         #region Alter Table
+
         public abstract Script RenameTable(Table table, string newName);
 
         public abstract Script SetTableComment(Table table, bool isNew = true);
@@ -498,19 +504,27 @@ namespace DatabaseInterpreter.Core
         public abstract Script DropCheckConstraint(TableConstraint constraint);
 
         public abstract Script SetIdentityEnabled(TableColumn column, bool enabled);
-        #endregion
 
-        #region Database Operation  
+        #endregion Alter Table
+
+        #region Database Operation
+
         public abstract Script AddUserDefinedType(UserDefinedType userDefinedType);
+
         public abstract ScriptBuilder AddTable(Table table, IEnumerable<TableColumn> columns,
            TablePrimaryKey primaryKey,
            IEnumerable<TableForeignKey> foreignKeys,
            IEnumerable<TableIndex> indexes,
            IEnumerable<TableConstraint> constraints);
+
         public abstract Script DropUserDefinedType(UserDefinedType userDefinedType);
+
         public abstract Script DropTable(Table table);
+
         public abstract Script DropView(View view);
+
         public abstract Script DropTrigger(TableTrigger trigger);
+
         public abstract Script DropFunction(Function function);
 
         public virtual Script SetTableChildComment(TableChild tableChild, bool isNew)
@@ -519,6 +533,7 @@ namespace DatabaseInterpreter.Core
         }
 
         public abstract Script DropProcedure(Procedure procedure);
+
         public abstract IEnumerable<Script> SetConstrainsEnabled(bool enabled);
 
         public virtual Script Add(DatabaseObject dbObject)
@@ -542,15 +557,15 @@ namespace DatabaseInterpreter.Core
             else if (dbObject is TableConstraint constraint)
             {
                 return this.AddCheckConstraint(constraint);
-            } 
-            else if(dbObject is UserDefinedType userDefinedType)
+            }
+            else if (dbObject is UserDefinedType userDefinedType)
             {
                 return this.AddUserDefinedType(userDefinedType);
             }
             else if (dbObject is ScriptDbObject scriptDbObject)
             {
                 return new CreateDbObjectScript<ScriptDbObject>(scriptDbObject.Definition);
-            }            
+            }
 
             throw new NotSupportedException($"Not support to add {dbObject.GetType().Name} using this method.");
         }
@@ -604,9 +619,11 @@ namespace DatabaseInterpreter.Core
 
             throw new NotSupportedException($"Not support to drop {dbObject.GetType().Name}.");
         }
-        #endregion
+
+        #endregion Database Operation
 
         #region Common Method
+
         public string GetQuotedObjectName(DatabaseObject obj)
         {
             return this.dbInterpreter.GetQuotedObjectName(obj);
@@ -643,9 +660,11 @@ namespace DatabaseInterpreter.Core
 
             return ValueHelper.TransferSingleQuotation(comment);
         }
-        #endregion
+
+        #endregion Common Method
 
         #region Feedback
+
         public void FeedbackInfo(OperationState state, DatabaseObject dbObject)
         {
             this.dbInterpreter.FeedbackInfo(state, dbObject);
@@ -660,7 +679,8 @@ namespace DatabaseInterpreter.Core
         {
             this.dbInterpreter.FeedbackError(message, skipError);
         }
-        #endregion
+
+        #endregion Feedback
 
         public virtual Script AddDefaultValueConstraint(TableColumn newColumn)
         {

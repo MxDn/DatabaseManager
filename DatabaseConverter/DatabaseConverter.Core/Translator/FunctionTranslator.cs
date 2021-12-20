@@ -1,11 +1,13 @@
-﻿using DatabaseConverter.Model;
-using DatabaseInterpreter.Core;
-using DatabaseInterpreter.Model;
-using SqlAnalyser.Model;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+
+using DatabaseConverter.Model;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
+
+using SqlAnalyser.Model;
 
 namespace DatabaseConverter.Core
 {
@@ -49,7 +51,7 @@ namespace DatabaseConverter.Core
                     string name = fomular.Name;
 
                     bool useBrackets = false;
-                  
+
                     MappingFunctionInfo targetFunctionInfo = this.GetMappingFunctionInfo(name, out useBrackets);
 
                     if (!string.IsNullOrEmpty(targetFunctionInfo.Name))
@@ -137,7 +139,7 @@ namespace DatabaseConverter.Core
 
                     functions.Add(func);
 
-                    innerContent = innerContent.Substring(firstLeftParenthesesIndex + 1, (func.StopIndex - 1) - (firstLeftParenthesesIndex + 1) + 1);
+                    innerContent = innerContent.Substring(firstLeftParenthesesIndex + 1, func.StopIndex - 1 - (firstLeftParenthesesIndex + 1) + 1);
                 }
                 else
                 {

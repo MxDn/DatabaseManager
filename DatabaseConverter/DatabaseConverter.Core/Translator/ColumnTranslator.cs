@@ -1,11 +1,14 @@
-﻿using DatabaseConverter.Model;
-using DatabaseInterpreter.Core;
-using DatabaseInterpreter.Model;
-using NCalc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+
+using DatabaseConverter.Model;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
+
+using NCalc;
 
 namespace DatabaseConverter.Core
 {
@@ -16,7 +19,6 @@ namespace DatabaseConverter.Core
         private DatabaseType targetDbType;
         private IEnumerable<DataTypeSpecification> sourceDataTypeSpecs;
         private IEnumerable<DataTypeSpecification> targetDataTypeSpecs;
-
 
         public ColumnTranslator(DbInterpreter sourceInterpreter, DbInterpreter targetInterpreter, List<TableColumn> columns) : base(sourceInterpreter, targetInterpreter)
         {

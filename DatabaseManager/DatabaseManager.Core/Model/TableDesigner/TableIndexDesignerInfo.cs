@@ -1,6 +1,7 @@
-﻿using DatabaseInterpreter.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
+
+using DatabaseInterpreter.Model;
 
 namespace DatabaseManager.Model
 {
@@ -18,7 +19,7 @@ namespace DatabaseManager.Model
         public string Comment { get; set; }
 
         public TableIndexExtraPropertyInfo ExtraPropertyInfo { get; set; }
-    }  
+    }
 
     public class TableIndexExtraPropertyInfo
     {

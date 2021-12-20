@@ -17,5 +17,5 @@
   <item name="timestamp" args="scale" range="0~9" optional="true" default="6"></item>
   <item name="timestamp with local time zone" format="timestamp($scale$) with local time zone" args="scale" range="0~9" default="6"></item>
   <item name="timestamp with time zone" format="timestamp($scale$) with time zone"  args="scale" range="0~9" default="6"></item>
-  <item name="varchar2" args="length" range="1~4000"></item>  
+  <item name="varchar2" args="length" range="1~4000"></item>
 </items>

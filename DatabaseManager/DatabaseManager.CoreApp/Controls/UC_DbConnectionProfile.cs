@@ -1,16 +1,16 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Data;
+using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using DatabaseInterpreter.Core;
 using DatabaseInterpreter.Model;
 using DatabaseInterpreter.Profile;
+
 using DatabaseManager.Helper;
-using DatabaseInterpreter.Core;
 
 namespace DatabaseManager.Controls
 {
@@ -52,7 +52,7 @@ namespace DatabaseManager.Controls
 
         public UC_DbConnectionProfile()
         {
-            InitializeComponent();           
+            InitializeComponent();
         }
 
         private void UC_DbConnectionProfile_Load(object sender, EventArgs e)
@@ -73,8 +73,7 @@ namespace DatabaseManager.Controls
             {
                 this.cboDbType.Items.Add(value.ToString());
             }
-        }   
-      
+        }
 
         public bool IsDbTypeSelected()
         {
@@ -239,7 +238,7 @@ namespace DatabaseManager.Controls
 
             if (profileName != from.ProflieName)
             {
-                this.LoadProfileNames(from.ProflieName);                
+                this.LoadProfileNames(from.ProflieName);
             }
 
             if (this.cboDbProfile.SelectedItem != null)
@@ -270,6 +269,6 @@ namespace DatabaseManager.Controls
         private void cboDbType_SelectedIndexChanged(object sender, EventArgs e)
         {
             this.LoadProfileNames();
-        }        
+        }
     }
 }

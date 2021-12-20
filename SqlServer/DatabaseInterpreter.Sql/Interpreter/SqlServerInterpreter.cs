@@ -1,12 +1,13 @@
-using DatabaseInterpreter.Model;
-using DatabaseInterpreter.Utility;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+
+using DatabaseInterpreter.Model;
+using DatabaseInterpreter.Utility;
 
 namespace DatabaseInterpreter.Core
 {
@@ -17,38 +18,57 @@ namespace DatabaseInterpreter.Core
             return new SqlServerInterpreter(connectionInfo, option);
         }
     }
+
     public class SqlServerInterpreter : DbInterpreter
     {
         #region Field & Property
+
         public const string AzureSQLFlag = "SQL Azure";
-        public override string CommandParameterChar { get { return "@"; } }
-        public override char QuotationLeftChar { get { return '['; } }
-        public override char QuotationRightChar { get { return ']'; } }
+
+        public override string CommandParameterChar
+        { get { return "@"; } }
+
+        public override char QuotationLeftChar
+        { get { return '['; } }
+
+        public override char QuotationRightChar
+        { get { return ']'; } }
+
         public override DatabaseType DatabaseType => DatabaseType.SqlServer;
         public override IndexType IndexType => IndexType.Normal | IndexType.Unique | IndexType.ColumnStore | IndexType.Primary;
-        public override bool SupportBulkCopy { get { return true; } }
+
+        public override bool SupportBulkCopy
+        { get { return true; } }
+
         public override string ScriptsDelimiter => "GO" + Environment.NewLine;
         public override string CommentString => "--";
         public override List<string> BuiltinDatabases => new List<string> { "master", "model", "msdb", "tempdb" };
-        #endregion
 
-        #region Constructor 
+        #endregion Field & Property
+
+        #region Constructor
+
         public SqlServerInterpreter(ConnectionInfo connectionInfo, DbInterpreterOption option) : base(connectionInfo, option)
         {
             this.dbConnector = this.GetDbConnector();
             this.ScriptGenerator = new SqlServerScriptGenerator(this);
-        } 
-        #endregion
+        }
+
+        #endregion Constructor
 
         #region Common Method
+
         public override DbConnector GetDbConnector()
         {
             return new DbConnector(new SqlServerProvider(), new SqlServerConnectionBuilder(), this.ConnectionInfo);
         }
-        #endregion
+
+        #endregion Common Method
 
         #region Schema Information
+
         #region Database
+
         public override Task<List<Database>> GetDatabasesAsync()
         {
             string notShowBuiltinDatabaseCondition = "";
@@ -63,9 +83,11 @@ namespace DatabaseInterpreter.Core
 
             return base.GetDbObjectsAsync<Database>(sql);
         }
-        #endregion
+
+        #endregion Database
 
         #region Database Owner
+
         public override Task<List<DatabaseOwner>> GetDatabaseOwnersAsync()
         {
             string sql = @"select name as [Name], name as [Owner]  from sys.schemas
@@ -79,14 +101,15 @@ namespace DatabaseInterpreter.Core
             return "dbo";
         }
 
-        #endregion
+        #endregion Database Owner
 
-        #region User Defined Type 
+        #region User Defined Type
 
         public override Task<List<UserDefinedType>> GetUserDefinedTypesAsync(SchemaInfoFilter filter = null)
         {
             return base.GetDbObjectsAsync<UserDefinedType>(this.GetSqlForUserDefinedTypes(filter));
         }
+
         public override Task<List<UserDefinedType>> GetUserDefinedTypesAsync(DbConnection dbConnection, SchemaInfoFilter filter = null)
         {
             return base.GetDbObjectsAsync<UserDefinedType>(dbConnection, this.GetSqlForUserDefinedTypes(filter));
@@ -106,9 +129,10 @@ namespace DatabaseInterpreter.Core
 
             return sql;
         }
-        #endregion
 
-        #region Function       
+        #endregion User Defined Type
+
+        #region Function
 
         public override Task<List<Function>> GetFunctionsAsync(SchemaInfoFilter filter = null)
         {
@@ -124,9 +148,9 @@ namespace DatabaseInterpreter.Core
         {
             bool isSimpleMode = this.IsObjectFectchSimpleMode();
 
-            string sql = $@"SELECT o.name AS [Name], schema_name(o.schema_id) AS [Owner], 
+            string sql = $@"SELECT o.name AS [Name], schema_name(o.schema_id) AS [Owner],
                            {(isSimpleMode ? "''" : "OBJECT_DEFINITION(o.object_id)")} AS [Definition]
-                           FROM sys.all_objects o 
+                           FROM sys.all_objects o
                            WHERE o.type IN ('FN', 'IF', 'AF', 'FS', 'FT','TF')
                            AND SCHEMA_NAME(schema_id)='dbo'";
 
@@ -140,9 +164,10 @@ namespace DatabaseInterpreter.Core
 
             return sql;
         }
-        #endregion
 
-        #region Table      
+        #endregion Function
+
+        #region Table
 
         public override Task<List<Table>> GetTablesAsync(SchemaInfoFilter filter = null)
         {
@@ -185,9 +210,11 @@ namespace DatabaseInterpreter.Core
 
             return sql;
         }
-        #endregion
+
+        #endregion Table
 
         #region Table Column
+
         public override Task<List<TableColumn>> GetTableColumnsAsync(SchemaInfoFilter filter = null)
         {
             return base.GetDbObjectsAsync<TableColumn>(this.GetSqlForTableColumns(filter));
@@ -206,38 +233,38 @@ namespace DatabaseInterpreter.Core
 
             if (this.IsObjectFectchSimpleMode())
             {
-                sql = @"SELECT schema_name(t.schema_id) AS [Owner], 
+                sql = @"SELECT schema_name(t.schema_id) AS [Owner],
                             t.name AS [TableName],
-                            c.name AS [Name], 
+                            c.name AS [Name],
                             st.name AS [DataType],
                             c.is_nullable AS [IsNullable],
-                            c.max_length AS [MaxLength], 
+                            c.max_length AS [MaxLength],
                             c.precision AS [Precision],
-                            c.column_id as [Order], 
-                            c.scale AS [Scale],                           
-                            c.is_identity AS [IsIdentity]                       
-                        FROM sys.columns c 
+                            c.column_id as [Order],
+                            c.scale AS [Scale],
+                            c.is_identity AS [IsIdentity]
+                        FROM sys.columns c
                         JOIN sys.systypes st ON c.user_type_id = st.xusertype
                         JOIN sys.tables t ON c.object_id=t.object_id";
             }
             else
             {
-                sql = @"SELECT schema_name(t.schema_id) AS [Owner], 
+                sql = @"SELECT schema_name(t.schema_id) AS [Owner],
                             t.name AS [TableName],
-                            c.name AS [Name], 
+                            c.name AS [Name],
                             st.name AS [DataType],
                             c.is_nullable AS [IsNullable],
-                            c.max_length AS [MaxLength], 
+                            c.max_length AS [MaxLength],
                             c.precision AS [Precision],
-                            c.column_id as [Order], 
+                            c.column_id as [Order],
                             c.scale AS [Scale],
-                            sco.text As [DefaultValue], 
+                            sco.text As [DefaultValue],
                             ext.value AS [Comment],
                             c.is_identity AS [IsIdentity],
                             sty.is_user_defined AS [IsUserDefined],
-                            schema_name(sty.schema_id) AS [TypeOwner],                           
+                            schema_name(sty.schema_id) AS [TypeOwner],
                             cc.definition as [ComputeExp]
-                        FROM sys.columns c 
+                        FROM sys.columns c
                         JOIN sys.systypes st ON c.user_type_id = st.xusertype
                         JOIN sys.tables t ON c.object_id=t.object_id
                         LEFT JOIN sys.syscomments sco ON c.default_object_id=sco.id
@@ -254,9 +281,10 @@ namespace DatabaseInterpreter.Core
 
             return sql;
         }
-        #endregion
 
-        #region Table Primary Key      
+        #endregion Table Column
+
+        #region Table Primary Key
 
         public override Task<List<TablePrimaryKeyItem>> GetTablePrimaryKeyItemsAsync(SchemaInfoFilter filter = null)
         {
@@ -275,11 +303,11 @@ namespace DatabaseInterpreter.Core
             string commentColumn = isSimpleMode ? "" : ",ext.value AS [Comment]";
             string commentJoin = isSimpleMode ? "" : "LEFT JOIN sys.extended_properties ext ON object_id(i.name, 'PK')=ext.major_id  AND ext.class_desc='OBJECT_OR_COLUMN' AND ext.name='MS_Description'";
 
-            string sql = $@"SELECT schema_name(t.schema_id) AS [Owner], t.name AS [TableName],i.name AS [Name], 
+            string sql = $@"SELECT schema_name(t.schema_id) AS [Owner], t.name AS [TableName],i.name AS [Name],
                            c.name AS [ColumnName], ic.key_ordinal AS [Order],ic.is_descending_key AS [IsDesc],
                            CASE i.type WHEN 1 THEN 1 ELSE 0 END AS [Clustered]{commentColumn}
                          FROM sys.index_columns ic
-                         JOIN sys.columns c ON ic.object_id=c.object_id AND ic.column_id=c.column_id						
+                         JOIN sys.columns c ON ic.object_id=c.object_id AND ic.column_id=c.column_id
                          JOIN sys.indexes i ON ic.object_id=i.object_id AND ic.index_id=i.index_id
                          JOIN sys.tables t ON c.object_id=t.object_id
                          {commentJoin}
@@ -293,9 +321,10 @@ namespace DatabaseInterpreter.Core
 
             return sql;
         }
-        #endregion
 
-        #region Table Foreign Key      
+        #endregion Table Primary Key
+
+        #region Table Foreign Key
 
         public override Task<List<TableForeignKeyItem>> GetTableForeignKeyItemsAsync(SchemaInfoFilter filter = null)
         {
@@ -333,9 +362,10 @@ namespace DatabaseInterpreter.Core
 
             return sql;
         }
-        #endregion
 
-        #region Table Index       
+        #endregion Table Foreign Key
+
+        #region Table Index
 
         public override Task<List<TableIndexItem>> GetTableIndexItemsAsync(SchemaInfoFilter filter = null, bool includePrimaryKey = false)
         {
@@ -350,7 +380,7 @@ namespace DatabaseInterpreter.Core
         private string GetSqlForTableIndexItems(SchemaInfoFilter filter = null, bool includePrimaryKey = false)
         {
             bool isSimpleMode = this.IsObjectFectchSimpleMode();
-            string commentColumn = isSimpleMode ? "" : ("," + (includePrimaryKey ? "ISNULL(ext.value,ext2.value)" : "ext.value")) + " AS [Comment]";
+            string commentColumn = isSimpleMode ? "" : "," + (includePrimaryKey ? "ISNULL(ext.value,ext2.value)" : "ext.value") + " AS [Comment]";
             string commentJoin = isSimpleMode ? "" : "LEFT JOIN sys.extended_properties ext on i.object_id=ext.major_id AND i.index_id= ext.minor_id AND ext.class_desc='INDEX' AND ext.name='MS_Description'";
 
             if (!isSimpleMode && includePrimaryKey)
@@ -358,7 +388,7 @@ namespace DatabaseInterpreter.Core
                 commentJoin += Environment.NewLine + " LEFT JOIN sys.extended_properties ext2 on object_id(i.name, 'PK')=ext2.major_id  AND ext2.class_desc='OBJECT_OR_COLUMN' AND ext2.name='MS_Description'";
             }
 
-            string sql = $@"SELECT schema_name(t.schema_id) AS [Owner],object_name(ic.object_id) AS TableName,i.name AS [Name], 
+            string sql = $@"SELECT schema_name(t.schema_id) AS [Owner],object_name(ic.object_id) AS TableName,i.name AS [Name],
                           i.is_primary_key AS [IsPrimary], i.is_unique AS [IsUnique], c.name AS [ColumnName], ic.key_ordinal AS [Order],ic.is_descending_key AS [IsDesc],
                           CASE i.type WHEN 1 THEN 1 ELSE 0 END AS [Clustered]{commentColumn},
                           CASE WHEN i.is_primary_key=1 THEN 'Primary' WHEN i.is_unique=1 THEN 'Unique' WHEN i.type=6 THEN 'ColumnStore' ELSE 'Normal' END AS [Type]
@@ -377,9 +407,10 @@ namespace DatabaseInterpreter.Core
 
             return sql;
         }
-        #endregion
 
-        #region Table Trigger       
+        #endregion Table Index
+
+        #region Table Trigger
 
         public override Task<List<TableTrigger>> GetTableTriggersAsync(SchemaInfoFilter filter = null)
         {
@@ -395,7 +426,7 @@ namespace DatabaseInterpreter.Core
         {
             bool isSimpleMode = this.IsObjectFectchSimpleMode();
 
-            string sql = $@"SELECT t.name AS [Name], OBJECT_SCHEMA_NAME(t.object_id) AS [Owner],object_name(t.parent_id) AS [TableName], 
+            string sql = $@"SELECT t.name AS [Name], OBJECT_SCHEMA_NAME(t.object_id) AS [Owner],object_name(t.parent_id) AS [TableName],
                             {(isSimpleMode ? "''" : "OBJECT_DEFINITION(t.object_id)")} AS [Definition]
                             FROM sys.triggers t
                             WHERE t.parent_id >0";
@@ -419,9 +450,11 @@ namespace DatabaseInterpreter.Core
 
             return sql;
         }
-        #endregion
+
+        #endregion Table Trigger
 
         #region Table Constraint
+
         public override Task<List<TableConstraint>> GetTableConstraintsAsync(SchemaInfoFilter filter = null)
         {
             return base.GetDbObjectsAsync<TableConstraint>(this.GetSqlForTableConstraints(filter));
@@ -438,7 +471,7 @@ namespace DatabaseInterpreter.Core
             string commentColumn = isSimpleMode ? "" : ",ext.value AS [Comment]";
             string commentJoin = isSimpleMode ? "" : "LEFT JOIN sys.extended_properties ext ON object_id(chk.name, 'C')=ext.major_id  AND ext.class_desc='OBJECT_OR_COLUMN' AND ext.name='MS_Description'";
 
-            string sql = $@"select schema_name(t.schema_id) as [Owner], t.name as [TableName], col.name as [ColumnName], chk.name as [Name], 
+            string sql = $@"select schema_name(t.schema_id) as [Owner], t.name as [TableName], col.name as [ColumnName], chk.name as [Name],
                          chk.definition as [Definition] {commentColumn}
                          from sys.check_constraints chk
                          inner join sys.columns col on chk.parent_object_id = col.object_id and col.column_id = chk.parent_column_id
@@ -454,9 +487,10 @@ namespace DatabaseInterpreter.Core
 
             return sql;
         }
-        #endregion
 
-        #region View       
+        #endregion Table Constraint
+
+        #region View
 
         public override Task<List<View>> GetViewsAsync(SchemaInfoFilter filter = null)
         {
@@ -486,9 +520,10 @@ namespace DatabaseInterpreter.Core
 
             return sql;
         }
-        #endregion       
 
-        #region Procedure       
+        #endregion View
+
+        #region Procedure
 
         public override Task<List<Procedure>> GetProceduresAsync(SchemaInfoFilter filter = null)
         {
@@ -504,7 +539,7 @@ namespace DatabaseInterpreter.Core
         {
             bool isSimpleMode = this.IsObjectFectchSimpleMode();
 
-            string sql = $@"SELECT name AS [Name], SCHEMA_NAME(schema_id) AS [Owner], 
+            string sql = $@"SELECT name AS [Name], SCHEMA_NAME(schema_id) AS [Owner],
                             {(isSimpleMode ? "''" : "OBJECT_DEFINITION(object_id)")} AS [Definition]
                             FROM sys.procedures
                             WHERE name not like 'sp[_]%'";
@@ -519,7 +554,8 @@ namespace DatabaseInterpreter.Core
 
             return sql;
         }
-        #endregion
+
+        #endregion Procedure
 
         #region Table Constraint
 
@@ -528,7 +564,7 @@ namespace DatabaseInterpreter.Core
             return base.GetDbObjectsAsync<TableDefaultValueConstraint>(this.GetSqlForTableDefaultValueConstraints(filter));
         }
 
-        public  Task<List<TableDefaultValueConstraint>> GetTableDefautValueConstraintsAsync(DbConnection dbConnection, SchemaInfoFilter filter = null)
+        public Task<List<TableDefaultValueConstraint>> GetTableDefautValueConstraintsAsync(DbConnection dbConnection, SchemaInfoFilter filter = null)
         {
             return base.GetDbObjectsAsync<TableDefaultValueConstraint>(dbConnection, this.GetSqlForTableDefaultValueConstraints(filter));
         }
@@ -548,8 +584,10 @@ namespace DatabaseInterpreter.Core
 
             return sql;
         }
-        #endregion
-        #endregion
+
+        #endregion Table Constraint
+
+        #endregion Schema Information
 
         #region Database Operation
 
@@ -565,20 +603,21 @@ namespace DatabaseInterpreter.Core
             return base.GetTableRecordCountAsync(connection, sql);
         }
 
-
         private async Task<bool> IsProcedureExisted(DbConnection dbConnection, string procedureName)
         {
             object result = await this.GetScalarAsync(dbConnection, $"SELECT name FROM master.dbo.sysobjects WHERE name = '{procedureName}' AND type='P'");
 
             return result != null && result.ToString().ToLower() == procedureName.ToLower();
         }
-        #endregion
+
+        #endregion Database Operation
 
         #region BulkCopy
+
         public override async Task BulkCopyAsync(DbConnection connection, DataTable dataTable, BulkCopyInfo bulkCopyInfo)
         {
             SqlBulkCopy bulkCopy = await this.GetBulkCopy(connection, bulkCopyInfo);
-            {               
+            {
                 await bulkCopy.WriteToServerAsync(this.ConvertDataTable(dataTable, bulkCopyInfo), bulkCopyInfo.CancellationToken);
             }
         }
@@ -753,12 +792,12 @@ namespace DatabaseInterpreter.Core
         {
             SqlBulkCopyOptions option = SqlBulkCopyOptions.Default;
 
-            if(bulkCopyInfo.KeepIdentity)
+            if (bulkCopyInfo.KeepIdentity)
             {
                 option = SqlBulkCopyOptions.KeepIdentity;
             }
 
-            SqlBulkCopy bulkCopy = new SqlBulkCopy(connection as SqlConnection, option , bulkCopyInfo.Transaction as SqlTransaction);
+            SqlBulkCopy bulkCopy = new SqlBulkCopy(connection as SqlConnection, option, bulkCopyInfo.Transaction as SqlTransaction);
 
             await this.OpenConnectionAsync(connection);
 
@@ -775,9 +814,11 @@ namespace DatabaseInterpreter.Core
 
             return bulkCopy;
         }
-        #endregion
+
+        #endregion BulkCopy
 
         #region Parse Column & DataType
+
         public override string ParseColumn(Table table, TableColumn column)
         {
             if (column.IsUserDefined)
@@ -795,8 +836,8 @@ namespace DatabaseInterpreter.Core
             {
                 string dataType = this.ParseDataType(column);
 
-                string identityClause = (this.Option.TableScriptsGenerateOption.GenerateIdentity && column.IsIdentity ? $"IDENTITY({table.IdentitySeed},{table.IdentityIncrement})" : "");
-                string requireClause = (column.IsRequired ? "NOT NULL" : "NULL");
+                string identityClause = this.Option.TableScriptsGenerateOption.GenerateIdentity && column.IsIdentity ? $"IDENTITY({table.IdentitySeed},{table.IdentityIncrement})" : "";
+                string requireClause = column.IsRequired ? "NOT NULL" : "NULL";
                 //string defaultValueClause = this.Option.TableScriptsGenerateOption.GenerateDefaultValue && !string.IsNullOrEmpty(column.DefaultValue) ? (" DEFAULT " + this.GetColumnDefaultValue(column)) : "";
                 string scriptComment = string.IsNullOrEmpty(column.ScriptComment) ? "" : $"/*{column.ScriptComment}*/";
 
@@ -869,9 +910,11 @@ namespace DatabaseInterpreter.Core
 
             return string.Empty;
         }
-        #endregion
+
+        #endregion Parse Column & DataType
 
         #region Sql Query Clause
+
         protected override string GetSqlForPagination(string tableName, string columnNames, string orderColumns, string whereClause, long pageNumber, int pageSize)
         {
             var startEndRowNumber = PaginationHelper.GetStartEndRowNumber(pageNumber, pageSize);
@@ -900,9 +943,11 @@ namespace DatabaseInterpreter.Core
         {
             return $"OFFSET {limitStart} ROWS FETCH NEXT {limitCount} ROWS ONLY";
         }
-        #endregion      
+
+        #endregion Sql Query Clause
 
         #region InfoMessage
+
         protected override void SubscribeInfoMessage(DbConnection dbConnection)
         {
             SqlConnection connection = dbConnection as SqlConnection;
@@ -924,10 +969,12 @@ namespace DatabaseInterpreter.Core
         {
             this.FeedbackInfo($"{e.RecordCount} row(s) affected.");
         }
-        #endregion
+
+        #endregion InfoMessage
 
         public override string GetObjectDisplayName(DatabaseObject obj, bool useQuotedString = false)
-        { return $"{this.GetString(obj.Owner, useQuotedString)}.{this.GetString(obj.Name, useQuotedString)}"; 
+        {
+            return $"{this.GetString(obj.Owner, useQuotedString)}.{this.GetString(obj.Name, useQuotedString)}";
         }
     }
 }

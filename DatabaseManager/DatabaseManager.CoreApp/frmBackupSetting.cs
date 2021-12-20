@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using DatabaseInterpreter.Model;
-using DatabaseManager.Model;
-using DatabaseManager.Core;
 using System.IO;
+using System.Linq;
+using System.Windows.Forms;
+
+using DatabaseInterpreter.Model;
+
+using DatabaseManager.Core;
 using DatabaseManager.Helper;
+using DatabaseManager.Model;
 
 namespace DatabaseManager
 {
@@ -60,7 +57,7 @@ namespace DatabaseManager
 
             DataGridViewCell cell = this.dgvSettings.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
-            if(cell.ReadOnly)
+            if (cell.ReadOnly)
             {
                 return;
             }
@@ -72,7 +69,7 @@ namespace DatabaseManager
                 if (this.openFileDialog1 == null)
                 {
                     this.openFileDialog1 = new OpenFileDialog();
-                }               
+                }
 
                 if (!string.IsNullOrEmpty(value) && File.Exists(value))
                 {
@@ -92,10 +89,10 @@ namespace DatabaseManager
             }
             else if (e.ColumnIndex == this.colSaveFolder.Index)
             {
-                if(this.folderBrowserDialog1==null)
+                if (this.folderBrowserDialog1 == null)
                 {
                     this.folderBrowserDialog1 = new FolderBrowserDialog();
-                }            
+                }
 
                 if (!string.IsNullOrEmpty(value) && File.Exists(value))
                 {
@@ -164,11 +161,11 @@ namespace DatabaseManager
 
         private void dgvSettings_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
-            foreach(DataGridViewRow row in this.dgvSettings.Rows)
+            foreach (DataGridViewRow row in this.dgvSettings.Rows)
             {
                 string dbType = DataGridViewHelper.GetCellStringValue(row, this.colDatabaseType.Name);
 
-                if(dbType == DatabaseType.SqlServer.ToString())
+                if (dbType == DatabaseType.SqlServer.ToString())
                 {
                     row.Cells[this.colClientToolFilePath.Name].ReadOnly = true;
                     row.Cells[this.colZipBackupFile.Name].ReadOnly = true;

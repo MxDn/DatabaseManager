@@ -1,6 +1,7 @@
-﻿using Antlr4.Runtime;
+﻿using System.Collections.Generic;
+
+using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
-using System.Collections.Generic;
 
 namespace SqlAnalyser.Model
 {

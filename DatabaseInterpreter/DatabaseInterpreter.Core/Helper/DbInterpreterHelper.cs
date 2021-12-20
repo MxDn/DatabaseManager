@@ -1,21 +1,19 @@
-﻿using DatabaseInterpreter.Model;
+﻿using System.Collections.Generic;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+using DatabaseInterpreter.Model;
 
 namespace DatabaseInterpreter.Core
 {
     public interface IDbInterpreterFactory
     {
         DbInterpreter GetDbInterpreter(ConnectionInfo connectionInfo, DbInterpreterOption option);
-
     }
-    public  class DbInterpreterHelper
+
+    public class DbInterpreterHelper
     {
-        private   readonly Dictionary<DatabaseType, IDbInterpreterFactory> registeredDbInterpreter;
-        public   DbInterpreterHelper(Dictionary<DatabaseType, IDbInterpreterFactory> dbInterpreterFactorys)
+        private readonly Dictionary<DatabaseType, IDbInterpreterFactory> registeredDbInterpreter;
+
+        public DbInterpreterHelper(Dictionary<DatabaseType, IDbInterpreterFactory> dbInterpreterFactorys)
         {
             registeredDbInterpreter = dbInterpreterFactorys;
         }
@@ -24,10 +22,9 @@ namespace DatabaseInterpreter.Core
         {
         }
 
-        public   DbInterpreter GetDbInterpreter(DatabaseType dbType, ConnectionInfo connectionInfo, DbInterpreterOption option)
+        public DbInterpreter GetDbInterpreter(DatabaseType dbType, ConnectionInfo connectionInfo, DbInterpreterOption option)
         {
             return registeredDbInterpreter[dbType].GetDbInterpreter(connectionInfo, option);
         }
-
     }
 }

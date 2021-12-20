@@ -1,14 +1,10 @@
-﻿using DatabaseInterpreter.Core;
-using DatabaseManager.Model;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using DatabaseInterpreter.Core;
+
+using DatabaseManager.Model;
 
 namespace DatabaseManager
 {
@@ -166,17 +162,17 @@ namespace DatabaseManager
 
         private void rbSingle_CheckedChanged(object sender, EventArgs e)
         {
-            this.SetControlEnabled();           
+            this.SetControlEnabled();
         }
 
         private void rbRange_CheckedChanged(object sender, EventArgs e)
         {
-            this.SetControlEnabled();            
+            this.SetControlEnabled();
         }
 
         private void rbSeries_CheckedChanged(object sender, EventArgs e)
         {
-            this.SetControlEnabled();            
+            this.SetControlEnabled();
         }
 
         private void SetControlEnabled()

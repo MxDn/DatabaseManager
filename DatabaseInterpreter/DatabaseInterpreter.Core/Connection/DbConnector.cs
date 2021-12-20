@@ -1,7 +1,7 @@
-using DatabaseInterpreter.Model;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Common;
+
+using DatabaseInterpreter.Model;
 
 namespace DatabaseInterpreter.Core
 {
@@ -10,6 +10,7 @@ namespace DatabaseInterpreter.Core
         private readonly IDbProvider _dbProvider;
         private readonly string _connectionString;
         private readonly IDictionary<string, DbProviderFactory> registeredDbProviderFactory;
+
         public DbConnector(IDbProvider dbProvider, string connectionString)
         {
             this._dbProvider = dbProvider;
@@ -26,8 +27,8 @@ namespace DatabaseInterpreter.Core
         {
             DbProviderFactory factory = null;
 
-            string lowerProviderName = this._dbProvider.ProviderName.ToLower(); 
-             factory = this._dbProvider.GetDbProviderFactory();
+            string lowerProviderName = this._dbProvider.ProviderName.ToLower();
+            factory = this._dbProvider.GetDbProviderFactory();
             DbConnection connection = factory.CreateConnection();
             if (connection != null)
             {

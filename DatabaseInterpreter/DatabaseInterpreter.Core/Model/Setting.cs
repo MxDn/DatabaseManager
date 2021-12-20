@@ -19,6 +19,6 @@ namespace DatabaseInterpreter.Model
     public enum DbObjectNameMode
     {
         WithQuotation = 0,
-        WithoutQuotation = 1,       
+        WithoutQuotation = 1,
     }
 }

@@ -1,15 +1,16 @@
-﻿using DatabaseInterpreter.Core;
-using DatabaseInterpreter.Model;
-using DatabaseInterpreter.Utility;
-using DatabaseManager.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Text;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
+using DatabaseInterpreter.Utility;
+
+using DatabaseManager.Model;
 
 namespace DatabaseManager.Core
 {
@@ -22,12 +23,13 @@ namespace DatabaseManager.Core
 
         public CancellationTokenSource CancellationTokenSource { get; private set; }
         public bool CancelRequested => this.cancelRequested;
-        public bool IsBusy => this.isBusy;      
+        public bool IsBusy => this.isBusy;
         public int LimitCount { get; set; } = 1000;
 
         public event FeedbackHandler OnFeedback;
 
-        DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
+        private DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
+
         public ScriptRunner()
         {
             this.CancellationTokenSource = new CancellationTokenSource();
@@ -96,7 +98,7 @@ namespace DatabaseManager.Core
                         }
                         else
                         {
-                            string delimiter = dbInterpreter.ScriptsDelimiter;                         
+                            string delimiter = dbInterpreter.ScriptsDelimiter;
 
                             commands = script.Split(new string[] { delimiter, delimiter.Replace("\r", "\n") }, StringSplitOptions.RemoveEmptyEntries);
                         }
@@ -120,7 +122,7 @@ namespace DatabaseManager.Core
 
                             int res = await dbInterpreter.ExecuteNonQueryAsync(dbConnection, commandInfo);
 
-                            affectedRows += (res == -1 ? 0 : res);
+                            affectedRows += res == -1 ? 0 : res;
                         }
 
                         result.Result = affectedRows;

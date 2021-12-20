@@ -1,14 +1,15 @@
-using DatabaseInterpreter.Core;
-using DatabaseInterpreter.Model;
-using DatabaseInterpreter.Profile;
-using DatabaseManager.Core;
-using DatabaseManager.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
+using DatabaseInterpreter.Profile;
+
+using DatabaseManager.Model;
 
 namespace DatabaseManager.Controls
 {
@@ -27,6 +28,7 @@ namespace DatabaseManager.Controls
             {
                 {DatabaseType.SqlServer,new SqlServerDbInterpreterFactory()}
             });
+
         public UC_DbAccountInfo()
         {
             InitializeComponent();
@@ -86,7 +88,7 @@ namespace DatabaseManager.Controls
                 {
                     this.chkRememberPassword.Checked = true;
                 }
-                else if(!string.IsNullOrEmpty(password))
+                else if (!string.IsNullOrEmpty(password))
                 {
                     this.txtPassword.Text = password;
                 }

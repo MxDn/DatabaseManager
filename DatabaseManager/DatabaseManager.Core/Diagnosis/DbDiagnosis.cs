@@ -1,13 +1,14 @@
-using DatabaseManager.Model;
-using System;
-using System.Text;
-using DatabaseInterpreter.Model;
-using System.Threading.Tasks;
-using DatabaseInterpreter.Core;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using System.Threading.Tasks;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
 using DatabaseInterpreter.Utility;
+
+using DatabaseManager.Model;
 
 namespace DatabaseManager.Core
 {
@@ -17,9 +18,10 @@ namespace DatabaseManager.Core
         protected ConnectionInfo connectionInfo;
 
         public FeedbackHandler OnFeedback;
-        DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
+        private DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper();
 
-        static IDictionary<DatabaseType, DbDiagnosis> registeredDbDiagnosis;
+        private static IDictionary<DatabaseType, DbDiagnosis> registeredDbDiagnosis;
+
         public DbDiagnosis(ConnectionInfo connectionInfo)
         {
             this.connectionInfo = connectionInfo;
@@ -142,6 +144,7 @@ namespace DatabaseManager.Core
         }
 
         public abstract string GetStringLengthFunction();
+
         public abstract string GetStringNullFunction();
 
         public static DbDiagnosis GetInstance(DatabaseType databaseType, ConnectionInfo connectionInfo)

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace DatabaseInterpreter.Model
 {
     public class DataTypeSpecification
-    {     
+    {
         public string Name { get; set; }
         public string Format { get; set; }
         public string Args { get; set; }

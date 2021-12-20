@@ -1,17 +1,13 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+
 using DatabaseInterpreter.Core;
 using DatabaseInterpreter.Model;
-using DatabaseManager.Model;
-using DatabaseManager.Core;
 using DatabaseInterpreter.Utility;
+
+using DatabaseManager.Core;
+using DatabaseManager.Model;
 
 namespace DatabaseManager
 {
@@ -20,7 +16,7 @@ namespace DatabaseManager
         public DatabaseType DatabaseType { get; set; }
         public ConnectionInfo ConnectionInfo { get; set; }
 
-        DbManager dbManager = null;
+        private DbManager dbManager = null;
 
         public frmDiagnose()
         {

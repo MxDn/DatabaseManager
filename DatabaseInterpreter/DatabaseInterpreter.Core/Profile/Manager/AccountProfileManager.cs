@@ -1,9 +1,11 @@
-﻿using DatabaseInterpreter.Utility;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
+using DatabaseInterpreter.Utility;
+
+using Newtonsoft.Json;
 
 namespace DatabaseInterpreter.Profile
 {
@@ -63,11 +65,11 @@ namespace DatabaseInterpreter.Profile
             if (File.Exists(ProfilePath))
             {
                 profiles = ((IEnumerable<AccountProfileInfo>)JsonConvert.DeserializeObject(File.ReadAllText(ProfilePath), typeof(IEnumerable<AccountProfileInfo>)))
-                            .Where(item => (item.DatabaseType == dbType || string.IsNullOrEmpty(dbType) ));
+                            .Where(item => item.DatabaseType == dbType || string.IsNullOrEmpty(dbType));
 
-                foreach(var profile in profiles)
+                foreach (var profile in profiles)
                 {
-                    if(!profile.IntegratedSecurity && !string.IsNullOrEmpty(profile.Password))
+                    if (!profile.IntegratedSecurity && !string.IsNullOrEmpty(profile.Password))
                     {
                         profile.Password = AesHelper.Decrypt(profile.Password);
                     }
@@ -88,16 +90,16 @@ namespace DatabaseInterpreter.Profile
 
             var oldProfiles = profiles.Where(item => ids.Contains(item.Id));
 
-            if (oldProfiles != null && oldProfiles.Count()>0 )
+            if (oldProfiles != null && oldProfiles.Count() > 0)
             {
-                profiles.RemoveAll(item=> oldProfiles.Any(t=>item.Id == t.Id));
+                profiles.RemoveAll(item => oldProfiles.Any(t => item.Id == t.Id));
 
                 var connectionProfiles = ConnectionProfileManager.GetProfiles(null, true).ToList();
 
                 connectionProfiles.RemoveAll(item => ids.Contains(item.AccountProfileId));
 
                 File.WriteAllText(ConnectionProfileManager.ProfilePath, JsonConvert.SerializeObject(connectionProfiles, Formatting.Indented));
-            }          
+            }
 
             File.WriteAllText(ProfilePath, JsonConvert.SerializeObject(profiles, Formatting.Indented));
         }

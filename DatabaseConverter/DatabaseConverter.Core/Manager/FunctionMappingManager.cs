@@ -1,16 +1,19 @@
-﻿using DatabaseConverter.Model;
-using DatabaseInterpreter.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
+using DatabaseConverter.Model;
+
+using DatabaseInterpreter.Core;
+
 namespace DatabaseConverter.Core
 {
     public class FunctionMappingManager : ConfigManager
     {
-        public static string FunctionMappingFilePath { get { return Path.Combine(ConfigRootFolder, "FunctionMapping.xml"); } }
+        public static string FunctionMappingFilePath
+        { get { return Path.Combine(ConfigRootFolder, "FunctionMapping.xml"); } }
 
         public static List<IEnumerable<FunctionMapping>> _functionMappings;
 

@@ -1,8 +1,9 @@
-﻿using DatabaseInterpreter.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace  DatabaseInterpreter.Core
+using DatabaseInterpreter.Model;
+
+namespace DatabaseInterpreter.Core
 {
     public class TableReferenceHelper
     {
@@ -39,7 +40,7 @@ namespace  DatabaseInterpreter.Core
             return sortedTableNames;
         }
 
-        private static List<string> GetSortedTableNames(List<string>tableNames, List<TableForeignKey> tableForeignKeys)
+        private static List<string> GetSortedTableNames(List<string> tableNames, List<TableForeignKey> tableForeignKeys)
         {
             List<string> sortedTableNames = new List<string>();
 
@@ -47,7 +48,7 @@ namespace  DatabaseInterpreter.Core
             {
                 string tableName = tableNames[i];
                 IEnumerable<TableForeignKey> foreignKeys = tableForeignKeys.Where(item => item.TableName == tableName && item.TableName != item.ReferencedTableName);
-                               
+
                 if (foreignKeys.Any())
                 {
                     foreach (TableForeignKey foreignKey in foreignKeys)
@@ -55,7 +56,7 @@ namespace  DatabaseInterpreter.Core
                         int referencedTableIndex = tableNames.IndexOf(foreignKey.ReferencedTableName);
                         if (referencedTableIndex >= 0 && referencedTableIndex > i)
                         {
-                            sortedTableNames.Add(foreignKey.ReferencedTableName);                          
+                            sortedTableNames.Add(foreignKey.ReferencedTableName);
                         }
                     }
                 }
@@ -70,7 +71,7 @@ namespace  DatabaseInterpreter.Core
             {
                 string tableName = sortedTableNames[i];
                 IEnumerable<TableForeignKey> foreignKeys = tableForeignKeys.Where(item => item.TableName == tableName && item.TableName != item.ReferencedTableName);
-                               
+
                 if (foreignKeys.Any())
                 {
                     foreach (TableForeignKey foreignKey in foreignKeys)
@@ -132,7 +133,7 @@ namespace  DatabaseInterpreter.Core
                 }
             }
 
-            return tables.OrderBy(item => item.Order).ToList(); 
+            return tables.OrderBy(item => item.Order).ToList();
         }
     }
 }

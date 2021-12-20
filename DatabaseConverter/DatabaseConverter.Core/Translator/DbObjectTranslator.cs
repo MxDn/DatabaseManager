@@ -1,12 +1,15 @@
-﻿using DatabaseConverter.Model;
-using DatabaseInterpreter.Core;
-using DatabaseInterpreter.Model;
-using DatabaseInterpreter.Utility;
-using PoorMansTSqlFormatterRedux;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+
+using DatabaseConverter.Model;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
+using DatabaseInterpreter.Utility;
+
+using PoorMansTSqlFormatterRedux;
 
 namespace DatabaseConverter.Core
 {
@@ -33,7 +36,6 @@ namespace DatabaseConverter.Core
         {
             this.sourceDbInterpreter = source;
             this.targetDbInterpreter = target;
-
         }
 
         public void LoadMappings()
@@ -351,6 +353,7 @@ namespace DatabaseConverter.Core
         {
             this.Feedback(FeedbackInfoType.Info, message);
         }
+
         public void FeedbackError(string message, bool skipError = false)
         {
             this.Feedback(FeedbackInfoType.Error, message, skipError);

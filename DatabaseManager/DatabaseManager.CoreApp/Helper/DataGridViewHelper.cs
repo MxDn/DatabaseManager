@@ -1,12 +1,9 @@
-﻿using DatabaseInterpreter.Core;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using DatabaseInterpreter.Core;
 
 namespace DatabaseManager.Helper
 {
@@ -21,6 +18,7 @@ namespace DatabaseManager.Helper
 
             return null;
         }
+
         public static DataTable ConvertDataTable(DataTable dataTable)
         {
             DataTable dt = dataTable.Clone();
@@ -69,7 +67,7 @@ namespace DatabaseManager.Helper
 
             int gridWidth = dgv.Width;
             int totalWidth = 0;
-            int rowHeadersWidth = (dgv.RowHeadersVisible ? dgv.RowHeadersWidth : 0);
+            int rowHeadersWidth = dgv.RowHeadersVisible ? dgv.RowHeadersWidth : 0;
             int width = 0;
 
             totalWidth += rowHeadersWidth;
@@ -151,7 +149,7 @@ namespace DatabaseManager.Helper
 
         public static bool IsEmptyRow(DataGridViewRow row)
         {
-            if(row == null)
+            if (row == null)
             {
                 return true;
             }
@@ -159,13 +157,13 @@ namespace DatabaseManager.Helper
             int visibleCount = 0;
             int emptyCount = 0;
 
-            foreach(DataGridViewCell cell in row.Cells)
+            foreach (DataGridViewCell cell in row.Cells)
             {
-                if(cell.Visible)
+                if (cell.Visible)
                 {
                     visibleCount++;
 
-                    if(string.IsNullOrEmpty(cell.Value?.ToString()))
+                    if (string.IsNullOrEmpty(cell.Value?.ToString()))
                     {
                         emptyCount++;
                     }

@@ -1,8 +1,8 @@
-﻿using DatabaseInterpreter.Core;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Text;
 using System.Text.RegularExpressions;
+
+using DatabaseInterpreter.Core;
 
 namespace DatabaseManager.Core
 {
@@ -30,9 +30,9 @@ namespace DatabaseManager.Core
         {
             StringBuilder sb = new StringBuilder();
 
-            string []lines = this.originalScript.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = this.originalScript.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-            foreach(string line in lines)
+            foreach (string line in lines)
             {
                 if (line.Trim().StartsWith(this.dbInterpreter.CommentString))
                 {

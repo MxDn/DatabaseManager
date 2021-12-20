@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DatabaseInterpreter.Model
+﻿namespace DatabaseInterpreter.Model
 {
-    public class DropDbObjectScript<T>: DatabaseObjectScript<T>
+    public class DropDbObjectScript<T> : DatabaseObjectScript<T>
         where T : DatabaseObject
     {
-        public DropDbObjectScript(string script) : base(script) { }       
+        public DropDbObjectScript(string script) : base(script)
+        {
+        }
     }
 }

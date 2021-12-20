@@ -11,7 +11,7 @@
   <item name="BFILENAME" args="DIR,FILE_NAME"></item>
   <item name="BIN_TO_NUM" args="EXP1,EXP2,..."></item>
   <item name="BITAND" args="EXP1,EXP2"></item>
-  <item name="CARDINALITY" args="COLUMN"></item> 
+  <item name="CARDINALITY" args="COLUMN"></item>
   <item name="CAST" args="EXP AS TYPE" delimiter="AS"></item>
   <item name="CEIL" args="EXL"></item>
   <item name="CHARTOROWID" args="EXP"></item>

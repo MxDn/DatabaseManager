@@ -11,7 +11,7 @@ namespace SqlAnalyser.Model
         {
             StringBuilder sb = new StringBuilder();
 
-            foreach(SqlSyntaxErrorItem item in this.Items)
+            foreach (SqlSyntaxErrorItem item in this.Items)
             {
                 sb.AppendLine($"{item.Text}(Line={item.Line},Column={item.Column},StartIndex={item.StartIndex},StopIndex={item.StopIndex});");
             }

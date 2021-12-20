@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
+
 using CsvHelper;
 
 namespace DatabaseManager.Helper
@@ -25,7 +22,7 @@ namespace DatabaseManager.Helper
                 writer.NextRecord();
 
                 foreach (DataRow row in dt.Rows)
-                {                    
+                {
                     for (var i = 0; i < dt.Columns.Count; i++)
                     {
                         writer.WriteField(row[i]);

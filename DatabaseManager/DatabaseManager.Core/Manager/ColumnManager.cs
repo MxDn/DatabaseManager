@@ -1,11 +1,11 @@
-﻿using DatabaseInterpreter.Core;
+﻿using System.Collections.Generic;
+using System.Linq;
+
+using DatabaseInterpreter.Core;
 using DatabaseInterpreter.Model;
 using DatabaseInterpreter.Utility;
+
 using DatabaseManager.Model;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DatabaseManager.Core
 {
@@ -81,7 +81,7 @@ namespace DatabaseManager.Core
         {
             message = "";
 
-            if(columnDesingerInfo.IsUserDefined)
+            if (columnDesingerInfo.IsUserDefined)
             {
                 return true;
             }

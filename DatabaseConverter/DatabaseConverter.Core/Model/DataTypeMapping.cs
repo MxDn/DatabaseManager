@@ -15,7 +15,9 @@ namespace DatabaseConverter.Model
         public string Type { get; set; }
         public bool IsExpression { get; set; }
 
-        public DataTypeMappingSource() { }
+        public DataTypeMappingSource()
+        { }
+
         public DataTypeMappingSource(XElement element)
         {
             var source = element.Element("source");
@@ -34,7 +36,9 @@ namespace DatabaseConverter.Model
         public string Args { get; set; }
         public List<DataTypeMappingArgument> Arguments { get; set; } = new List<DataTypeMappingArgument>();
 
-        public DataTypeMappingTarget() { }
+        public DataTypeMappingTarget()
+        { }
+
         public DataTypeMappingTarget(XElement element)
         {
             var target = element.Element("target");
@@ -54,21 +58,23 @@ namespace DatabaseConverter.Model
     }
 
     public class DataTypeMappingSpecial
-    {               
+    {
         public string Name { get; set; }
         public string Value { get; set; }
         public string Type { get; set; }
         public string TargetMaxLength { get; set; }
-        public string Substitute { get; set; }       
+        public string Substitute { get; set; }
 
-        public DataTypeMappingSpecial() { }
+        public DataTypeMappingSpecial()
+        { }
+
         public DataTypeMappingSpecial(XElement element)
-        {            
+        {
             this.Name = element.Attribute("name")?.Value;
-            this.Value = element.Attribute("value")?.Value;          
+            this.Value = element.Attribute("value")?.Value;
             this.Type = element.Attribute("type")?.Value;
             this.TargetMaxLength = element.Attribute("targetMaxLength")?.Value;
-            this.Substitute = element.Attribute("substitute")?.Value;           
+            this.Substitute = element.Attribute("substitute")?.Value;
         }
     }
 }

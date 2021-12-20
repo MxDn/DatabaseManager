@@ -1,8 +1,9 @@
-﻿using DatabaseInterpreter.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+
+using DatabaseInterpreter.Model;
 
 namespace DatabaseInterpreter.Core
 {

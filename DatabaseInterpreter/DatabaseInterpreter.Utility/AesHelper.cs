@@ -9,7 +9,7 @@ namespace DatabaseInterpreter.Utility
     {
         public static string IV { get; set; } = "1234567812345678";
         public static string Key { get; set; } = "FA5DEAAB-5171-405A-9CED-E2C6DED6";
-        
+
         public static string Encrypt(string plainText)
         {
             byte[] data = Encrypt(plainText, Encoding.UTF8.GetBytes(Key), Encoding.UTF8.GetBytes(IV));
@@ -52,10 +52,8 @@ namespace DatabaseInterpreter.Utility
                 }
             }
 
-
             // Return the encrypted bytes from the memory stream.
             return encrypted;
-
         }
 
         public static string Decrypt(string cipherText)
@@ -94,14 +92,12 @@ namespace DatabaseInterpreter.Utility
                     {
                         using (StreamReader srDecrypt = new StreamReader(csDecrypt))
                         {
-
                             // Read the decrypted bytes from the decrypting stream
                             // and place them in a string.
                             plaintext = srDecrypt.ReadToEnd();
                         }
                     }
                 }
-
             }
 
             return plaintext;

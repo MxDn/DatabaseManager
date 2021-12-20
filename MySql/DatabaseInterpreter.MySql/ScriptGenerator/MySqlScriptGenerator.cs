@@ -1,27 +1,32 @@
-using DatabaseInterpreter.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DatabaseInterpreter.Utility;
+
+using DatabaseInterpreter.Model;
 
 namespace DatabaseInterpreter.Core
 {
     public class MySqlScriptGenerator : DbScriptGenerator
     {
-        public MySqlScriptGenerator(DbInterpreter dbInterpreter) : base(dbInterpreter) { }
+        public MySqlScriptGenerator(DbInterpreter dbInterpreter) : base(dbInterpreter)
+        {
+        }
 
-        #region Generate Schema Scripts 
+        #region Generate Schema Scripts
 
         public override ScriptBuilder GenerateSchemaScripts(SchemaInfo schemaInfo)
         {
             ScriptBuilder sb = new ScriptBuilder();
 
-            #region Function           
+            #region Function
+
             sb.AppendRange(this.GenerateScriptDbObjectScripts<Function>(schemaInfo.Functions));
-            #endregion
+
+            #endregion Function
 
             #region Table
+
             foreach (Table table in schemaInfo.Tables)
             {
                 this.FeedbackInfo(OperationState.Begin, table);
@@ -38,20 +43,26 @@ namespace DatabaseInterpreter.Core
 
                 this.FeedbackInfo(OperationState.End, table);
             }
-            #endregion            
 
-            #region View           
+            #endregion Table
+
+            #region View
+
             sb.AppendRange(this.GenerateScriptDbObjectScripts<View>(schemaInfo.Views));
 
-            #endregion
+            #endregion View
 
-            #region Trigger           
+            #region Trigger
+
             sb.AppendRange(this.GenerateScriptDbObjectScripts<TableTrigger>(schemaInfo.TableTriggers));
-            #endregion
 
-            #region Procedure           
+            #endregion Trigger
+
+            #region Procedure
+
             sb.AppendRange(this.GenerateScriptDbObjectScripts<Procedure>(schemaInfo.Procedures));
-            #endregion
+
+            #endregion Procedure
 
             if (this.option.ScriptOutputMode.HasFlag(GenerateScriptOutputMode.WriteToFile))
             {
@@ -89,9 +100,9 @@ namespace DatabaseInterpreter.Core
             return name;
         }
 
-        #endregion
+        #endregion Generate Schema Scripts
 
-        #region Data Script    
+        #region Data Script
 
         public override Task<string> GenerateDataScriptsAsync(SchemaInfo schemaInfo)
         {
@@ -103,6 +114,7 @@ namespace DatabaseInterpreter.Core
             string hex = string.Concat(((byte[])value).Select(item => item.ToString("X2")));
             return $"UNHEX('{hex}')";
         }
+
         protected override object ParseValue(TableColumn column, object value, bool bytesAsString = false)
         {
             if (value != null)
@@ -143,7 +155,7 @@ namespace DatabaseInterpreter.Core
                 {
                     case nameof(Guid):
 
-                        needQuotated = true; 
+                        needQuotated = true;
                         strValue = value.ToString();
                         break;
 
@@ -226,7 +238,6 @@ namespace DatabaseInterpreter.Core
                 {
                     strValue = $"{this.dbInterpreter.UnicodeInsertChar}'{ValueHelper.TransferSingleQuotation(strValue)}'";
 
-
                     return strValue;
                 }
                 else
@@ -240,9 +251,10 @@ namespace DatabaseInterpreter.Core
             }
         }
 
-        #endregion
+        #endregion Data Script
 
         #region Alter Table
+
         public override Script RenameTable(Table table, string newName)
         {
             return new AlterDbObjectScript<Table>($"ALTER TABLE {this.GetQuotedString(table.Name)} RENAME {this.GetQuotedString(newName)};");
@@ -329,6 +341,7 @@ namespace DatabaseInterpreter.Core
         {
             return new DropDbObjectScript<TableForeignKey>($"ALTER TABLE {this.GetQuotedString(foreignKey.TableName)} DROP FOREIGN KEY {this.GetQuotedString(foreignKey.Name)}");
         }
+
         public override Script AddIndex(TableIndex index)
         {
             string columnNames = string.Join(",", index.Columns.Select(item => $"{this.GetQuotedString(item.ColumnName)}"));
@@ -376,11 +389,12 @@ namespace DatabaseInterpreter.Core
             return new AlterDbObjectScript<TableColumn>($"ALTER TABLE { this.GetQuotedString(column.TableName)} MODIFY COLUMN {this.dbInterpreter.ParseColumn(table, column)} {(enabled ? "AUTO_INCREMENT" : "")}");
         }
 
-        #endregion
+        #endregion Alter Table
 
         #region Database Operation
 
-        public override Script AddUserDefinedType(UserDefinedType userDefinedType) { return new Script(""); }
+        public override Script AddUserDefinedType(UserDefinedType userDefinedType)
+        { return new Script(""); }
 
         public override ScriptBuilder AddTable(Table table, IEnumerable<TableColumn> columns,
             TablePrimaryKey primaryKey,
@@ -419,12 +433,12 @@ $@"
 $@"
 CREATE TABLE {notCreateIfExistsClause} {quotedTableName}(
 {string.Join("," + Environment.NewLine, columns.Select(item => this.dbInterpreter.ParseColumn(table, item)))}{primaryKeyColumns}
-){(!string.IsNullOrEmpty(table.Comment) ? ($"comment='{this.dbInterpreter.ReplaceSplitChar(ValueHelper.TransferSingleQuotation(table.Comment))}'") : "")}
+){(!string.IsNullOrEmpty(table.Comment) ? $"comment='{this.dbInterpreter.ReplaceSplitChar(ValueHelper.TransferSingleQuotation(table.Comment))}'" : "")}
 DEFAULT CHARSET={dbCharSet}" + this.scriptsDelimiter;
 
             sb.AppendLine(new CreateDbObjectScript<Table>(tableScript));
 
-            #endregion
+            #endregion Table
 
             //#region Primary Key
             //if (this.option.TableScriptsGenerateOption.GeneratePrimaryKey && primaryKeys.Count() > 0)
@@ -441,6 +455,7 @@ DEFAULT CHARSET={dbCharSet}" + this.scriptsDelimiter;
             List<string> foreignKeysLines = new List<string>();
 
             #region Foreign Key
+
             if (this.option.TableScriptsGenerateOption.GenerateForeignKey)
             {
                 foreach (TableForeignKey foreignKey in foreignKeys)
@@ -449,9 +464,10 @@ DEFAULT CHARSET={dbCharSet}" + this.scriptsDelimiter;
                 }
             }
 
-            #endregion
+            #endregion Foreign Key
 
             #region Index
+
             if (this.option.TableScriptsGenerateOption.GenerateIndex)
             {
                 foreach (TableIndex index in indexes)
@@ -459,7 +475,8 @@ DEFAULT CHARSET={dbCharSet}" + this.scriptsDelimiter;
                     sb.AppendLine(this.AddIndex(index));
                 }
             }
-            #endregion
+
+            #endregion Index
 
             sb.AppendLine();
 
@@ -506,6 +523,6 @@ DEFAULT CHARSET={dbCharSet}" + this.scriptsDelimiter;
             yield return new ExecuteProcedureScript($"SET FOREIGN_KEY_CHECKS = { (enabled ? 1 : 0)};");
         }
 
-        #endregion
+        #endregion Database Operation
     }
 }

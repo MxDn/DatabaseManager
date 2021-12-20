@@ -1,11 +1,11 @@
-using DatabaseInterpreter.Model;
-using DatabaseInterpreter.Utility;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using DatabaseInterpreter.Model;
+using DatabaseInterpreter.Utility;
 
 namespace DatabaseInterpreter.Core
 {
@@ -16,17 +16,21 @@ namespace DatabaseInterpreter.Core
             return new SqlServerScriptGenerator(dbInterpreter);
         }
     }
+
     public class SqlServerScriptGenerator : DbScriptGenerator
     {
-        public SqlServerScriptGenerator(DbInterpreter dbInterpreter) : base(dbInterpreter) { }
+        public SqlServerScriptGenerator(DbInterpreter dbInterpreter) : base(dbInterpreter)
+        {
+        }
 
-        #region Schema Script   
+        #region Schema Script
 
         public override ScriptBuilder GenerateSchemaScripts(SchemaInfo schemaInfo)
         {
             ScriptBuilder sb = new ScriptBuilder();
 
             #region User Defined Type
+
             List<string> userTypeNames = new List<string>();
             foreach (UserDefinedType userDefinedType in schemaInfo.UserDefinedTypes)
             {
@@ -49,13 +53,16 @@ namespace DatabaseInterpreter.Core
                 this.FeedbackInfo(OperationState.End, userDefinedType);
             }
 
-            #endregion
+            #endregion User Defined Type
 
-            #region Function           
+            #region Function
+
             sb.AppendRange(this.GenerateScriptDbObjectScripts<Function>(schemaInfo.Functions));
-            #endregion
+
+            #endregion Function
 
             #region Table
+
             foreach (Table table in schemaInfo.Tables)
             {
                 this.FeedbackInfo(OperationState.Begin, table);
@@ -73,19 +80,25 @@ namespace DatabaseInterpreter.Core
                 this.FeedbackInfo(OperationState.End, table);
             }
 
-            #endregion
+            #endregion Table
 
-            #region View           
+            #region View
+
             sb.AppendRange(this.GenerateScriptDbObjectScripts<View>(schemaInfo.Views));
-            #endregion
 
-            #region Trigger           
+            #endregion View
+
+            #region Trigger
+
             sb.AppendRange(this.GenerateScriptDbObjectScripts<TableTrigger>(schemaInfo.TableTriggers));
-            #endregion
 
-            #region Procedure           
+            #endregion Trigger
+
+            #region Procedure
+
             sb.AppendRange(this.GenerateScriptDbObjectScripts<Procedure>(schemaInfo.Procedures));
-            #endregion
+
+            #endregion Procedure
 
             if (this.option.ScriptOutputMode.HasFlag(GenerateScriptOutputMode.WriteToFile))
             {
@@ -104,6 +117,7 @@ namespace DatabaseInterpreter.Core
                 case "image":
                 case "xml":
                     return true;
+
                 case "varchar":
                 case "nvarchar":
                 case "varbinary":
@@ -112,14 +126,15 @@ namespace DatabaseInterpreter.Core
                         return true;
                     }
                     return false;
+
                 default:
                     return false;
             }
         }
 
-        #endregion
+        #endregion Schema Script
 
-        #region Data Script      
+        #region Data Script
 
         public override Task<string> GenerateDataScriptsAsync(SchemaInfo schemaInfo)
         {
@@ -131,6 +146,7 @@ namespace DatabaseInterpreter.Core
             string hex = ValueHelper.BytesToHexString(value as byte[]);
             return $"CAST({hex} AS {dataType})";
         }
+
         protected override object ParseValue(TableColumn column, object value, bool bytesAsString = false)
         {
             if (value != null)
@@ -191,7 +207,7 @@ namespace DatabaseInterpreter.Core
                     case nameof(DateTime):
                     case nameof(DateTimeOffset):
 
-                      if (string.IsNullOrEmpty(strValue))
+                        if (string.IsNullOrEmpty(strValue))
                         {
                             needQuotated = true;
                             strValue = value.ToString();
@@ -246,7 +262,6 @@ namespace DatabaseInterpreter.Core
                 if (needQuotated)
                 {
                     strValue = $"{this.dbInterpreter.UnicodeInsertChar}'{ValueHelper.TransferSingleQuotation(strValue)}'";
-                     
 
                     return strValue;
                 }
@@ -261,7 +276,7 @@ namespace DatabaseInterpreter.Core
             }
         }
 
-        #endregion
+        #endregion Data Script
 
         #region Alter Table
 
@@ -426,7 +441,7 @@ REFERENCES {this.GetQuotedString(foreignKey.Owner)}.{this.GetQuotedString(foreig
             return new AlterDbObjectScript<Table>($"SET IDENTITY_INSERT { this.GetQuotedFullTableName(column) } {(enabled ? "OFF" : "ON")}");
         }
 
-        #endregion
+        #endregion Alter Table
 
         #region Database Operation
 
@@ -445,7 +460,7 @@ REFERENCES {this.GetQuotedString(foreignKey.Owner)}.{this.GetQuotedString(foreig
 
             #region Create Table
 
-            string existsClause = $"IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name='{(table.Name)}')";
+            string existsClause = $"IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name='{table.Name}')";
 
             string tableScript =
 $@"
@@ -459,9 +474,10 @@ CREATE TABLE {quotedTableName}(
 
             sb.AppendLine(new CreateDbObjectScript<Table>(tableScript));
 
-            #endregion
+            #endregion Create Table
 
             #region Comment
+
             if (!string.IsNullOrEmpty(table.Comment))
             {
                 sb.AppendLine(this.SetTableComment(table));
@@ -471,9 +487,11 @@ CREATE TABLE {quotedTableName}(
             {
                 sb.AppendLine(this.SetTableColumnComment(table, column, true));
             }
-            #endregion
+
+            #endregion Comment
 
             #region Default Value
+
             if (this.option.TableScriptsGenerateOption.GenerateDefaultValue)
             {
                 IEnumerable<TableColumn> defaultValueColumns = columns.Where(item => item.Owner == table.Owner && item.TableName == tableName && !string.IsNullOrEmpty(item.DefaultValue));
@@ -483,9 +501,11 @@ CREATE TABLE {quotedTableName}(
                     sb.AppendLine(this.AddDefaultValueConstraint(column));
                 }
             }
-            #endregion            
+
+            #endregion Default Value
 
             #region Primary Key
+
             if (this.option.TableScriptsGenerateOption.GeneratePrimaryKey && primaryKey != null)
             {
                 sb.AppendLine(this.AddPrimaryKey(primaryKey));
@@ -495,9 +515,11 @@ CREATE TABLE {quotedTableName}(
                     sb.AppendLine(this.SetTableChildComment(primaryKey, true));
                 }
             }
-            #endregion
+
+            #endregion Primary Key
 
             #region Foreign Key
+
             if (this.option.TableScriptsGenerateOption.GenerateForeignKey && foreignKeys != null)
             {
                 foreach (TableForeignKey foreignKey in foreignKeys)
@@ -510,9 +532,11 @@ CREATE TABLE {quotedTableName}(
                     }
                 }
             }
-            #endregion
+
+            #endregion Foreign Key
 
             #region Index
+
             if (this.option.TableScriptsGenerateOption.GenerateIndex && indexes != null)
             {
                 foreach (TableIndex index in indexes)
@@ -525,9 +549,11 @@ CREATE TABLE {quotedTableName}(
                     }
                 }
             }
-            #endregion
+
+            #endregion Index
 
             #region Constraint
+
             if (this.option.TableScriptsGenerateOption.GenerateConstraint && constraints != null)
             {
                 foreach (TableConstraint constraint in constraints)
@@ -540,7 +566,8 @@ CREATE TABLE {quotedTableName}(
                     }
                 }
             }
-            #endregion
+
+            #endregion Constraint
 
             sb.Append(new SpliterScript(this.scriptsDelimiter));
 
@@ -549,7 +576,7 @@ CREATE TABLE {quotedTableName}(
 
         public override Script AddUserDefinedType(UserDefinedType userDefinedType)
         {
-            string userTypeName = userDefinedType.Name;           
+            string userTypeName = userDefinedType.Name;
 
             TableColumn column = new TableColumn() { DataType = userDefinedType.Type, MaxLength = userDefinedType.MaxLength, Precision = userDefinedType.Precision, Scale = userDefinedType.Scale };
             string dataLength = this.dbInterpreter.GetColumnDataLength(column);
@@ -605,32 +632,32 @@ BEGIN
   EXEC {procName} 'ALTER TABLE ? {(enabled ? "CHECK" : "NOCHECK")} CONSTRAINT ALL';
   EXEC {procName} 'ALTER TABLE ? {(enabled ? "ENABLE" : "DISABLE")} TRIGGER ALL';
 END
-ELSE 
+ELSE
 BEGIN
     DECLARE @owner NVARCHAR(50)
 	DECLARE @tableName NVARCHAR(256)
 
-	DECLARE table_cursor CURSOR  
-    FOR SELECT SCHEMA_NAME(schema_id),name FROM sys.tables  
-	OPEN table_cursor  
+	DECLARE table_cursor CURSOR
+    FOR SELECT SCHEMA_NAME(schema_id),name FROM sys.tables
+	OPEN table_cursor
 
     FETCH NEXT FROM table_cursor INTO @owner,@tableName
-  
-    WHILE @@FETCH_STATUS = 0  
-    BEGIN  
+
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
         EXEC('ALTER TABLE ['+ @owner + '].[' + @tableName +'] {(enabled ? "CHECK" : "NOCHECK")} CONSTRAINT ALL');
         EXEC('ALTER TABLE ['+ @owner + '].[' + @tableName +'] {(enabled ? "ENABLE" : "DISABLE")} TRIGGER ALL');
 
-        FETCH NEXT FROM table_cursor INTO @owner,@tableName  
-    END  
-  
-    CLOSE table_cursor  
-    DEALLOCATE table_cursor   
+        FETCH NEXT FROM table_cursor INTO @owner,@tableName
+    END
+
+    CLOSE table_cursor
+    DEALLOCATE table_cursor
 END";
 
             yield return new ExecuteProcedureScript(sql);
         }
 
-        #endregion
+        #endregion Database Operation
     }
 }

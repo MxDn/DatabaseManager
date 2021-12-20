@@ -8,14 +8,14 @@ namespace DatabaseInterpreter.Model
         public List<Function> Functions { get; set; } = new List<Function>();
         public List<Table> Tables { get; set; } = new List<Table>();
         public List<View> Views { get; set; } = new List<View>();
-        public List<TableTrigger> TableTriggers { get; set; } = new List<TableTrigger>();       
+        public List<TableTrigger> TableTriggers { get; set; } = new List<TableTrigger>();
         public List<Procedure> Procedures { get; set; } = new List<Procedure>();
         public List<TableColumn> TableColumns { get; set; } = new List<TableColumn>();
-        public List<TablePrimaryKey> TablePrimaryKeys { get; set; }= new List<TablePrimaryKey>();
-        public List<TableForeignKey> TableForeignKeys { get; set; }= new List<TableForeignKey>();
+        public List<TablePrimaryKey> TablePrimaryKeys { get; set; } = new List<TablePrimaryKey>();
+        public List<TableForeignKey> TableForeignKeys { get; set; } = new List<TableForeignKey>();
         public List<TableIndex> TableIndexes { get; set; } = new List<TableIndex>();
         public List<TableConstraint> TableConstraints { get; set; } = new List<TableConstraint>();
 
-        public Table PickupTable { get; set; }       
+        public Table PickupTable { get; set; }
     }
 }

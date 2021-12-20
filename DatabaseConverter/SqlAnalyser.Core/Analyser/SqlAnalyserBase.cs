@@ -1,18 +1,24 @@
-﻿using Antlr4.Runtime;
-using DatabaseInterpreter.Model;
-using SqlAnalyser.Model;
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
+
+using DatabaseInterpreter.Model;
+
+using SqlAnalyser.Model;
 
 namespace SqlAnalyser.Core
 {
     public abstract class SqlAnalyserBase
     {
         public abstract DatabaseType DatabaseType { get; }
+
         public abstract string GenerateScripts(CommonScript script);
+
         public abstract AnalyseResult AnalyseView(string content);
+
         public abstract AnalyseResult AnalyseProcedure(string content);
+
         public abstract AnalyseResult AnalyseFunction(string content);
+
         public abstract AnalyseResult AnalyseTrigger(string content);
 
         public AnalyseResult Analyse<T>(string content) where T : DatabaseObject

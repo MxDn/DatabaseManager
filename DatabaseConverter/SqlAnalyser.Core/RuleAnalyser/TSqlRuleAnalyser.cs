@@ -1,12 +1,15 @@
-﻿using Antlr4.Runtime;
-using Antlr4.Runtime.Tree;
-using DatabaseInterpreter.Utility;
-using SqlAnalyser.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
+
+using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
+
+using DatabaseInterpreter.Utility;
+
+using SqlAnalyser.Model;
+
 using static TSqlParser;
 
 namespace SqlAnalyser.Core
@@ -64,25 +67,28 @@ namespace SqlAnalyser.Core
                 if (proc != null)
                 {
                     #region Name
+
                     this.SetScriptName(script, proc.func_proc_name_schema().id());
-                    #endregion
+
+                    #endregion Name
 
                     #region Parameters
+
                     this.SetRoutineParameters(script, proc.procedure_param());
-                    #endregion
+
+                    #endregion Parameters
 
                     #region Body
 
                     this.SetScriptBody(script, proc.sql_clauses().sql_clause());
 
-                    #endregion
+                    #endregion Body
                 }
 
                 this.ExtractFunctions(script, ddlStatement);
 
                 result.Script = script;
             }
-
 
             return result;
         }
@@ -112,12 +118,16 @@ namespace SqlAnalyser.Core
                 if (func != null)
                 {
                     #region Name
+
                     this.SetScriptName(script, func.func_proc_name_schema().id());
-                    #endregion
+
+                    #endregion Name
 
                     #region Parameters
+
                     this.SetRoutineParameters(script, func.procedure_param());
-                    #endregion
+
+                    #endregion Parameters
 
                     this.SetFunction(script, func);
                 }
@@ -143,6 +153,7 @@ namespace SqlAnalyser.Core
                 this.SetScriptBody(script, scalar.sql_clause());
 
                 #region ReturnStatement
+
                 IParseTree t = null;
                 for (var i = scalar.children.Count - 1; i >= 0; i--)
                 {
@@ -164,7 +175,8 @@ namespace SqlAnalyser.Core
 
                     t = scalar.children[i];
                 }
-                #endregion
+
+                #endregion ReturnStatement
             }
             else if (table != null)
             {
@@ -211,8 +223,10 @@ namespace SqlAnalyser.Core
                 if (view != null)
                 {
                     #region Name
+
                     this.SetScriptName(script, view.simple_name().id());
-                    #endregion
+
+                    #endregion Name
 
                     #region Statement
 
@@ -224,7 +238,7 @@ namespace SqlAnalyser.Core
                         }
                     }
 
-                    #endregion
+                    #endregion Statement
                 }
 
                 this.ExtractFunctions(script, ddlStatement);
@@ -250,11 +264,11 @@ namespace SqlAnalyser.Core
 
                 if (trigger != null)
                 {
-                    #region Name                 
+                    #region Name
 
                     this.SetScriptName(script, trigger.simple_name().id());
 
-                    #endregion
+                    #endregion Name
 
                     script.TableName = new TokenInfo(trigger.table_name()) { Type = TokenType.TableName };
 
@@ -267,9 +281,11 @@ namespace SqlAnalyser.Core
                                 case TSqlParser.BEFORE:
                                     script.Time = TriggerTime.BEFORE;
                                     break;
+
                                 case TSqlParser.INSTEAD:
                                     script.Time = TriggerTime.INSTEAD_OF;
                                     break;
+
                                 case TSqlParser.AFTER:
                                     script.Time = TriggerTime.AFTER;
                                     break;
@@ -285,7 +301,7 @@ namespace SqlAnalyser.Core
 
                     this.SetScriptBody(script, trigger.sql_clauses().sql_clause());
 
-                    #endregion
+                    #endregion Body
                 }
 
                 this.ExtractFunctions(script, ddlStatement);
@@ -528,21 +544,27 @@ namespace SqlAnalyser.Core
                         case TSqlParser.INNER:
                             joinItem.Type = JoinType.INNER;
                             break;
+
                         case TSqlParser.LEFT:
                             joinItem.Type = JoinType.LEFT;
                             break;
+
                         case TSqlParser.RIGHT:
                             joinItem.Type = JoinType.RIGHT;
                             break;
+
                         case TSqlParser.FULL:
                             joinItem.Type = JoinType.FULL;
                             break;
+
                         case TSqlParser.CROSS:
                             joinItem.Type = JoinType.CROSS;
                             break;
+
                         case TSqlParser.PIVOT:
                             joinItem.Type = JoinType.PIVOT;
                             break;
+
                         case TSqlParser.UNPIVOT:
                             joinItem.Type = JoinType.UNPIVOT;
                             break;
@@ -1058,6 +1080,7 @@ namespace SqlAnalyser.Core
                         case TSqlParser.WHERE:
                             statement.Where = this.ParseCondition(condition);
                             break;
+
                         case TSqlParser.HAVING:
                             statement.Having = this.ParseCondition(condition);
                             break;
@@ -1100,9 +1123,11 @@ namespace SqlAnalyser.Core
                         case TSqlParser.ALL:
                             unionType = UnionType.UNION_ALL;
                             break;
+
                         case TSqlParser.INTERSECT:
                             unionType = UnionType.INTERSECT;
                             break;
+
                         case TSqlParser.EXCEPT:
                             unionType = UnionType.EXCEPT;
                             break;
@@ -1367,7 +1392,6 @@ namespace SqlAnalyser.Core
                     tableName = new TableName(fullName);
 
                     tableName.Name = new TokenInfo(fullName.table);
-
                 }
                 else if (node is Table_source_itemContext tsi)
                 {

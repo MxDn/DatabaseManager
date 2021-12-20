@@ -11,7 +11,7 @@ namespace DatabaseInterpreter.Model
         public bool RemoveEmoji { get; set; }
         public bool TreatBytesAsNullForReading { get; set; }
         public bool TreatBytesAsNullForExecuting { get; set; }
-        public bool TreatBytesAsHexStringForFile { get; set; }      
+        public bool TreatBytesAsHexStringForFile { get; set; }
         public DatabaseObjectFetchMode ObjectFetchMode = DatabaseObjectFetchMode.Details;
         public GenerateScriptMode ScriptMode { get; set; }
         public GenerateScriptOutputMode ScriptOutputMode { get; set; }
@@ -45,5 +45,5 @@ namespace DatabaseInterpreter.Model
     {
         Details = 0,
         Simple = 1
-    }   
+    }
 }

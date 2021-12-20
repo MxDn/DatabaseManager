@@ -1,7 +1,4 @@
-using Dapper;
-using DatabaseInterpreter.Model;
-using DatabaseInterpreter.Utility;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -9,11 +6,17 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
+using Dapper;
+
+using DatabaseInterpreter.Model;
+using DatabaseInterpreter.Utility;
+
 namespace DatabaseInterpreter.Core
 {
     public abstract class DbInterpreter
     {
-        #region Field & Property       
+        #region Field & Property
+
         private IObserver<FeedbackInfo> observer;
         protected DbConnector dbConnector;
         protected bool hasError = false;
@@ -40,54 +43,75 @@ namespace DatabaseInterpreter.Core
         public ConnectionInfo ConnectionInfo { get; protected set; }
 
         public delegate Task DataReadHandler(TableDataReadInfo tableDataReadInfo);
+
         public event DataReadHandler OnDataRead;
+
         public DbScriptGenerator ScriptGenerator { get; protected set; }
 
-        #endregion
+        #endregion Field & Property
 
-        #region Constructor     
+        #region Constructor
 
         public DbInterpreter(ConnectionInfo connectionInfo, DbInterpreterOption option)
         {
             this.ConnectionInfo = connectionInfo;
             this.Option = option;
         }
-        #endregion
+
+        #endregion Constructor
 
         #region Schema Informatioin
+
         #region Database
+
         public abstract Task<List<Database>> GetDatabasesAsync();
-        #endregion
+
+        #endregion Database
 
         #region Database Owner
+
         public abstract Task<List<DatabaseOwner>> GetDatabaseOwnersAsync();
+
         public abstract string GetDbOwner();
 
-        #endregion
+        #endregion Database Owner
 
-        #region User Defined Type     
+        #region User Defined Type
+
         public abstract Task<List<UserDefinedType>> GetUserDefinedTypesAsync(SchemaInfoFilter filter = null);
+
         public abstract Task<List<UserDefinedType>> GetUserDefinedTypesAsync(DbConnection dbConnection, SchemaInfoFilter filter = null);
 
-        #endregion
+        #endregion User Defined Type
 
-        #region Function        
+        #region Function
+
         public abstract Task<List<Function>> GetFunctionsAsync(SchemaInfoFilter filter = null);
-        public abstract Task<List<Function>> GetFunctionsAsync(DbConnection dbConnection, SchemaInfoFilter filter = null);
-        #endregion
 
-        #region Table      
+        public abstract Task<List<Function>> GetFunctionsAsync(DbConnection dbConnection, SchemaInfoFilter filter = null);
+
+        #endregion Function
+
+        #region Table
+
         public abstract Task<List<Table>> GetTablesAsync(SchemaInfoFilter filter = null);
+
         public abstract Task<List<Table>> GetTablesAsync(DbConnection dbConnection, SchemaInfoFilter filter = null);
-        #endregion
+
+        #endregion Table
 
         #region Table Column
+
         public abstract Task<List<TableColumn>> GetTableColumnsAsync(SchemaInfoFilter filter = null);
+
         public abstract Task<List<TableColumn>> GetTableColumnsAsync(DbConnection dbConnection, SchemaInfoFilter filter = null);
-        #endregion
+
+        #endregion Table Column
 
         #region Table Primary Key
+
         public abstract Task<List<TablePrimaryKeyItem>> GetTablePrimaryKeyItemsAsync(SchemaInfoFilter filter = null);
+
         public abstract Task<List<TablePrimaryKeyItem>> GetTablePrimaryKeyItemsAsync(DbConnection dbConnection, SchemaInfoFilter filter = null);
 
         public virtual async Task<List<TablePrimaryKey>> GetTablePrimaryKeysAsync(SchemaInfoFilter filter = null)
@@ -101,10 +125,13 @@ namespace DatabaseInterpreter.Core
             List<TablePrimaryKeyItem> primaryKeyItems = await this.GetTablePrimaryKeyItemsAsync(dbConnection, filter);
             return SchemaInfoHelper.GetTablePrimaryKeys(primaryKeyItems);
         }
-        #endregion
 
-        #region Table Foreign Key       
+        #endregion Table Primary Key
+
+        #region Table Foreign Key
+
         public abstract Task<List<TableForeignKeyItem>> GetTableForeignKeyItemsAsync(SchemaInfoFilter filter = null);
+
         public abstract Task<List<TableForeignKeyItem>> GetTableForeignKeyItemsAsync(DbConnection dbConnection, SchemaInfoFilter filter = null);
 
         public virtual async Task<List<TableForeignKey>> GetTableForeignKeysAsync(SchemaInfoFilter filter = null)
@@ -118,10 +145,13 @@ namespace DatabaseInterpreter.Core
             List<TableForeignKeyItem> foreignKeyItems = await this.GetTableForeignKeyItemsAsync(dbConnection, filter);
             return SchemaInfoHelper.GetTableForeignKeys(foreignKeyItems);
         }
-        #endregion
+
+        #endregion Table Foreign Key
 
         #region Table Index
+
         public abstract Task<List<TableIndexItem>> GetTableIndexItemsAsync(SchemaInfoFilter filter = null, bool includePrimaryKey = false);
+
         public abstract Task<List<TableIndexItem>> GetTableIndexItemsAsync(DbConnection dbConnection, SchemaInfoFilter filter = null, bool includePrimaryKey = false);
 
         public virtual async Task<List<TableIndex>> GetTableIndexesAsync(SchemaInfoFilter filter = null, bool includePrimaryKey = false)
@@ -135,30 +165,43 @@ namespace DatabaseInterpreter.Core
             List<TableIndexItem> indexItems = await this.GetTableIndexItemsAsync(dbConnection, filter, includePrimaryKey);
             return SchemaInfoHelper.GetTableIndexes(indexItems);
         }
-        #endregion
 
-        #region Table Trigger        
+        #endregion Table Index
+
+        #region Table Trigger
+
         public abstract Task<List<TableTrigger>> GetTableTriggersAsync(SchemaInfoFilter filter = null);
+
         public abstract Task<List<TableTrigger>> GetTableTriggersAsync(DbConnection dbConnection, SchemaInfoFilter filter = null);
-        #endregion
+
+        #endregion Table Trigger
 
         #region Table Constraint
+
         public abstract Task<List<TableConstraint>> GetTableConstraintsAsync(SchemaInfoFilter filter = null);
+
         public abstract Task<List<TableConstraint>> GetTableConstraintsAsync(DbConnection dbConnection, SchemaInfoFilter filter = null);
 
-        #endregion
+        #endregion Table Constraint
 
-        #region View        
+        #region View
+
         public abstract Task<List<View>> GetViewsAsync(SchemaInfoFilter filter = null);
-        public abstract Task<List<View>> GetViewsAsync(DbConnection dbConnection, SchemaInfoFilter filter = null);
-        #endregion     
 
-        #region Procedure        
+        public abstract Task<List<View>> GetViewsAsync(DbConnection dbConnection, SchemaInfoFilter filter = null);
+
+        #endregion View
+
+        #region Procedure
+
         public abstract Task<List<Procedure>> GetProceduresAsync(SchemaInfoFilter filter = null);
+
         public abstract Task<List<Procedure>> GetProceduresAsync(DbConnection dbConnection, SchemaInfoFilter filter = null);
-        #endregion
+
+        #endregion Procedure
 
         #region SchemaInfo
+
         protected async Task<List<T>> GetDbObjectsAsync<T>(string sql) where T : DatabaseObject
         {
             if (!string.IsNullOrEmpty(sql))
@@ -324,8 +367,10 @@ namespace DatabaseInterpreter.Core
                 return hasName || filter.DatabaseObjectType.HasFlag(currentObjectType);
             }
         }
-        #endregion
-        #endregion
+
+        #endregion SchemaInfo
+
+        #endregion Schema Informatioin
 
         #region Database Operation
 
@@ -551,6 +596,7 @@ namespace DatabaseInterpreter.Core
                 string columnName = this.GetQuotedString(column.Name);
 
                 #region Convert MySql float to decimal, avoid scientific notation
+
                 if (this.DatabaseType == DatabaseType.MySql && column.DataType.ToLower().Contains("float"))
                 {
                     DataTypeInfo dataTypeInfo = DataTypeHelper.GetDataTypeInfo(column.DataType);
@@ -576,14 +622,17 @@ namespace DatabaseInterpreter.Core
                         }
                     }
                 }
-                #endregion
+
+                #endregion Convert MySql float to decimal, avoid scientific notation
 
                 #region Convert Oracle number to char
+
                 else if (this.DatabaseType == DatabaseType.Oracle && column.DataType.ToLower().Contains("number"))
                 {
                     columnName = $"TO_CHAR({columnName}) AS {columnName}";
                 }
-                #endregion
+
+                #endregion Convert Oracle number to char
 
                 columnNames.Add(columnName);
             }
@@ -693,23 +742,27 @@ namespace DatabaseInterpreter.Core
             return dictPagedData;
         }
 
-        #endregion
+        #endregion Database Operation
 
         #region Sql Query Clause
-        public virtual string GetDefaultOrder() { return string.Empty; }
-        public virtual string GetLimitStatement(int limitStart, int limitCount) { return string.Empty; }
+
+        public virtual string GetDefaultOrder()
+        { return string.Empty; }
+
+        public virtual string GetLimitStatement(int limitStart, int limitCount)
+        { return string.Empty; }
 
         protected abstract string GetSqlForPagination(string tableName, string columnNames, string orderColumns, string whereClause, long pageNumber, int pageSize);
-        #endregion
 
-        #region Common Method 
+        #endregion Sql Query Clause
 
-
+        #region Common Method
 
         public static IEnumerable<DatabaseType> GetDisplayDatabaseTypes()
         {
             return Enum.GetValues(typeof(DatabaseType)).Cast<DatabaseType>().Where(item => item != DatabaseType.Unknown);
         }
+
         public virtual string GetOwnerName()
         {
             if (this.DatabaseType == DatabaseType.Oracle)
@@ -726,8 +779,9 @@ namespace DatabaseInterpreter.Core
                 return this.ConnectionInfo.Database;
             }
         }
+
         public virtual string GetObjectDisplayName(DatabaseObject obj, bool useQuotedString = false)
-        { 
+        {
             return $"{this.GetString(obj.Name, useQuotedString)}";
         }
 
@@ -768,16 +822,22 @@ namespace DatabaseInterpreter.Core
             return value?.Replace(this.ScriptsDelimiter, ",");
         }
 
-        protected virtual void SubscribeInfoMessage(DbConnection dbConnection) { }
-        protected virtual void SubscribeInfoMessage(DbCommand dbCommand) { }
+        protected virtual void SubscribeInfoMessage(DbConnection dbConnection)
+        { }
 
+        protected virtual void SubscribeInfoMessage(DbCommand dbCommand)
+        { }
 
-        #endregion
+        #endregion Common Method
 
-        #region Parse Column & DataType 
+        #region Parse Column & DataType
+
         public abstract string ParseColumn(Table table, TableColumn column);
+
         public abstract string ParseDataType(TableColumn column);
-        public virtual string GetColumnDataLength(TableColumn column) { return string.Empty; }
+
+        public virtual string GetColumnDataLength(TableColumn column)
+        { return string.Empty; }
 
         public virtual string GetColumnDefaultValue(TableColumn column)
         {
@@ -849,9 +909,11 @@ namespace DatabaseInterpreter.Core
 
             return string.Empty;
         }
-        #endregion
+
+        #endregion Parse Column & DataType
 
         #region Feedback
+
         public void Subscribe(IObserver<FeedbackInfo> observer)
         {
             this.observer = observer;
@@ -887,7 +949,8 @@ namespace DatabaseInterpreter.Core
             string message = $"{state.ToString()}{(state == OperationState.Begin ? " to" : "")} generate script for { StringHelper.GetFriendlyTypeName(dbObject.GetType().Name).ToLower() } \"{dbObject.Name}\".";
             this.Feedback(FeedbackInfoType.Info, message);
         }
-        #endregion
+
+        #endregion Feedback
 
         public virtual Task<List<TableDefaultValueConstraint>> GetTableDefautValueConstraintsAsync(SchemaInfoFilter filter = null)
         {

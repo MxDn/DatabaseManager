@@ -8,7 +8,7 @@ namespace DatabaseInterpreter.Model
     public class CommandInfo
     {
         public CommandType CommandType { get; set; } = CommandType.Text;
-        public string CommandText { get; set; }       
+        public string CommandText { get; set; }
         public Dictionary<string, object> Parameters { get; set; }
         public DbTransaction Transaction { get; set; }
         public CancellationToken CancellationToken { get; set; }

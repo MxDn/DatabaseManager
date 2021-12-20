@@ -1,10 +1,13 @@
-﻿using Antlr4.Runtime;
-using Antlr4.Runtime.Tree;
-using DatabaseInterpreter.Model;
-using SqlAnalyser.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
+
+using DatabaseInterpreter.Model;
+
+using SqlAnalyser.Model;
 
 namespace SqlAnalyser.Core
 {
@@ -40,10 +43,15 @@ namespace SqlAnalyser.Core
         }
 
         public abstract TableName ParseTableName(ParserRuleContext node, bool strict = false);
+
         public abstract ColumnName ParseColumnName(ParserRuleContext node, bool strict = false);
+
         public abstract bool IsFunction(IParseTree node);
+
         public abstract List<TokenInfo> GetTableNameTokens(IParseTree node);
+
         public abstract List<TokenInfo> GetColumnNameTokens(IParseTree node);
+
         public abstract List<TokenInfo> GetRoutineNameTokens(IParseTree node);
 
         public virtual AnalyseResult Analyse<T>(string content)
@@ -151,11 +159,10 @@ namespace SqlAnalyser.Core
             }
         }
 
-
         protected void AddToken(List<TokenInfo> tokens, TokenInfo tokenInfo)
         {
             if (!tokens.Any(item => item != null && item.Symbol != null && item.StartIndex == tokenInfo.StartIndex && item.StopIndex == tokenInfo.StopIndex))
-            {              
+            {
                 tokens.Add(tokenInfo);
             }
         }

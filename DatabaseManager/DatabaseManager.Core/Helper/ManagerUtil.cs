@@ -1,6 +1,8 @@
-﻿using DatabaseInterpreter.Model;
-using System;
+﻿using System;
 using System.Diagnostics;
+
+using DatabaseInterpreter.Model;
+
 using Humanizer;
 
 namespace DatabaseManager.Helper
@@ -9,7 +11,7 @@ namespace DatabaseManager.Helper
     {
         public static DatabaseType GetDatabaseType(string dbType)
         {
-            if(!string.IsNullOrEmpty(dbType))
+            if (!string.IsNullOrEmpty(dbType))
             {
                 return (DatabaseType)Enum.Parse(typeof(DatabaseType), dbType);
             }
@@ -24,7 +26,7 @@ namespace DatabaseManager.Helper
             string cmd = "explorer.exe";
             string arg = "/select," + filePath;
             Process.Start(cmd, arg);
-        }        
+        }
 
         public static string GetSingularString(string value)
         {
@@ -34,6 +36,6 @@ namespace DatabaseManager.Helper
         public static string GetPluralString(string value)
         {
             return value.Pluralize();
-        }       
+        }
     }
 }

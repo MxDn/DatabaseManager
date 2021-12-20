@@ -1,11 +1,11 @@
-﻿using DatabaseInterpreter.Core;
-using DatabaseInterpreter.Model;
-using SqlAnalyser.Model;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
+
+using SqlAnalyser.Model;
 
 namespace SqlAnalyser.Core
 {
@@ -133,7 +133,6 @@ namespace SqlAnalyser.Core
 
             if (script.ReturnTable != null)
             {
-
             }
 
             FetchCursorStatement fetchCursorStatement = null;

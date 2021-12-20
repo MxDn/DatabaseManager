@@ -1,23 +1,26 @@
-﻿using BrightIdeasSoftware;
-using DatabaseInterpreter.Core;
-using DatabaseInterpreter.Model;
-using DatabaseInterpreter.Utility;
-using DatabaseManager.Core;
-using DatabaseManager.Helper;
-using DatabaseManager.Model;
-using DiffPlex.DiffBuilder;
-using DiffPlex.DiffBuilder.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using BrightIdeasSoftware;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
+using DatabaseInterpreter.Utility;
+
+using DatabaseManager.Core;
+using DatabaseManager.Helper;
+using DatabaseManager.Model;
+
+using DiffPlex.DiffBuilder;
+using DiffPlex.DiffBuilder.Model;
+
 using static BrightIdeasSoftware.TreeListView;
 
 namespace DatabaseManager
@@ -37,6 +40,7 @@ namespace DatabaseManager
         private SchemaInfo sourceSchemaInfo;
         private SchemaInfo targetSchemaInfo;
         private DbInterpreterHelper DbInterpreterHelper;
+
         public frmCompare()
         {
             InitializeComponent();
@@ -262,8 +266,8 @@ namespace DatabaseManager
             }
 
             var children = this.differences.Where(item => item.ParentType == difference.Type
-            && ((item.ParentName == null || (item.ParentName == difference.Source?.Name || item.ParentName == difference.Target?.Name)) ||
-                (item.ParentName == null || (item.ParentName == difference.Parent?.Source?.Name || item.ParentName == difference?.Parent.Target?.Name))
+            && (item.ParentName == null || item.ParentName == difference.Source?.Name || item.ParentName == difference.Target?.Name ||
+                item.ParentName == null || item.ParentName == difference.Parent?.Source?.Name || item.ParentName == difference?.Parent.Target?.Name
             ));
 
             if (difference.DatabaseObjectType == DatabaseObjectType.Table)
@@ -304,7 +308,7 @@ namespace DatabaseManager
         {
             DatabaseObjectType databaseObjectType = difference.DatabaseObjectType;
 
-            return (databaseObjectType == DatabaseObjectType.None || difference.DatabaseObjectType == DatabaseObjectType.Table);
+            return databaseObjectType == DatabaseObjectType.None || difference.DatabaseObjectType == DatabaseObjectType.Table;
         }
 
         private IEnumerable<DbDifference> GetTableChildrenFolders(Table source, Table target, DbDifference difference)
@@ -367,18 +371,22 @@ namespace DatabaseManager
                         difference.ParentType = DbObjectTreeFolderType.Types.ToString();
                         addFolderType(DbObjectTreeFolderType.Types, difference.DifferenceType);
                         break;
+
                     case DatabaseObjectType.Table:
                         difference.ParentType = DbObjectTreeFolderType.Tables.ToString();
                         addFolderType(DbObjectTreeFolderType.Tables, difference.DifferenceType);
                         break;
+
                     case DatabaseObjectType.View:
                         difference.ParentType = DbObjectTreeFolderType.Views.ToString();
                         addFolderType(DbObjectTreeFolderType.Views, difference.DifferenceType);
                         break;
+
                     case DatabaseObjectType.Function:
                         difference.ParentType = DbObjectTreeFolderType.Functions.ToString();
                         addFolderType(DbObjectTreeFolderType.Functions, difference.DifferenceType);
                         break;
+
                     case DatabaseObjectType.Procedure:
                         difference.ParentType = DbObjectTreeFolderType.Procedures.ToString();
                         addFolderType(DbObjectTreeFolderType.Procedures, difference.DifferenceType);
@@ -794,17 +802,21 @@ namespace DatabaseManager
         }
 
         #region IObserver<FeedbackInfo>
+
         void IObserver<FeedbackInfo>.OnCompleted()
         {
         }
+
         void IObserver<FeedbackInfo>.OnError(Exception error)
         {
         }
+
         void IObserver<FeedbackInfo>.OnNext(FeedbackInfo info)
         {
             this.Feedback(info);
         }
-        #endregion
+
+        #endregion IObserver<FeedbackInfo>
 
         private void tlvDifferences_MouseDown(object sender, MouseEventArgs e)
         {
@@ -821,7 +833,7 @@ namespace DatabaseManager
                 {
                     this.tsmiCollapseAll.Visible = this.tsmiExpandAll.Visible = this.CanExpand(difference);
 
-                    this.tsmiGenerateChangedScripts.Visible = (difference.DifferenceType != DbDifferenceType.None && difference.DatabaseObjectType != DatabaseObjectType.None);
+                    this.tsmiGenerateChangedScripts.Visible = difference.DifferenceType != DbDifferenceType.None && difference.DatabaseObjectType != DatabaseObjectType.None;
                 }
                 else
                 {

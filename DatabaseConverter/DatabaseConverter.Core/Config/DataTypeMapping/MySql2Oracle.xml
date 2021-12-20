@@ -1,7 +1,7 @@
 <mappings>
   <mapping>
     <source type="bigint" />
-    <target type="number"/>
+    <target type="number" />
   </mapping>
   <mapping>
     <source type="binary" />
@@ -9,17 +9,17 @@
   </mapping>
   <mapping>
     <source type="bit" />
-    <target type="number"/>
+    <target type="number" />
   </mapping>
   <mapping>
     <source type="blob" />
-    <target type="blob"/>
-  </mapping> 
+    <target type="blob" />
+  </mapping>
   <mapping>
     <source type="char" />
     <target type="char" />
     <special name="maxLength" value="36" type="raw" targetMaxLength="16"></special>
-  </mapping> 
+  </mapping>
   <mapping>
     <source type="date" />
     <target type="date" />
@@ -34,7 +34,7 @@
   </mapping>
   <mapping>
     <source type="double" />
-    <target type="binary_double"/>
+    <target type="binary_double" />
   </mapping>
   <mapping>
     <source type="enum" />
@@ -42,7 +42,7 @@
   </mapping>
   <mapping>
     <source type="float" />
-    <target type="binary_float"/>
+    <target type="binary_float" />
   </mapping>
   <mapping>
     <source type="int" />
@@ -71,7 +71,7 @@
   <mapping>
     <source type="mediumtext" />
     <target type="clob" />
-  </mapping> 
+  </mapping>
   <mapping>
     <source type="numeric" />
     <target type="number" />
@@ -82,7 +82,7 @@
   </mapping>
   <mapping>
     <source type="set" />
-    <target type="varchar2" length="1000"/>
+    <target type="varchar2" length="1000" />
   </mapping>
   <mapping>
     <source type="smallint" />
@@ -98,12 +98,12 @@
   </mapping>
   <mapping>
     <source type="time" />
-    <target type="interval day to second"/>
+    <target type="interval day to second" />
   </mapping>
   <mapping>
     <source type="timestamp" />
     <target type="timestamp" />
-  </mapping> 
+  </mapping>
   <mapping>
     <source type="tinyblob" />
     <target type="raw" />

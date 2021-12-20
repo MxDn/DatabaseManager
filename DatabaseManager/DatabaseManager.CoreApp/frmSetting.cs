@@ -1,9 +1,9 @@
-﻿using DatabaseInterpreter.Core;
+﻿using System;
+using System.Windows.Forms;
+
+using DatabaseInterpreter.Core;
 using DatabaseInterpreter.Model;
 using DatabaseInterpreter.Utility;
-using System;
-using System.Linq;
-using System.Windows.Forms;
 
 namespace DatabaseManager
 {
@@ -24,7 +24,7 @@ namespace DatabaseManager
             this.tabControl1.SelectedIndex = 0;
 
             var dbObjectNameModes = Enum.GetNames(typeof(DbObjectNameMode));
-            this.cboDbObjectNameMode.Items.AddRange(dbObjectNameModes);           
+            this.cboDbObjectNameMode.Items.AddRange(dbObjectNameModes);
 
             Setting setting = SettingManager.Setting;
 
@@ -57,14 +57,14 @@ namespace DatabaseManager
             setting.EnableLog = this.chkEnableLog.Checked;
             setting.DbObjectNameMode = (DbObjectNameMode)Enum.Parse(typeof(DbObjectNameMode), this.cboDbObjectNameMode.Text);
 
-            if(this.cboPreferredDatabase.SelectedIndex>=0)
+            if (this.cboPreferredDatabase.SelectedIndex >= 0)
             {
-                setting.PreferredDatabase =(DatabaseType) Enum.Parse(typeof(DatabaseType), this.cboPreferredDatabase.Text);
+                setting.PreferredDatabase = (DatabaseType)Enum.Parse(typeof(DatabaseType), this.cboPreferredDatabase.Text);
             }
 
             LogType logType = LogType.None;
 
-            if(this.chkLogInfo.Checked)
+            if (this.chkLogInfo.Checked)
             {
                 logType |= LogType.Info;
             }

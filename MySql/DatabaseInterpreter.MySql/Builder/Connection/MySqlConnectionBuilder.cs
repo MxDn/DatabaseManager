@@ -1,5 +1,6 @@
-﻿using DatabaseInterpreter.Model;
-using System.Text;
+﻿using System.Text;
+
+using DatabaseInterpreter.Model;
 
 namespace DatabaseInterpreter.Core
 {
@@ -9,13 +10,13 @@ namespace DatabaseInterpreter.Core
         {
             StringBuilder sb = new StringBuilder($"server={connectionInfo.Server};database={connectionInfo.Database};Charset=utf8;AllowLoadLocalInfile=True;AllowZeroDateTime=True;");
 
-            if(connectionInfo.IntegratedSecurity)
+            if (connectionInfo.IntegratedSecurity)
             {
                 sb.Append($"IntegratedSecurity=yes;Uid=auth_windows;");
             }
             else
             {
-                sb.Append($"user id={connectionInfo.UserId};password={connectionInfo.Password};SslMode={(connectionInfo.UseSsl? "Preferred" : "none")};");
+                sb.Append($"user id={connectionInfo.UserId};password={connectionInfo.Password};SslMode={(connectionInfo.UseSsl ? "Preferred" : "none")};");
             }
 
             return sb.ToString();

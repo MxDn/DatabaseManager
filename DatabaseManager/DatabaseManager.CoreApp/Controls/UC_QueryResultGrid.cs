@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using DatabaseManager.Core;
+
 using DatabaseManager.Helper;
 
 namespace DatabaseManager.Controls
@@ -87,7 +81,6 @@ namespace DatabaseManager.Controls
 
         private void dgvData_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-
         }
     }
 }

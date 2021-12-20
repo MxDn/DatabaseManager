@@ -1,9 +1,11 @@
-﻿using DatabaseConverter.Model;
+﻿using System;
+using System.Collections.Generic;
+
+using DatabaseConverter.Model;
+
 using DatabaseInterpreter.Core;
 using DatabaseInterpreter.Model;
 using DatabaseInterpreter.Utility;
-using System;
-using System.Collections.Generic;
 
 namespace DatabaseConverter.Core
 {
@@ -17,10 +19,10 @@ namespace DatabaseConverter.Core
         private IObserver<FeedbackInfo> observer;
         private DbConverterOption option;
         public List<UserDefinedType> UserDefinedTypes { get; set; } = new List<UserDefinedType>();
+
         public const DatabaseObjectType SupportDatabaseObjectType = DatabaseObjectType.TableColumn | DatabaseObjectType.TableConstraint |
                                                        DatabaseObjectType.View | DatabaseObjectType.Function |
                                                        DatabaseObjectType.Procedure | DatabaseObjectType.TableTrigger;
-
 
         public TranslateHandler OnTranslated;
 

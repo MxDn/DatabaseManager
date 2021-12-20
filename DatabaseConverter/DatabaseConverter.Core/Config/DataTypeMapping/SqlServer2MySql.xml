@@ -9,11 +9,11 @@
   </mapping>
   <mapping>
     <source type="bit" />
-    <target type="tinyint"  length="1"/>
+    <target type="tinyint"  length="1" />
   </mapping>
   <mapping>
     <source type="char" />
-    <target type="char" substitute="varchar"/>    
+    <target type="char" substitute="varchar" />
   </mapping>
   <mapping>
     <source type="date" />
@@ -37,7 +37,7 @@
   </mapping>
   <mapping>
     <source type="float" />
-    <target type="float" scale="4"/>
+    <target type="float" scale="4" />
   </mapping>
   <mapping>
     <source type="geography" />
@@ -65,7 +65,7 @@
   </mapping>
   <mapping>
     <source type="nchar" />
-    <target type="char" substitute="varchar,mediumtext"/>   
+    <target type="char" substitute="varchar,mediumtext" />
   </mapping>
   <mapping>
     <source type="ntext" />
@@ -82,11 +82,11 @@
   </mapping>
   <mapping>
     <source type="real" />
-    <target type="float"/>
+    <target type="float" />
   </mapping>
   <mapping>
     <source type="rowversion" />
-    <target type="binary" length="8"/>
+    <target type="binary" length="8" />
   </mapping>
   <mapping>
     <source type="smalldatetime" />
@@ -107,10 +107,10 @@
   <mapping>
     <source type="sysname" />
     <target type="varchar" length="128" />
-  </mapping> 
+  </mapping>
   <mapping>
     <source type="text" />
-    <target type="longtext"/>
+    <target type="longtext" />
   </mapping>
   <mapping>
     <source type="time" />
@@ -118,11 +118,11 @@
   </mapping>
   <mapping>
     <source type="timestamp" />
-    <target type="binary" length="8"/>
+    <target type="binary" length="8" />
   </mapping>
   <mapping>
     <source type="tinyint" />
-    <target type="int"/>
+    <target type="int" />
   </mapping>
   <mapping>
     <source type="uniqueidentifier" />
@@ -130,7 +130,7 @@
   </mapping>
   <mapping>
     <source type="varbinary" />
-    <target type="varbinary" />    
+    <target type="varbinary" />
   </mapping>
   <mapping>
     <source type="varchar" />

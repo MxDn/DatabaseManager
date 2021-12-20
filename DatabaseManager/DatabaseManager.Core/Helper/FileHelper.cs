@@ -1,5 +1,6 @@
-﻿using ICSharpCode.SharpZipLib.Zip;
-using System.IO;
+﻿using System.IO;
+
+using ICSharpCode.SharpZipLib.Zip;
 
 namespace DatabaseManager.Helper
 {

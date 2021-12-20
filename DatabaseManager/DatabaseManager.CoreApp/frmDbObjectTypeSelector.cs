@@ -1,14 +1,10 @@
-﻿using DatabaseInterpreter.Model;
-using DatabaseManager.Helper;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using DatabaseInterpreter.Model;
+
+using DatabaseManager.Helper;
 
 namespace DatabaseManager
 {
@@ -40,12 +36,12 @@ namespace DatabaseManager
                 DatabaseObjectType.Procedure
             };
 
-            if(this.DatabaseType== DatabaseType.SqlServer)
+            if (this.DatabaseType == DatabaseType.SqlServer)
             {
                 dbObjTypes.Insert(0, DatabaseObjectType.UserDefinedType);
             }
 
-            foreach(DatabaseObjectType type in dbObjTypes)
+            foreach (DatabaseObjectType type in dbObjTypes)
             {
                 this.chkDbObjectTypes.Items.Add(ManagerUtil.GetPluralString(type.ToString()));
             }
@@ -62,7 +58,7 @@ namespace DatabaseManager
                 databaseObjectType = databaseObjectType | type;
             }
 
-            if(databaseObjectType == DatabaseObjectType.None)
+            if (databaseObjectType == DatabaseObjectType.None)
             {
                 MessageBox.Show("Please select database object type.");
                 return;
@@ -89,14 +85,14 @@ namespace DatabaseManager
 
         private void CheckItems(bool @checked)
         {
-            if(!this.isChecking)
+            if (!this.isChecking)
             {
                 for (int i = 0; i < this.chkDbObjectTypes.Items.Count; i++)
                 {
                     this.chkDbObjectTypes.SetItemChecked(i, @checked);
                 }
-            }           
-        }       
+            }
+        }
 
         private void chkDbObjectTypes_MouseUp(object sender, MouseEventArgs e)
         {
@@ -114,5 +110,5 @@ namespace DatabaseManager
             this.chkSelectAll.Checked = this.chkDbObjectTypes.CheckedItems.Count == this.chkDbObjectTypes.Items.Count;
             this.isChecking = false;
         }
-    }  
+    }
 }

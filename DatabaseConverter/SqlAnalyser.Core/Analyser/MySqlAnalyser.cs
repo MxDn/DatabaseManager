@@ -1,9 +1,10 @@
-﻿using DatabaseInterpreter.Model;
-using SqlAnalyser.Model;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Text;
+
+using DatabaseInterpreter.Model;
+
+using SqlAnalyser.Model;
 
 namespace SqlAnalyser.Core
 {
@@ -20,22 +21,22 @@ namespace SqlAnalyser.Core
 
         public override AnalyseResult AnalyseView(string content)
         {
-            return this.ruleAnalyser.AnalyseView(content);            
+            return this.ruleAnalyser.AnalyseView(content);
         }
 
         public override AnalyseResult AnalyseProcedure(string content)
         {
-            return this.ruleAnalyser.AnalyseProcedure(content);           
+            return this.ruleAnalyser.AnalyseProcedure(content);
         }
 
         public override AnalyseResult AnalyseFunction(string content)
         {
-            return this.ruleAnalyser.AnalyseFunction(content);          
+            return this.ruleAnalyser.AnalyseFunction(content);
         }
 
         public override AnalyseResult AnalyseTrigger(string content)
         {
-            return this.ruleAnalyser.AnalyseTrigger(content);           
+            return this.ruleAnalyser.AnalyseTrigger(content);
         }
 
         public override string GenerateScripts(CommonScript script)
@@ -143,7 +144,7 @@ namespace SqlAnalyser.Core
                 appendDeclareCursor();
             }
 
-            #endregion
+            #endregion Cursor
 
             if (script.ReturnTable != null)
             {
@@ -245,6 +246,6 @@ namespace SqlAnalyser.Core
             }
 
             return this.FormatScripts(sb.ToString());
-        }     
+        }
     }
 }

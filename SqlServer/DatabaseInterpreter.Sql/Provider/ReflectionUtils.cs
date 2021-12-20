@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -851,6 +851,7 @@ namespace DatabaseInterpreter.Core
                         int.TryParse(s, out result1);
                         instance = CallMethod(instance, "GetValue", (object)result1);
                         break;
+
                     case ICollection _:
                         if (s.StartsWith("\""))
                         {
@@ -941,6 +942,7 @@ namespace DatabaseInterpreter.Core
                         instance = ReflectionUtils.CallMethod(instance, "SetValue", Value,
                             (object)result1);
                         break;
+
                     case ICollection _:
                         if (s.StartsWith("\""))
                         {

@@ -1,13 +1,11 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+
 using DatabaseInterpreter.Core;
 using DatabaseInterpreter.Model;
 using DatabaseInterpreter.Profile;
-using DatabaseInterpreter.Utility;
-using DatabaseManager.Core;
-using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Windows.Forms;
 
 namespace DatabaseManager
 {
@@ -23,6 +21,7 @@ namespace DatabaseManager
         public ConnectionInfo ConnectionInfo { get; set; }
 
         public DbInterpreterHelper DbInterpreterHelper = new DbInterpreterHelper(new Dictionary<DatabaseType, IDbInterpreterFactory>() { { DatabaseType.SqlServer, new SqlServerDbInterpreterFactory() } });
+
         public frmDbConnect(DatabaseType dbType)
         {
             InitializeComponent();
@@ -72,7 +71,7 @@ namespace DatabaseManager
 
         private void LoadProfile()
         {
-            ConnectionInfo connectionInfo = ConnectionProfileManager.GetConnectionInfo(this.DatabaseType.ToString(), this.ProflieName);          
+            ConnectionInfo connectionInfo = ConnectionProfileManager.GetConnectionInfo(this.DatabaseType.ToString(), this.ProflieName);
 
             this.ucDbAccountInfo.LoadData(connectionInfo, this.ConnectionInfo?.Password);
 

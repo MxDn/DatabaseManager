@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
+
 using DatabaseInterpreter.Model;
+
 using DatabaseManager.Helper;
 using DatabaseManager.Model;
 
@@ -14,8 +14,10 @@ namespace DatabaseManager.Core
         public BackupSetting Setting { get; set; }
         public ConnectionInfo ConnectionInfo { get; set; }
 
-        static IDictionary<DatabaseType, DbBackup> registeredDbBackup;
-        public DbBackup() { }
+        private static IDictionary<DatabaseType, DbBackup> registeredDbBackup;
+
+        public DbBackup()
+        { }
 
         public DbBackup(BackupSetting setting, ConnectionInfo connectionInfo)
         {
@@ -41,7 +43,7 @@ namespace DatabaseManager.Core
 
             return saveFolder;
         }
-       
+
         protected virtual string ZipFile(string backupFilePath, string zipFilePath)
         {
             if (File.Exists(backupFilePath))
@@ -53,16 +55,15 @@ namespace DatabaseManager.Core
                     File.Delete(backupFilePath);
 
                     backupFilePath = zipFilePath;
-                }              
+                }
             }
 
             return backupFilePath;
         }
 
         public static DbBackup GetInstance(DatabaseType databaseType)
-        { 
-            return registeredDbBackup[databaseType]; 
+        {
+            return registeredDbBackup[databaseType];
         }
-
     }
 }

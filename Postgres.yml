@@ -1,0 +1,56 @@
+# Use postgres/example user/password credentials
+version: '3.1'
+
+services:
+
+  dbpostgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: dbroot
+      POSTGRES_PASSWORD: root 
+      POSTGRES_DATABASE: dbbasic
+    ports:
+     - "5432:5432"
+    networks:
+     - vpcbr
+
+  mysql:
+    container_name: mysql
+    image: mysql:latest
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+     - "3306:3306"
+    networks:
+     - vpcbr
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8082:8080
+    networks:
+     - vpcbr
+
+  cloudbeaver:
+    image: dbeaver/cloudbeaver:latest
+    restart: always
+    ports:
+     - 8081:8978
+    networks:
+     - vpcbr
+       
+
+networks:
+  vpcbr:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.5.0.0/16
+         gateway: 10.5.0.1
+         aux_addresses:
+          mysql: 10.5.0.5
+          cloudbeaver: 10.5.0.7
+          adminer: 10.5.0.8

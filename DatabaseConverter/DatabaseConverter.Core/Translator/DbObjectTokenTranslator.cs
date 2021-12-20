@@ -1,9 +1,12 @@
-﻿using DatabaseConverter.Model;
-using DatabaseInterpreter.Core;
-using DatabaseInterpreter.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
+using DatabaseConverter.Model;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
+
 using TSQL;
 using TSQL.Tokens;
 
@@ -17,11 +20,12 @@ namespace DatabaseConverter.Core
         private List<FunctionSpecification> sourceFuncSpecs;
         private List<FunctionSpecification> targetFuncSpecs;
 
-        public DbObjectTokenTranslator(DbInterpreter source, DbInterpreter target) : base(source, target) { }
+        public DbObjectTokenTranslator(DbInterpreter source, DbInterpreter target) : base(source, target)
+        {
+        }
 
         public override void Translate()
         {
-
         }
 
         public virtual string ParseDefinition(string definition)
@@ -83,7 +87,7 @@ namespace DatabaseConverter.Core
                 if (!string.IsNullOrEmpty(functionExpression))
                 {
                     bool useBrackets = false;
-                    MappingFunctionInfo targetFunctionInfo= this.GetMappingFunctionInfo(text, out useBrackets);
+                    MappingFunctionInfo targetFunctionInfo = this.GetMappingFunctionInfo(text, out useBrackets);
 
                     FunctionFomular fomular = new FunctionFomular(functionExpression);
 
@@ -103,12 +107,12 @@ namespace DatabaseConverter.Core
                         this.convertedDataTypes.AddRange(dictDataType.Values);
                     }
 
-                    if(!string.IsNullOrEmpty(targetFunctionInfo.Args) && changed)
+                    if (!string.IsNullOrEmpty(targetFunctionInfo.Args) && changed)
                     {
-                        if(!this.convertedFunctions.Contains(targetFunctionInfo.Name))
+                        if (!this.convertedFunctions.Contains(targetFunctionInfo.Name))
                         {
                             this.convertedFunctions.Add(targetFunctionInfo.Name);
-                        }                        
+                        }
                     }
                 }
             }
@@ -192,7 +196,7 @@ namespace DatabaseConverter.Core
                         {
                             if ((text == "dbo" || text == "[dbo]") && this.TargetDbOwner?.ToLower() != "dbo")
                             {
-                                if(nextToken!=null && nextToken.Text==".")
+                                if (nextToken != null && nextToken.Text == ".")
                                 {
                                     ignoreCount++;
                                 }
@@ -205,7 +209,7 @@ namespace DatabaseConverter.Core
                         {
                             sb.Append(text);
                             continue;
-                        }                       
+                        }
 
                         //Remove owner name
                         if (nextToken != null && nextToken.Text.Trim() != "(" &&
@@ -225,11 +229,11 @@ namespace DatabaseConverter.Core
 
                             string textWithBrackets = text.ToLower() + "()";
 
-                            bool useBrackets = false;                           
+                            bool useBrackets = false;
 
-                            MappingFunctionInfo targetFunctionInfo = this.GetMappingFunctionInfo(text, out useBrackets);                          
+                            MappingFunctionInfo targetFunctionInfo = this.GetMappingFunctionInfo(text, out useBrackets);
 
-                            if (targetFunctionInfo.Name.ToLower() !=text.ToLower())
+                            if (targetFunctionInfo.Name.ToLower() != text.ToLower())
                             {
                                 string targetFunction = targetFunctionInfo.Name;
 
@@ -260,6 +264,7 @@ namespace DatabaseConverter.Core
                             sb.Append(this.GetQuotedString(text));
                         }
                         break;
+
                     case TSQLTokenType.StringLiteral:
                         if (previousType != TSQLTokenType.Whitespace && previousText.ToLower() == "as")
                         {
@@ -270,6 +275,7 @@ namespace DatabaseConverter.Core
                             sb.Append(text);
                         }
                         break;
+
                     case TSQLTokenType.SingleLineComment:
                     case TSQLTokenType.MultilineComment:
                         continue;
@@ -289,6 +295,7 @@ namespace DatabaseConverter.Core
                         }
                         sb.Append(text);
                         break;
+
                     default:
                         sb.Append(text);
                         break;
@@ -306,7 +313,7 @@ namespace DatabaseConverter.Core
 
         private string GetQuotedString(string text)
         {
-            if (//text.StartsWith(this.sourceDbInterpreter.QuotationLeftChar.ToString()) && text.EndsWith(this.sourceDbInterpreter.QuotationRightChar.ToString())&& 
+            if (//text.StartsWith(this.sourceDbInterpreter.QuotationLeftChar.ToString()) && text.EndsWith(this.sourceDbInterpreter.QuotationRightChar.ToString())&&
                 !text.StartsWith(this.targetDbInterpreter.QuotationLeftChar.ToString()) && !text.EndsWith(this.targetDbInterpreter.QuotationRightChar.ToString()))
             {
                 return this.targetDbInterpreter.GetQuotedString(text.Trim('\'', '"', this.sourceDbInterpreter.QuotationLeftChar, this.sourceDbInterpreter.QuotationRightChar));

@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+
 using DatabaseInterpreter.Model;
+
 using DatabaseManager.Helper;
 using DatabaseManager.Model;
 
@@ -17,6 +14,7 @@ namespace DatabaseManager
     {
         public bool ColumnIsReadOnly { get; set; }
         public List<IndexColumn> SelectedColumns { get; private set; }
+
         public frmColumSelect()
         {
             InitializeComponent();
@@ -29,7 +27,7 @@ namespace DatabaseManager
 
         private void InitGrid()
         {
-            if(this.ColumnIsReadOnly)
+            if (this.ColumnIsReadOnly)
             {
                 this.colColumName.ReadOnly = true;
                 this.dgvColumns.AllowUserToAddRows = false;
@@ -155,7 +153,6 @@ namespace DatabaseManager
 
         private void dgvColumns_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-
         }
 
         private void dgvColumns_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)

@@ -1,5 +1,6 @@
-﻿using DatabaseInterpreter.Model;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+
+using DatabaseInterpreter.Model;
 
 namespace DatabaseManager.Model
 {

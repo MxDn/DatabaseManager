@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DatabaseInterpreter.Model
+﻿namespace DatabaseInterpreter.Model
 {
     public class FunctionSpecification
     {
         private string _delimiter;
         public string Name { get; set; }
         public string Args { get; set; }
-        public bool NoParenthesess{ get; set; }
+        public bool NoParenthesess { get; set; }
 
         public string Delimiter
         {
@@ -27,5 +23,5 @@ namespace DatabaseInterpreter.Model
                 this._delimiter = value;
             }
         }
-    }   
+    }
 }

@@ -1,8 +1,9 @@
-﻿using DatabaseInterpreter.Model;
-using DatabaseInterpreter.Utility;
-using System;
+﻿using System;
 using System.Data;
 using System.Linq;
+
+using DatabaseInterpreter.Model;
+using DatabaseInterpreter.Utility;
 
 namespace DatabaseInterpreter.Core
 {
@@ -29,7 +30,7 @@ namespace DatabaseInterpreter.Core
 
         public static bool IsBytes(object value)
         {
-            return (value != null && value.GetType() == typeof(byte[]));
+            return value != null && value.GetType() == typeof(byte[]);
         }
 
         public static string TransferSingleQuotation(string value)

@@ -1,9 +1,4 @@
-﻿using DatabaseConverter.Model;
-using DatabaseConverter.Profile;
-using DatabaseInterpreter.Core;
-using DatabaseInterpreter.Model;
-using DatabaseInterpreter.Utility;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -11,6 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
+using DatabaseConverter.Model;
+using DatabaseConverter.Profile;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
+using DatabaseInterpreter.Utility;
 
 namespace DatabaseConverter.Core
 {
@@ -34,10 +36,11 @@ namespace DatabaseConverter.Core
         public DbConverterOption Option { get; set; } = new DbConverterOption();
 
         public event FeedbackHandler OnFeedback;
+
         public event TranslateHandler OnTranslated;
 
         public CancellationTokenSource CancellationTokenSource { get; private set; }
-         
+
         public DbConverter(DbConveterInfo source, DbConveterInfo target)
         {
             this.Source = source;
@@ -85,8 +88,8 @@ namespace DatabaseConverter.Core
             this.Target.DbInterpreter.Option.ThrowExceptionWhenErrorOccurs = false;
 
             if (string.IsNullOrEmpty(this.Target.DbOwner))
-            { this.Target.DbOwner = this.Target.DbInterpreter.GetDbOwner();
-                
+            {
+                this.Target.DbOwner = this.Target.DbInterpreter.GetDbOwner();
             }
 
             DatabaseObjectType databaseObjectType = (DatabaseObjectType)Enum.GetValues(typeof(DatabaseObjectType)).Cast<int>().Sum();
@@ -119,7 +122,7 @@ namespace DatabaseConverter.Core
                 SchemaInfoHelper.ExcludeExistingObjects(sourceSchemaInfo, targetSchema);
             }
 
-            #region Set data type by user define type          
+            #region Set data type by user define type
 
             List<UserDefinedType> utypes = new List<UserDefinedType>();
 
@@ -141,7 +144,7 @@ namespace DatabaseConverter.Core
                 }
             }
 
-            #endregion
+            #endregion Set data type by user define type
 
             SchemaInfo targetSchemaInfo = SchemaInfoHelper.Clone(sourceSchemaInfo);
 
@@ -161,6 +164,7 @@ namespace DatabaseConverter.Core
             }
 
             #region Translate
+
             TranslateEngine translateEngine = new TranslateEngine(sourceSchemaInfo, targetSchemaInfo, sourceInterpreter, this.Target.DbInterpreter, this.Option, this.Target.DbOwner);
 
             translateEngine.SkipError = this.Option.SkipScriptError || this.Option.OnlyForTranslate;
@@ -185,7 +189,7 @@ namespace DatabaseConverter.Core
                 }
             }
 
-            #endregion
+            #endregion Translate
 
             if (targetSchemaInfo.Tables.Any())
             {
@@ -244,7 +248,7 @@ namespace DatabaseConverter.Core
                     this.transaction = dbConnection.BeginTransaction();
                 }
 
-                #region Schema sync        
+                #region Schema sync
 
                 if (scriptBuilder != null && this.Option.ExecuteScriptOnTargetServer)
                 {
@@ -339,9 +343,11 @@ namespace DatabaseConverter.Core
 
                     targetInterpreter.Feedback(FeedbackInfoType.Info, "End sync schema.");
                 }
-                #endregion
+
+                #endregion Schema sync
 
                 #region Data sync
+
                 if (!targetInterpreter.HasError && this.Option.GenerateScriptMode.HasFlag(GenerateScriptMode.Data) && sourceSchemaInfo.Tables.Count > 0)
                 {
                     List<TableColumn> identityTableColumns = new List<TableColumn>();
@@ -437,7 +443,7 @@ namespace DatabaseConverter.Core
 
                                         long transferredCount = dictTableDataTransferredCount[table];
 
-                                        double percent = (transferredCount * 1.0 / tableDataReadInfo.TotalCount) * 100;
+                                        double percent = transferredCount * 1.0 / tableDataReadInfo.TotalCount * 100;
 
                                         string strPercent = (percent == (int)percent) ? (percent + "%") : (percent / 100).ToString("P2");
 
@@ -490,7 +496,8 @@ namespace DatabaseConverter.Core
 
                     await this.SetIdentityEnabled(identityTableColumns, targetInterpreter, targetDbScriptGenerator, dbConnection, transaction, true);
                 }
-                #endregion
+
+                #endregion Data sync
 
                 if (this.transaction != null && this.transaction.Connection != null && !this.cancelRequested)
                 {

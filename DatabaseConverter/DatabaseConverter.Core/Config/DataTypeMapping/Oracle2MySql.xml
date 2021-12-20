@@ -18,22 +18,22 @@
   <mapping>
     <source type="char" />
     <target type="varchar" />
-  </mapping>  
-  <mapping>
-    <source type="date" />
-    <target type="datetime" />
   </mapping>
   <mapping>
     <source type="date" />
     <target type="datetime" />
   </mapping>
   <mapping>
-    <source type="interval day([(]\d[)])? to second([(]\d[)])?" isExp="true"/>
-    <target type="datetime"  />
+    <source type="date" />
+    <target type="datetime" />
+  </mapping>
+  <mapping>
+    <source type="interval day([(]\d[)])? to second([(]\d[)])?" isExp="true" />
+    <target type="datetime" />
     <special name="expression" value="interval day[(]0[)] to second([(]\d[)])?" type="time" ></special>
   </mapping>
   <mapping>
-    <source type="interval year([(]\d[)])? to month" isExp="true"/>
+    <source type="interval year([(]\d[)])? to month" isExp="true" />
     <target type="int" />
   </mapping>
   <mapping>
@@ -75,11 +75,11 @@
     <target type="timestamp" />
   </mapping>
   <mapping>
-    <source type="timestamp([(]\d[)])? with local time zone" isExp="true"/>
+    <source type="timestamp([(]\d[)])? with local time zone" isExp="true" />
     <target type="timestamp" />
   </mapping>
   <mapping>
-    <source type="timestamp([(]\d[)])? with time zone" isExp="true"/>
+    <source type="timestamp([(]\d[)])? with time zone" isExp="true" />
     <target type="timestamp" />
   </mapping>
   <mapping>

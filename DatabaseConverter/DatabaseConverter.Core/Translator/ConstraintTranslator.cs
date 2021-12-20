@@ -1,8 +1,9 @@
-﻿using DatabaseInterpreter.Core;
-using DatabaseInterpreter.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
 
 namespace DatabaseConverter.Core
 {

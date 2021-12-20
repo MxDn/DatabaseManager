@@ -1,8 +1,9 @@
-﻿using DatabaseInterpreter.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+
+using DatabaseInterpreter.Model;
 
 namespace DatabaseInterpreter.Core
 {
@@ -23,7 +24,6 @@ namespace DatabaseInterpreter.Core
         {
             return BinaryTypeFlags.Any(item => dataType.ToLower().Contains(item));
         }
-
 
         public static bool StartWithN(string dataType)
         {

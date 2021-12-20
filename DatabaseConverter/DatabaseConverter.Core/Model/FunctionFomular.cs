@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DatabaseConverter.Model
 {
@@ -14,7 +13,6 @@ namespace DatabaseConverter.Model
 
         public string Delimiter { get; set; } = ",";
 
-        
         public int StartIndex { get; set; }
         public int StopIndex { get; set; }
 
@@ -24,14 +22,14 @@ namespace DatabaseConverter.Model
         {
             get
             {
-                if(string.IsNullOrEmpty(this._name) && !string.IsNullOrEmpty(this._expression))
+                if (string.IsNullOrEmpty(this._name) && !string.IsNullOrEmpty(this._expression))
                 {
                     int firstParenthesesIndex = this.Expression.IndexOf('(');
 
-                    if(firstParenthesesIndex>0)
+                    if (firstParenthesesIndex > 0)
                     {
                         this._name = this._expression.Substring(0, firstParenthesesIndex);
-                    }                   
+                    }
                 }
 
                 return this._name;
@@ -61,7 +59,7 @@ namespace DatabaseConverter.Model
             this.Expression = expression;
         }
 
-        public FunctionFomular(string name , string expression)
+        public FunctionFomular(string name, string expression)
         {
             this.Name = name;
             this.Expression = expression;

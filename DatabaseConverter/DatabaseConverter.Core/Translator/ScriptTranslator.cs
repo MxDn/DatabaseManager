@@ -1,13 +1,16 @@
-﻿using DatabaseConverter.Model;
-using DatabaseInterpreter.Core;
-using DatabaseInterpreter.Model;
-using DatabaseInterpreter.Utility;
-using SqlAnalyser.Core;
-using SqlAnalyser.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+
+using DatabaseConverter.Model;
+
+using DatabaseInterpreter.Core;
+using DatabaseInterpreter.Model;
+using DatabaseInterpreter.Utility;
+
+using SqlAnalyser.Core;
+using SqlAnalyser.Model;
 
 namespace DatabaseConverter.Core
 {
@@ -19,6 +22,7 @@ namespace DatabaseConverter.Core
         private DatabaseType targetDbType;
 
         public List<UserDefinedType> UserDefinedTypes { get; set; } = new List<UserDefinedType>();
+
         public ScriptTranslator(DbInterpreter sourceDbInterpreter, DbInterpreter targetDbInterpreter, List<T> scripts) : base(sourceDbInterpreter, targetDbInterpreter)
         {
             this.sourceDbType = sourceDbInterpreter.DatabaseType;
@@ -71,7 +75,7 @@ namespace DatabaseConverter.Core
 
             foreach (T dbObj in this.scripts)
             {
-                if(this.hasError)
+                if (this.hasError)
                 {
                     break;
                 }
@@ -97,6 +101,7 @@ namespace DatabaseConverter.Core
                     if (result.HasError)
                     {
                         #region Special handle for view
+
                         if (typeof(T) == typeof(View))
                         {
                             //Currently, ANTLR can't parse some complex tsql accurately, so it uses general strategy.
@@ -139,7 +144,8 @@ namespace DatabaseConverter.Core
                                 }
                             }
                         }
-                        #endregion
+
+                        #endregion Special handle for view
                     }
 
                     if (!result.HasError && !tokenProcessed)
@@ -169,7 +175,7 @@ namespace DatabaseConverter.Core
                     {
                         this.FeedbackError(this.ParseSqlSyntaxError(result.Error, originalDefinition).ToString(), this.SkipError);
 
-                        if(!this.SkipError)
+                        if (!this.SkipError)
                         {
                             this.hasError = true;
                         }

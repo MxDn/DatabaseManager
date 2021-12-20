@@ -1,19 +1,22 @@
-using DatabaseInterpreter.Model;
-using DatabaseInterpreter.Utility;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using DatabaseInterpreter.Model;
+using DatabaseInterpreter.Utility;
+
 namespace DatabaseInterpreter.Core
 {
     public class OracleScriptGenerator : DbScriptGenerator
     {
-        public OracleScriptGenerator(DbInterpreter dbInterpreter) : base(dbInterpreter) { }
+        public OracleScriptGenerator(DbInterpreter dbInterpreter) : base(dbInterpreter)
+        {
+        }
 
-        #region Schema Script 
+        #region Schema Script
 
         public override ScriptBuilder GenerateSchemaScripts(SchemaInfo schemaInfo)
         {
@@ -42,11 +45,14 @@ namespace DatabaseInterpreter.Core
 
             //#endregion
 
-            #region Function           
+            #region Function
+
             sb.AppendRange(this.GenerateScriptDbObjectScripts<Function>(schemaInfo.Functions));
-            #endregion
+
+            #endregion Function
 
             #region Table
+
             foreach (Table table in schemaInfo.Tables)
             {
                 this.FeedbackInfo(OperationState.Begin, table);
@@ -63,19 +69,26 @@ namespace DatabaseInterpreter.Core
 
                 this.FeedbackInfo(OperationState.End, table);
             }
-            #endregion
 
-            #region View           
+            #endregion Table
+
+            #region View
+
             sb.AppendRange(this.GenerateScriptDbObjectScripts<View>(schemaInfo.Views));
-            #endregion
 
-            #region Trigger           
+            #endregion View
+
+            #region Trigger
+
             sb.AppendRange(this.GenerateScriptDbObjectScripts<TableTrigger>(schemaInfo.TableTriggers));
-            #endregion
 
-            #region Procedure           
+            #endregion Trigger
+
+            #region Procedure
+
             sb.AppendRange(this.GenerateScriptDbObjectScripts<Procedure>(schemaInfo.Procedures));
-            #endregion
+
+            #endregion Procedure
 
             if (this.option.ScriptOutputMode.HasFlag(GenerateScriptOutputMode.WriteToFile))
             {
@@ -89,9 +102,10 @@ namespace DatabaseInterpreter.Core
         {
             return (this.dbInterpreter as OracleInterpreter).GetDbOwner();
         }
-        #endregion
 
-        #region Data Script        
+        #endregion Schema Script
+
+        #region Data Script
 
         public override async Task<string> GenerateDataScriptsAsync(SchemaInfo schemaInfo)
         {
@@ -110,7 +124,7 @@ namespace DatabaseInterpreter.Core
 
         protected override string GetBatchInsertItemEnd(bool isAllEnd)
         {
-            return (isAllEnd ? $"{Environment.NewLine}SELECT 1 FROM DUAL;" : "");
+            return isAllEnd ? $"{Environment.NewLine}SELECT 1 FROM DUAL;" : "";
         }
 
         protected override bool NeedInsertParameter(TableColumn column, object value)
@@ -136,6 +150,7 @@ namespace DatabaseInterpreter.Core
             }
             return false;
         }
+
         protected override object ParseValue(TableColumn column, object value, bool bytesAsString = false)
         {
             if (value != null)
@@ -204,7 +219,7 @@ namespace DatabaseInterpreter.Core
                     case nameof(DateTimeOffset):
                         if (this.databaseType == DatabaseType.Oracle)
                         {
-                           if (type.Name == nameof(DateTime))
+                            if (type.Name == nameof(DateTime))
                             {
                                 DateTime dateTime = Convert.ToDateTime(value);
 
@@ -296,6 +311,7 @@ namespace DatabaseInterpreter.Core
                 return null;
             }
         }
+
         private string GetOracleDatetimeConvertString(DateTime dateTime)
         {
             int millisecondLength = dateTime.Millisecond.ToString().Length;
@@ -304,9 +320,11 @@ namespace DatabaseInterpreter.Core
 
             return $"TO_TIMESTAMP('{dateTime.ToString(format)}','yyyy-MM-dd hh24:mi:ssxff')";
         }
-        #endregion
+
+        #endregion Data Script
 
         #region Alter Table
+
         public override Script RenameTable(Table table, string newName)
         {
             return new AlterDbObjectScript<Table>($"RENAME TABLE {this.GetQuotedObjectName(table)} TO {this.GetQuotedString(newName)};");
@@ -346,11 +364,11 @@ namespace DatabaseInterpreter.Core
         {
             string sql =
 $@"
-ALTER TABLE {this.GetQuotedFullTableName(primaryKey)} ADD CONSTRAINT {this.GetQuotedString(primaryKey.Name)} PRIMARY KEY 
+ALTER TABLE {this.GetQuotedFullTableName(primaryKey)} ADD CONSTRAINT {this.GetQuotedString(primaryKey.Name)} PRIMARY KEY
 (
 {string.Join(Environment.NewLine, primaryKey.Columns.Select(item => $"{ this.GetQuotedString(item.ColumnName)},")).TrimEnd(',')}
 )
-USING INDEX 
+USING INDEX
 TABLESPACE
 {this.dbInterpreter.ConnectionInfo.Database}{this.scriptsDelimiter}";
 
@@ -433,11 +451,13 @@ REFERENCES { this.GetQuotedString(foreignKey.ReferencedTableName)}({referenceCol
         {
             return new Script("");
         }
-        #endregion
+
+        #endregion Alter Table
 
         #region Database Operation
 
-        public override Script AddUserDefinedType(UserDefinedType userDefinedType) { return new Script(""); }
+        public override Script AddUserDefinedType(UserDefinedType userDefinedType)
+        { return new Script(""); }
 
         public override ScriptBuilder AddTable(Table table, IEnumerable<TableColumn> columns,
          TablePrimaryKey primaryKey,
@@ -462,11 +482,12 @@ TABLESPACE
 
             sb.AppendLine(new CreateDbObjectScript<Table>(tableScript));
 
-            #endregion
+            #endregion Create Table
 
             sb.AppendLine();
 
             #region Comment
+
             if (!string.IsNullOrEmpty(table.Comment))
             {
                 sb.AppendLine(this.SetTableComment(table));
@@ -476,16 +497,20 @@ TABLESPACE
             {
                 sb.AppendLine(this.SetTableColumnComment(table, column, true));
             }
-            #endregion
+
+            #endregion Comment
 
             #region Primary Key
+
             if (this.option.TableScriptsGenerateOption.GeneratePrimaryKey && primaryKey != null)
             {
                 sb.AppendLine(this.AddPrimaryKey(primaryKey));
             }
-            #endregion
+
+            #endregion Primary Key
 
             #region Foreign Key
+
             if (this.option.TableScriptsGenerateOption.GenerateForeignKey && foreignKeys != null)
             {
                 foreach (TableForeignKey foreignKey in foreignKeys)
@@ -493,9 +518,11 @@ TABLESPACE
                     sb.AppendLine(this.AddForeignKey(foreignKey));
                 }
             }
-            #endregion
+
+            #endregion Foreign Key
 
             #region Index
+
             if (this.option.TableScriptsGenerateOption.GenerateIndex && indexes != null)
             {
                 List<string> indexColumns = new List<string>();
@@ -518,9 +545,11 @@ TABLESPACE
                     }
                 }
             }
-            #endregion
+
+            #endregion Index
 
             #region Constraint
+
             if (this.option.TableScriptsGenerateOption.GenerateConstraint && constraints != null)
             {
                 foreach (TableConstraint constraint in constraints)
@@ -528,10 +557,12 @@ TABLESPACE
                     sb.AppendLine(this.AddCheckConstraint(constraint));
                 }
             }
-            #endregion
+
+            #endregion Constraint
 
             return sb;
         }
+
         public override Script DropUserDefinedType(UserDefinedType userDefinedType)
         {
             return new Script("");
@@ -594,8 +625,8 @@ TABLESPACE
 
         private string GetSqlForEnableConstraints(bool enabled)
         {
-            return $@"SELECT 'ALTER TABLE ""'|| T.TABLE_NAME ||'"" {(enabled ? "ENABLE" : "DISABLE")} CONSTRAINT ""'||T.CONSTRAINT_NAME || '""' AS ""SQL""  
-                            FROM USER_CONSTRAINTS T 
+            return $@"SELECT 'ALTER TABLE ""'|| T.TABLE_NAME ||'"" {(enabled ? "ENABLE" : "DISABLE")} CONSTRAINT ""'||T.CONSTRAINT_NAME || '""' AS ""SQL""
+                            FROM USER_CONSTRAINTS T
                             WHERE T.CONSTRAINT_TYPE = 'R'
                             AND UPPER(OWNER)= UPPER('{this.GetDbOwner()}')
                            ";
@@ -607,6 +638,7 @@ TABLESPACE
                          FROM USER_TRIGGERS
                          WHERE UPPER(TABLE_OWNER)= UPPER('{this.GetDbOwner()}')";
         }
-        #endregion
+
+        #endregion Database Operation
     }
 }

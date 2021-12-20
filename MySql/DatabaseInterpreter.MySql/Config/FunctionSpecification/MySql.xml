@@ -1,4 +1,4 @@
-﻿<items>   
+﻿<items>
   <item name="ABS" args="EXP"></item>
   <item name="ACOS" args="EXP"></item>
   <item name="ADDDATE" args="DATE,INTERVAL"></item>
@@ -9,7 +9,7 @@
   <item name="ATAN2" args="EXP"></item>
   <item name="AVG" args="EXP"></item>
   <item name="BIN" args="EXP"></item>
-  <item name="BINARY" args="EXP"></item> 
+  <item name="BINARY" args="EXP"></item>
   <item name="CAST" args="EXP AS TYPE" delimiter="AS"></item>
   <item name="CEIL" args="EXP"></item>
   <item name="CEILING" args="EXP"></item>
@@ -98,7 +98,7 @@
   <item name="QUARTER" args="DATE"></item>
   <item name="RADIANS" args="EXP"></item>
   <item name="RAND" args="EXP"></item>
-  <item name="REPEAT" args="EXP,LENGTH"></item> 
+  <item name="REPEAT" args="EXP,LENGTH"></item>
   <item name="REPLACE" args="EXP,OLD,NEW"></item>
   <item name="REVERSE" args="EXP"></item>
   <item name="RIGHT" args="EXP,LENGTH"></item>
